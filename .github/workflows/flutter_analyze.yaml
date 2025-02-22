@@ -12,6 +12,9 @@ jobs:
   flutter_analyze:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: flutter_client
     steps:
       - uses: actions/checkout@v4
       - name: Read Flutter version from .fvmrc
