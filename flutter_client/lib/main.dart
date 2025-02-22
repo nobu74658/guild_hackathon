@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knitting/view/knitting_pattern/knitting_pattern_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Spacer(),
+      home: const KnittingPatternView(),
     );
   }
 }
