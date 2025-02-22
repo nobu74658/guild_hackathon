@@ -1,22 +1,6 @@
 # 画像処理サーバー
 
-## 環境構築
-
-### Dockerを使う場合
-
-Dockerコンテナの起動
-
-```bash
-docker compose up -d
-```
-
-Dockerコンテナの停止
-
-```bash
-docker compose down
-```
-
-### ローカルで実行する場合
+## 開発環境構築
 
 パッケージのインストール
 
