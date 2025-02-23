@@ -1,25 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image/image.dart' as img;
+import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/view/knitting_pattern/components/stitch.dart';
 
-class KnittingPatternViewer extends HookWidget {
-  const KnittingPatternViewer({
-    super.key,
+class ConnectedKnittingPatternViewer extends ConsumerWidget {
+  const ConnectedKnittingPatternViewer({
     required this.maxHeight,
+    super.key,
   });
 
   final double maxHeight;
 
   @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Future<img.Image> image =
+        ref.watch(knittingPatternManagerProvider).fetch();
+
+    return FutureBuilder(
+      future: image,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final image = snapshot.data;
+          if (image == null) {
+            return const Center(child: Text('Failed to load image'));
+          }
+          return KnittingPatternViewer(
+            maxHeight: maxHeight,
+            image: snapshot.data!,
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+}
+
+class KnittingPatternViewer extends HookWidget {
+  const KnittingPatternViewer({
+    super.key,
+    required this.maxHeight,
+    required this.image,
+  });
+
+  final double maxHeight;
+  final img.Image image;
+
+  @override
   Widget build(BuildContext context) {
-    const xCount = 20;
-    const yCount = 40;
+    final imageWidth = image.width;
+    final imageHeight = image.height;
+
+    const unitSize = 20.0;
     const dxRatio = 1.0;
-    const dyRatio = 0.5;
+    const dyRatio = 1.0;
     const margin = 8.0;
 
-    final knittingWidth = 20 * xCount.toDouble() * dxRatio;
-    final knittingHeight = 20 * yCount.toDouble() * dyRatio;
+    final knittingWidth = unitSize * imageWidth * dxRatio;
+    final knittingHeight = unitSize * imageHeight * dyRatio;
 
     final viewerController = useTransformationController();
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -52,16 +92,18 @@ class KnittingPatternViewer extends HookWidget {
         height: knittingHeight,
         child: Stack(
           children: [
-            for (var y = 0; y < yCount; y++)
-              for (var x = 0; x < xCount; x++)
+            for (var y = 0; y < imageHeight; y++)
+              for (var x = 0; x < imageWidth; x++) ...{
                 _Stitch(
-                  width: knittingWidth / xCount,
-                  height: knittingWidth / xCount,
+                  width: unitSize,
+                  height: unitSize,
                   x: x,
                   y: y,
                   dxRatio: dxRatio,
                   dyRatio: dyRatio,
+                  pixel: image.getPixel(x, y),
                 ),
+              },
           ],
         ),
       ),
@@ -77,6 +119,7 @@ class _Stitch extends HookWidget {
     required this.y,
     required this.dxRatio,
     required this.dyRatio,
+    required this.pixel,
   });
 
   final double width;
@@ -85,10 +128,18 @@ class _Stitch extends HookWidget {
   final int y;
   final double dxRatio;
   final double dyRatio;
+  final img.Pixel pixel;
 
   @override
   Widget build(BuildContext context) {
-    final color = useState(Colors.red);
+    final color = useState(
+      Color.fromARGB(
+        pixel.a.toInt(),
+        pixel.r.toInt(),
+        pixel.g.toInt(),
+        pixel.b.toInt(),
+      ),
+    );
 
     return Positioned(
       left: x * width * dxRatio,

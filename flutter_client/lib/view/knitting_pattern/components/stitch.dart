@@ -8,7 +8,7 @@ class StitchPainter {
 class _FineStitchPainter extends _TouchablePainter {
   _FineStitchPainter(super.color);
 
-  final double strokeWidth = 10.0;
+  final double strokeWidth = 4.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -46,7 +46,7 @@ class _FineStitchPainter extends _TouchablePainter {
 class _FlatStitchPainter extends _TouchablePainter {
   _FlatStitchPainter(super.color);
 
-  final double strokeWidth = 20.0;
+  final double strokeWidth = 4.0;
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -34,7 +34,7 @@ class KnittingPatternScreen extends HookWidget {
         ),
       ),
       body: LayoutBuilder(
-        builder: (context, constraints) => KnittingPatternViewer(
+        builder: (context, constraints) => ConnectedKnittingPatternViewer(
           maxHeight: constraints.maxHeight,
         ),
       ),

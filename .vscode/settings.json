@@ -1,4 +1,8 @@
 {
   "dart.flutterSdkPath": "knitting/.fvm/versions/3.27.4",
   "python.defaultInterpreterPath": "image_server/.venv/bin/python",
+  "explorer.fileNesting.patterns": {
+    "*.dart": "$(capture).freezed.dart, $(capture).g.dart"
+  },
+  "explorer.fileNesting.enabled": true
 }
