@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StitchPainter {
-  static CustomPainter fine(Color color) => _FineStitchPainter(color);
-  static CustomPainter flat(Color color) => _FlatStitchPainter(color);
+  static CustomPainter crossStitch(Color color) => _CrossStitchPainter(color);
+  static CustomPainter knit(Color color) => _KnitPainter(color);
   static CustomPainter singleCrochetKnit(Color color) =>
       _SingleCrochetKnitPainter(color);
   static CustomPainter singleCrochetPurl(Color color) =>
@@ -11,8 +11,9 @@ class StitchPainter {
       _SingleCrochetBackLoopOnlyPainter(color);
 }
 
-class _FineStitchPainter extends _TouchablePainter {
-  _FineStitchPainter(super.color);
+// クロススティッチ用(刺繍)
+class _CrossStitchPainter extends _TouchablePainter {
+  _CrossStitchPainter(super.color);
 
   final double strokeWidth = 10.0;
 
@@ -49,8 +50,8 @@ class _FineStitchPainter extends _TouchablePainter {
   }
 }
 
-class _FlatStitchPainter extends _TouchablePainter {
-  _FlatStitchPainter(super.color);
+class _KnitPainter extends _TouchablePainter {
+  _KnitPainter(super.color);
 
   final double strokeWidth = 30.0;
 
@@ -59,14 +60,23 @@ class _FlatStitchPainter extends _TouchablePainter {
     final painter = Paint()..color = color;
 
     path
+      // 外側を時計回りに動いていく、左右対称
       ..moveTo(0, 0)
-      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width - strokeWidth, 0)
-      ..lineTo(size.width / 2, size.height - strokeWidth)
-      ..lineTo(0 + strokeWidth, 0);
-
+      // 1. 左上から中央
+      ..quadraticBezierTo(size.width * 0.2, -size.height * 0.2,
+          size.width / 2 - strokeWidth / 2, size.height * 0.2)
+      // 2. 中央から右
+      ..quadraticBezierTo(size.width / 2, size.height - strokeWidth,
+          size.width / 2 + strokeWidth / 2, size.height * 0.2)
+      // 3.
+      ..quadraticBezierTo(size.width * 0.8, -size.height * 0.2, size.width, 0)
+      // 4.
+      ..quadraticBezierTo(size.width + strokeWidth / 2, size.height * 0.2,
+          size.width / 2 + strokeWidth, size.height - strokeWidth)
+      // 5
+      ..quadraticBezierTo(size.width / 2, size.height + strokeWidth / 2,
+          size.width / 2 - strokeWidth, size.height - strokeWidth)
+      ..quadraticBezierTo(0 - strokeWidth / 2, size.height * 0.2, 0, 0);
     canvas.drawPath(path, painter);
   }
 }
