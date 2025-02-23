@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class StitchPainter {
   static CustomPainter fine(Color color) => _FineStitchPainter(color);
   static CustomPainter flat(Color color) => _FlatStitchPainter(color);
+  static CustomPainter singleCrochet(Color color) =>
+      _SingleCrochetPainter(color);
 }
 
 class _FineStitchPainter extends _TouchablePainter {
@@ -46,7 +48,7 @@ class _FineStitchPainter extends _TouchablePainter {
 class _FlatStitchPainter extends _TouchablePainter {
   _FlatStitchPainter(super.color);
 
-  final double strokeWidth = 20.0;
+  final double strokeWidth = 30.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -84,5 +86,27 @@ class _TouchablePainter extends CustomPainter {
   @override
   bool? hitTest(Offset position) {
     return path.contains(position);
+  }
+}
+
+class _SingleCrochetPainter extends _TouchablePainter {
+  _SingleCrochetPainter(super.color);
+
+  final double strokeWidth = 30.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final painter = Paint()..color = color;
+
+    path
+      ..moveTo(0, 0)
+      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
+      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width - strokeWidth, 0)
+      ..lineTo(size.width / 2, size.height - strokeWidth)
+      ..lineTo(0 + strokeWidth, 0);
+
+    canvas.drawPath(path, painter);
   }
 }
