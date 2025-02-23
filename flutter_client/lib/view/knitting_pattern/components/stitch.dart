@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class StitchPainter {
   static CustomPainter fine(Color color) => _FineStitchPainter(color);
   static CustomPainter flat(Color color) => _FlatStitchPainter(color);
-  static CustomPainter singleCrochet(Color color) =>
-      _SingleCrochetPainter(color);
+  static CustomPainter singleCrochetKnit(Color color) =>
+      _SingleCrochetKnitPainter(color);
+  static CustomPainter singleCrochetPurl(Color color) =>
+      _SingleCrochetPurlPainter(color);
   static CustomPainter singleCrochetBackLoopOnly(Color color) =>
       _SingleCrochetBackLoopOnlyPainter(color);
 }
@@ -91,9 +93,9 @@ class _TouchablePainter extends CustomPainter {
   }
 }
 
-// 細編み(single crochet)
-class _SingleCrochetPainter extends _TouchablePainter {
-  _SingleCrochetPainter(super.color);
+// 輪編みの細編み(single crochet)(表)
+class _SingleCrochetKnitPainter extends _TouchablePainter {
+  _SingleCrochetKnitPainter(super.color);
 
   final double strokeWidth = 45.0;
 
@@ -118,7 +120,35 @@ class _SingleCrochetPainter extends _TouchablePainter {
   }
 }
 
-// すじ編み(single crochet back loop only)
+// 輪編みの細編み(single crochet)(裏)
+class _SingleCrochetPurlPainter extends _TouchablePainter {
+  _SingleCrochetPurlPainter(super.color);
+
+  final double strokeWidth = 45.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final painter = Paint()..color = color;
+
+    path
+      ..moveTo(0, 0 + size.height * 2 / 5)
+      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
+      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
+      ..lineTo(size.width - strokeWidth / 4, 0 + size.height * 2 / 5)
+      ..lineTo(size.width, 0 + size.height * 2 / 5)
+      ..lineTo(size.width, 0 + size.height * 1 / 5)
+      // 本当はここに2本の区別の切り込みが入れられると嬉しい
+      ..lineTo(size.width, 0)
+      ..lineTo(-strokeWidth / 2, 0)
+      ..lineTo(-strokeWidth / 2, 0 + size.height * 1 / 5)
+      ..lineTo(size.width / 3, size.height * 1 / 5)
+      ..lineTo(size.width / 3, size.height * 2 / 5)
+      ..lineTo(0, size.height * 2 / 5);
+    canvas.drawPath(path, painter);
+  }
+}
+
+// 輪編みのすじ編み(single crochet back loop only)
 class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
   _SingleCrochetBackLoopOnlyPainter(super.color);
 
