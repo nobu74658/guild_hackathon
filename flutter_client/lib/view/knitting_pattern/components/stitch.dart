@@ -5,6 +5,8 @@ class StitchPainter {
   static CustomPainter flat(Color color) => _FlatStitchPainter(color);
   static CustomPainter singleCrochet(Color color) =>
       _SingleCrochetPainter(color);
+  static CustomPainter singleCrochetBackLoopOnly(Color color) =>
+      _SingleCrochetBackLoopOnlyPainter(color);
 }
 
 class _FineStitchPainter extends _TouchablePainter {
@@ -89,10 +91,11 @@ class _TouchablePainter extends CustomPainter {
   }
 }
 
+// 細編み(single crochet)
 class _SingleCrochetPainter extends _TouchablePainter {
   _SingleCrochetPainter(super.color);
 
-  final double strokeWidth = 30.0;
+  final double strokeWidth = 45.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -100,12 +103,43 @@ class _SingleCrochetPainter extends _TouchablePainter {
 
     path
       ..moveTo(0, 0)
+      ..lineTo(0, 0 + size.height / 3)
+      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
       ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
       ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width - strokeWidth, 0)
+      ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 5)
+      ..lineTo(size.width - strokeWidth, 0 + size.height / 5)
       ..lineTo(size.width / 2, size.height - strokeWidth)
-      ..lineTo(0 + strokeWidth, 0);
+      ..lineTo(0 + strokeWidth, 0 + size.height / 3)
+      ..lineTo(size.width * 0.6, 0 + size.height / 3)
+      ..lineTo(size.width * 0.6, 0);
+
+    canvas.drawPath(path, painter);
+  }
+}
+
+// すじ編み(single crochet back loop only)
+class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
+  _SingleCrochetBackLoopOnlyPainter(super.color);
+
+  final double strokeWidth = 45.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final painter = Paint()..color = color;
+
+    path
+      ..moveTo(0, 0)
+      ..lineTo(0, 0 + size.height / 3)
+      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
+      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
+      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
+      ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 3)
+      ..lineTo(size.width - strokeWidth, 0 + size.height / 3)
+      ..lineTo(size.width / 2, size.height - strokeWidth)
+      ..lineTo(0 + strokeWidth, 0 + size.height / 3)
+      ..lineTo(size.width, 0 + size.height / 3)
+      ..lineTo(size.width, 0);
 
     canvas.drawPath(path, painter);
   }
