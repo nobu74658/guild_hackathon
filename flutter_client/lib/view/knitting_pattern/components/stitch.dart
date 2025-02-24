@@ -15,7 +15,7 @@ class StitchPainter {
 class _CrossStitchPainter extends _TouchablePainter {
   _CrossStitchPainter(super.color);
 
-  final double strokeWidth = 10.0;
+  final double strokeWidth = 4.0;
 
   @override
   void paint(Canvas canvas, Size size) {

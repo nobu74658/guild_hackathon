@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:knitting/view/knitting_pattern/knitting_pattern_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:knitting/common/theme.dart';
+import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,11 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const KnittingPatternView(),
+      theme: AppTheme.get,
+      home: const KnittingPatternScreen(),
     );
   }
 }
