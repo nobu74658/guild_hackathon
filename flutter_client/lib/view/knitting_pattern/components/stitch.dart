@@ -114,6 +114,7 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
     final painter = Paint()..color = color;
 
     path
+      // 上下関係の改善が必要
       ..moveTo(size.width * 0.2, size.height * 0.3)
       // 1
       ..quadraticBezierTo(
@@ -164,6 +165,7 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
 }
 
 // 輪編みの細編み(single crochet)(裏)
+// 重なり方の改善が必要
 class _SingleCrochetPurlPainter extends _TouchablePainter {
   _SingleCrochetPurlPainter(super.color);
 
@@ -174,19 +176,63 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
     final painter = Paint()..color = color;
 
     path
-      ..moveTo(0, 0 + size.height * 2 / 5)
-      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width - strokeWidth / 4, 0 + size.height * 2 / 5)
-      ..lineTo(size.width, 0 + size.height * 2 / 5)
-      ..lineTo(size.width, 0 + size.height * 1 / 5)
-      // 本当はここに2本の区別の切り込みが入れられると嬉しい
-      ..lineTo(size.width, 0)
-      ..lineTo(-strokeWidth / 2, 0)
-      ..lineTo(-strokeWidth / 2, 0 + size.height * 1 / 5)
-      ..lineTo(size.width / 3, size.height * 1 / 5)
-      ..lineTo(size.width / 3, size.height * 2 / 5)
-      ..lineTo(0, size.height * 2 / 5);
+      // 一番上の横の糸
+      ..moveTo(size.width * 0.25, size.height * 0.3)
+      // 1
+      ..quadraticBezierTo(
+          0, size.height * 0.35, size.width * 0.01, size.height * 0.3)
+      // 2
+      ..quadraticBezierTo(
+          size.width * 0.4, -size.height * 0.1, size.width * 0.9, 0)
+      // 3
+      ..quadraticBezierTo(
+          size.width, size.height * 0.15, size.width * 0.9, size.height * 0.2)
+      // 4
+      ..quadraticBezierTo(size.width * 0.6, size.height * 0.2, size.width * 0.4,
+          size.height * 0.27)
+      // 右上から中央の左斜めの糸
+      // 10
+      ..moveTo(size.width * 0.65, size.height * 0.55)
+      // 11
+      ..quadraticBezierTo(size.width * 0.45, size.height * 0.7,
+          size.width * 0.45, size.height * 1.3)
+      // 12
+      ..quadraticBezierTo(size.width * 0.5, size.height * 1.4, size.width * 0.6,
+          size.height * 1.3)
+      // 13
+      ..quadraticBezierTo(size.width * 0.9, size.height * 0.8,
+          size.width * 0.85, size.height * 0.545)
+      // 左から中央の右斜めの糸
+      // 14
+      ..moveTo(0, size.height * 0.5)
+      // 15
+      ..quadraticBezierTo(-size.width * 0.05, size.height * 0.6,
+          size.width * 0.3, size.height * 1.3)
+      // 16
+      ..quadraticBezierTo(size.width * 0.4, size.height * 1.4, size.width * 0.5,
+          size.height * 1.3)
+      // 17
+      ..quadraticBezierTo(size.width * 0.45, size.height * 0.8,
+          size.width * 0.2, size.height * 0.5)
+      // 18
+      ..quadraticBezierTo(
+          size.width * 0.1, size.height * 0.4, 0, size.height * 0.5);
+    path
+      // 右の横の毛糸
+      // 5
+      ..moveTo(size.width * 0.55, size.height * 0.38)
+      // 6
+      ..quadraticBezierTo(size.width * 0.9, size.height * 0.25,
+          size.width * 1.3, size.height * 0.3)
+      // 7
+      ..quadraticBezierTo(size.width * 1.4, size.height * 0.4, size.width * 1.3,
+          size.height * 0.5)
+      // 8
+      ..quadraticBezierTo(
+          size.width, size.height * 0.55, size.width * 0.6, size.height * 0.55)
+      // 9
+      ..quadraticBezierTo(size.width * 0.55, size.height * 0.5,
+          size.width * 0.55, size.height * 0.38);
     canvas.drawPath(path, painter);
   }
 }
