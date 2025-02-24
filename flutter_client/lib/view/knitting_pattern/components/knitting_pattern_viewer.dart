@@ -92,8 +92,8 @@ class KnittingPatternViewer extends HookWidget {
         height: knittingHeight,
         child: Stack(
           children: [
-            for (var y = 0; y < imageHeight; y++)
-              for (var x = 0; x < imageWidth; x++) ...{
+            for (var y = imageHeight - 1; y > -1; y--)
+              for (var x = imageWidth - 1; x > -1; x--) ...{
                 _Stitch(
                   width: unitSize,
                   height: unitSize,
@@ -152,7 +152,7 @@ class _Stitch extends HookWidget {
             color.value = color.value == Colors.red ? Colors.blue : Colors.red;
           },
           child: CustomPaint(
-            painter: StitchPainter.flat(color.value),
+            painter: StitchPainter.singleCrochetPurl(color.value),
           ),
         ),
       ),
