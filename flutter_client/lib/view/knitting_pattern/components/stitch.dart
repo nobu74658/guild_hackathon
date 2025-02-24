@@ -60,7 +60,7 @@ class _KnitPainter extends _TouchablePainter {
     final painter = Paint()..color = color;
 
     path
-      // 外側を時計回りに動いていく、左右対称
+      // 編み物的には時計回りで書いておくと重なった時の前後関係が自然(物による)
       ..moveTo(0, 0)
       // 1. 左上から中央
       ..quadraticBezierTo(size.width * 0.2, -size.height * 0.2,
@@ -114,17 +114,50 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
     final painter = Paint()..color = color;
 
     path
-      ..moveTo(0, 0)
-      ..lineTo(0, 0 + size.height / 3)
-      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
-      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 5)
-      ..lineTo(size.width - strokeWidth, 0 + size.height / 5)
-      ..lineTo(size.width / 2, size.height - strokeWidth)
-      ..lineTo(0 + strokeWidth, 0 + size.height / 3)
-      ..lineTo(size.width * 0.6, 0 + size.height / 3)
-      ..lineTo(size.width * 0.6, 0);
+      ..moveTo(size.width * 0.2, size.height * 0.3)
+      // 1
+      ..quadraticBezierTo(
+          0, size.height * 0.3, size.width * 0.1, size.height * 0.2)
+      // 2
+      ..quadraticBezierTo(size.width * 0.5, -size.height * 0.15,
+          size.width * 0.7, size.height * 0.0)
+      // 3
+      ..quadraticBezierTo(size.width * 0.75, size.height * 0.1,
+          size.width * 0.7, size.height * 0.1)
+      // 4
+      ..quadraticBezierTo(size.width * 0.4, size.height * 0.3,
+          size.width * 0.35, size.height * 0.3)
+      // 5
+      ..quadraticBezierTo(size.width * 0.67, size.height * 0.65,
+          size.width * 0.7, size.height * 0.9)
+      // 6
+      ..quadraticBezierTo(size.width * 0.7, size.height * 0.5, size.width * 0.8,
+          size.height * 0.1)
+      // 7
+      ..quadraticBezierTo(
+          size.width * 0.9, size.height * 0.05, size.width, size.height * 0.1)
+      // 8
+      ..quadraticBezierTo(size.width * 1.02, size.height * 0.7,
+          size.width * 0.9, size.height * 0.9)
+      // 9
+      ..quadraticBezierTo(size.width * 0.8, size.height * 0.95,
+          size.width * 0.7, size.height * 0.9)
+      // 10
+      ..quadraticBezierTo(
+          size.width * 0.7, size.height * 1, size.width * 0.55, size.height * 1)
+      // 11
+      ..quadraticBezierTo(size.width * 0.08, size.height * 0.55,
+          size.width * 0.07, size.height * 0.25);
+    // ..lineTo(0, 0 + size.height / 3)
+    // ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
+    // ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
+    // ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
+    // ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 5)
+    // ..lineTo(size.width - strokeWidth, 0 + size.height / 5)
+    // ..lineTo(size.width / 2, size.height - strokeWidth)
+    // ..lineTo(0 + strokeWidth, 0 + size.height / 3)
+    // ..lineTo(size.width * 0.6, 0 + size.height / 3)
+    // ..lineTo(size.width * 0.6, 0);
 
     canvas.drawPath(path, painter);
   }
