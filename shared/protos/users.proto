@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "pkg/knitting-api-proto";
+package api;
+
+service UserService {
+  rpc GetUser(UserRequest) returns (User);
+}
+
+message UserRequest {
+  string id = 1;
+}
+
+message User {
+  string id = 1;
+  string display_name = 2;
+  string photo_url = 3;
+}
