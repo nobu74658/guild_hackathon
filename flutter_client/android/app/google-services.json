@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "561731936896",
+    "project_id": "yiwashita-guild-hackason",
+    "storage_bucket": "yiwashita-guild-hackason.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561731936896:android:808045c2d9fb221a1f7c65",
+        "android_client_info": {
+          "package_name": "com.yiwashita.knitting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561731936896-tte35rt6q3pbtqqt80pgsc8j24i0lm2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACWOHwz6y-v-tMnzqwgUQDcVxtCXgoZ28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561731936896-tte35rt6q3pbtqqt80pgsc8j24i0lm2j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "561731936896-bfjuqt8bhjni80cgta8jc7kvtrpq578h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yiwashita.knitting"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
