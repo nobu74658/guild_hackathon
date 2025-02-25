@@ -28,7 +28,10 @@ analyzer:
     - "**/*.g.dart"
     - "bin/cache/**"
       # Ignore protoc generated files
-    - "dev/conductor/lib/proto/*"
+    - "**/*.pb.dart"
+    - "**/*.pbgrpc.dart"
+    - "**/*.pbjson.dart"
+    - "**/*.pbenum.dart"
 linter:
   rules:
     # This list is derived from the list of all available lints located at
