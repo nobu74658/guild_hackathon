@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,10 +18,14 @@ class ConnectedKnittingPatternViewer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<img.Image> image =
-        ref.watch(knittingPatternManagerProvider).fetch();
+        ref.watch(knittingPatternManagerProvider).fetchImage();
+    final Future<ui.Image> texture =
+        ref.watch(knittingPatternManagerProvider).fetchTexture();
+
+    final future = Future.wait([image, texture]);
 
     return FutureBuilder(
-      future: image,
+      future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final image = snapshot.data;
@@ -28,7 +34,8 @@ class ConnectedKnittingPatternViewer extends ConsumerWidget {
           }
           return KnittingPatternViewer(
             maxHeight: maxHeight,
-            image: snapshot.data!,
+            image: snapshot.data![0] as img.Image,
+            texture: snapshot.data![1] as ui.Image,
           );
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -43,20 +50,22 @@ class KnittingPatternViewer extends HookWidget {
     super.key,
     required this.maxHeight,
     required this.image,
+    required this.texture,
   });
 
   final double maxHeight;
   final img.Image image;
+  final ui.Image texture;
 
   @override
   Widget build(BuildContext context) {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    const unitSize = 20.0;
+    const unitSize = 100.0;
     const dxRatio = 1.0;
     const dyRatio = 1.0;
-    const margin = 8.0;
+    const margin = 100.0;
 
     final knittingWidth = unitSize * imageWidth * dxRatio;
     final knittingHeight = unitSize * imageHeight * dyRatio;
@@ -102,6 +111,8 @@ class KnittingPatternViewer extends HookWidget {
                   dxRatio: dxRatio,
                   dyRatio: dyRatio,
                   pixel: image.getPixel(x, y),
+                  texture: texture,
+                  seed: x + y + x * y,
                 ),
               },
           ],
@@ -120,6 +131,8 @@ class _Stitch extends HookWidget {
     required this.dxRatio,
     required this.dyRatio,
     required this.pixel,
+    required this.texture,
+    required this.seed,
   });
 
   final double width;
@@ -129,6 +142,8 @@ class _Stitch extends HookWidget {
   final double dxRatio;
   final double dyRatio;
   final img.Pixel pixel;
+  final ui.Image texture;
+  final int seed;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +167,13 @@ class _Stitch extends HookWidget {
             color.value = color.value == Colors.red ? Colors.blue : Colors.red;
           },
           child: CustomPaint(
-            painter: StitchPainter.singleCrochetPurl(color.value),
+            painter: StitchPainter.singleCrochetPurl(
+              StitchPainterData(
+                color: color.value,
+                texture: texture,
+                seed: seed,
+              ),
+            ),
           ),
         ),
       ),
