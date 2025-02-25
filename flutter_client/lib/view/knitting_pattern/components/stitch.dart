@@ -1,26 +1,79 @@
+import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
+class StitchPainterData {
+  StitchPainterData({
+    required this.color,
+    required this.texture,
+    required this.seed,
+  });
+
+  final Color color;
+  final ui.Image texture;
+  final int seed;
+}
+
 class StitchPainter {
-  static CustomPainter crossStitch(Color color) => _CrossStitchPainter(color);
-  static CustomPainter knit(Color color) => _KnitPainter(color);
-  static CustomPainter singleCrochetKnit(Color color) =>
-      _SingleCrochetKnitPainter(color);
-  static CustomPainter singleCrochetPurl(Color color) =>
-      _SingleCrochetPurlPainter(color);
-  static CustomPainter singleCrochetBackLoopOnly(Color color) =>
-      _SingleCrochetBackLoopOnlyPainter(color);
+  static CustomPainter crossStitch(StitchPainterData data) =>
+      _CrossStitchPainter(data);
+  static CustomPainter knit(StitchPainterData data) => _KnitPainter(data);
+  static CustomPainter singleCrochetKnit(StitchPainterData data) =>
+      _SingleCrochetKnitPainter(data);
+  static CustomPainter singleCrochetPurl(StitchPainterData data) =>
+      _SingleCrochetPurlPainter(data);
+  static CustomPainter singleCrochetBackLoopOnly(StitchPainterData data) =>
+      _SingleCrochetBackLoopOnlyPainter(data);
+}
+
+class _TouchablePainter extends CustomPainter {
+  _TouchablePainter(this.data)
+      : offsetX = Random(data.seed).nextDouble() * 100 + 100,
+        offsetY = Random(data.seed).nextDouble() * 100 + 100;
+  final StitchPainterData data;
+
+  final path = Path();
+  final double offsetX;
+  final double offsetY;
+  Matrix4 get _matrix => Matrix4.identity()..translate(-offsetX, -offsetY);
+  Paint get painter => Paint()
+    ..shader = ImageShader(
+      data.texture,
+      TileMode.repeated,
+      TileMode.repeated,
+      _matrix.storage,
+      filterQuality: FilterQuality.high,
+    )
+    ..colorFilter = ColorFilter.mode(data.color, BlendMode.plus);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool shouldRepaint(_TouchablePainter oldDelegate) {
+    // TODO(nobu): 編み方が変更された時にも再描画する
+    return oldDelegate.data.color != data.color;
+  }
+
+  @override
+  bool? hitTest(Offset position) {
+    return path.contains(position);
+  }
 }
 
 // クロススティッチ用(刺繍)
 // 後回し
 class _CrossStitchPainter extends _TouchablePainter {
-  _CrossStitchPainter(super.color);
+  _CrossStitchPainter(super.data);
 
   final double strokeWidth = 4.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = color;
+    final painter = Paint()..color = data.color;
 
     path
       ..moveTo(strokeWidth, 0)
@@ -39,27 +92,17 @@ class _CrossStitchPainter extends _TouchablePainter {
 
     canvas.drawPath(path, painter);
   }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-
-  @override
-  bool? hitTest(Offset position) {
-    return path.contains(position);
-  }
 }
 
 // strokeWidthを使わない修正が必要
 class _KnitPainter extends _TouchablePainter {
-  _KnitPainter(super.color);
+  _KnitPainter(super.data);
 
   final double strokeWidth = 5.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = color;
+    final painter = Paint()..color = data.color;
 
     path
       // 編み物的には時計回りで書いておくと重なった時の前後関係が自然(物による)
@@ -99,40 +142,18 @@ class _KnitPainter extends _TouchablePainter {
   }
 }
 
-class _TouchablePainter extends CustomPainter {
-  _TouchablePainter(this.color);
-  final Color color;
-
-  final path = Path();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    throw UnimplementedError();
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-
-  @override
-  bool? hitTest(Offset position) {
-    return path.contains(position);
-  }
-}
-
 // 曲線済み
 // 斜行を考える必要あり
 // 輪編みの細編み(single crochet)(表)
 class _SingleCrochetKnitPainter extends _TouchablePainter {
-  _SingleCrochetKnitPainter(super.color);
+  _SingleCrochetKnitPainter(super.data);
 
   final double strokeWidth = 45.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = color;
-// 縦：横 = 9:10
+    final painter = Paint()..color = data.color;
+
     path
       // 上下関係の改善が必要
       // 上の横の糸
@@ -188,14 +209,12 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
 // 輪編みの細編み(single crochet)(裏)
 // 斜行の需要はそんなにないから、一旦、完成で問題ない
 class _SingleCrochetPurlPainter extends _TouchablePainter {
-  _SingleCrochetPurlPainter(super.color);
+  _SingleCrochetPurlPainter(super.data);
 
   final double strokeWidth = 45.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = color;
-
     path
       // 一番上の横の糸
       ..moveTo(size.width * 0.25, size.height * 0.3)
@@ -321,13 +340,13 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
 // 輪編みのすじ編み(single crochet back loop only)
 // 曲線の修正が必要
 class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
-  _SingleCrochetBackLoopOnlyPainter(super.color);
+  _SingleCrochetBackLoopOnlyPainter(super.data);
 
   final double strokeWidth = 3.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = color;
+    final painter = Paint()..color = data.color;
 
     path
       ..moveTo(0, 0)
