@@ -104,6 +104,14 @@ class _TouchablePainter extends CustomPainter {
   final Color color;
 
   final path = Path();
+  // 追加
+  final path1 = Path();
+  final path2 = Path();
+  final path3 = Path();
+  final path4 = Path();
+  final innerHole = Path();
+  // 何故かこっちで定義したら、タップした時の挙動がおかしくなる
+  // final outerPath = Path();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -329,18 +337,70 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
   void paint(Canvas canvas, Size size) {
     final painter = Paint()..color = color;
 
+// 縦：横＝9:10
+    // 外側の形状
+    final Path outerPath = Path()
+      ..moveTo(size.width * 0.05, size.height * 2 / 9)
+      // 1
+      ..quadraticBezierTo(-size.width * 0.14, size.height * 2.5 / 9,
+          size.width * 0.05, size.height * 4 / 9)
+      // 2
+      ..quadraticBezierTo(size.width * 0.3, size.height * 4.2 / 9,
+          size.width * 0.55, size.height * 3.2 / 9)
+      // 3
+      ..cubicTo(size.width * 0.65, size.height * 2.8 / 9, size.width * 0.85,
+          size.height * 3.5 / 9, size.width * 0.95, size.height * 3 / 9)
+      // 15
+      ..quadraticBezierTo(size.width * 1.1, size.height * 2.5 / 9,
+          size.width * 1.05, size.height / 9)
+      // 14
+      ..quadraticBezierTo(size.width * 0.45, -size.height * 6 / 9,
+          -size.width * 0.1, size.height * 2.5 / 9);
+
+    // 内側の穴
+    // タップで問題が起きたらこっちで宣言
+    // final Path innerHole = Path()
+    innerHole
+      //16
+      ..moveTo(size.width * 0.85, size.height * 1 / 9)
+      // 17
+      ..quadraticBezierTo(size.width * 0.6, -size.height * 0.3,
+          size.width * 0.15, size.height * 1.8 / 9)
+      // 16
+      ..quadraticBezierTo(size.width * 0.5, size.height * 1 / 9,
+          size.width * 0.85, size.height * 1 / 9);
+
+    // ドーナツの形状を作成（外側 - 内側の穴）
+    Path donutPath =
+        Path.combine(PathOperation.difference, outerPath, innerHole);
+
+    // タップ判定用にpathを設定
+    path.addPath(donutPath, Offset.zero); // pathにドーナツ形状を代入
+
     path
-      ..moveTo(0, 0)
-      ..lineTo(0, 0 + size.height / 3)
-      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
-      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 3)
-      ..lineTo(size.width - strokeWidth, 0 + size.height / 3)
-      ..lineTo(size.width / 2, size.height - strokeWidth)
-      ..lineTo(0 + strokeWidth, 0 + size.height / 3)
-      ..lineTo(size.width, 0 + size.height / 3)
-      ..lineTo(size.width, 0);
+      // 6
+      ..moveTo(size.width * 0.3, size.height * 0.3)
+      // 7
+      ..quadraticBezierTo(size.width * 0.2, size.height * 5 / 9,
+          size.width * 0.3, size.height * 6 / 9)
+      // 8
+      ..quadraticBezierTo(size.width * 0.45, size.height * 6.5 / 9,
+          size.width * 0.4, size.height * 5 / 9)
+      // 9
+      ..quadraticBezierTo(size.width * 0.35, size.height * 4.5 / 9,
+          size.width * 0.4, size.height * 3 / 9);
+    path
+      // 10
+      ..moveTo(size.width * 0.55, size.height * 2.5 / 9)
+      // 11
+      ..quadraticBezierTo(size.width * 0.5, size.height * 5 / 9,
+          size.width * 0.55, size.height * 8 / 9)
+      // 12
+      ..quadraticBezierTo(size.width * 0.65, size.height * 9.5 / 9,
+          size.width * 0.75, size.height * 8 / 9)
+      // 13
+      ..quadraticBezierTo(size.width * 0.8, size.height * 5.5 / 9,
+          size.width * 0.75, size.height * 2.5 / 9);
 
     canvas.drawPath(path, painter);
   }
