@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "pkg/knitting-api-proto";
+package api;
+
+service ProjectService {
+  rpc GetProjectByProjectId(GetProjectByProjectIdRequest) returns (Project);
+  rpc GetProjectsByUserId(GetProjectsByUserIdRequest) returns (GetProjectsByUserIdResponse);
+}
+
+message GetProjectByProjectIdRequest {
+  string id = 1;
+}
+
+message GetProjectsByUserIdRequest {
+  string user_id = 1;
+}
+
+message GetProjectsByUserIdResponse {
+  repeated Project projects = 1;
+}
+
+message Project {
+  string id = 1;
+  string title = 2;
+  string user_id = 3;
+}

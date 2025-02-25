@@ -1,0 +1,17 @@
+name: knitting-server
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - $KNITTING_SERVER_DB_PORT:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    healthcheck:
+      test: mysql -u$KNITTING_SERVER_DB_USER -p$KNITTING_SERVER_DB_PASSWORD -e "SELECT 1;"
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  mysql:
