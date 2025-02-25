@@ -351,7 +351,7 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
     path
       ..moveTo(0, 0)
       ..lineTo(0, 0 + size.height / 3)
-      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
+      ..lineTo(10 + strokeWidth / 4, 0 + size.height / 3)
       ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
       ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
       ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 3)
