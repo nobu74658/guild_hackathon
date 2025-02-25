@@ -18,6 +18,8 @@ dependencies:
   riverpod_annotation: ^2.6.1
   riverpod_generator: ^2.6.4
   image: ^4.5.3
+  protobuf: ^3.1.0
+  grpc: ^4.0.1
 
 dev_dependencies:
   flutter_test:
