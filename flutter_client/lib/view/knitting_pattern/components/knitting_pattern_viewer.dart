@@ -62,13 +62,14 @@ class KnittingPatternViewer extends HookWidget {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    const unitSize = 100.0;
+    const unitWidth = 100.0;
+    const unitHeight = 200.0;
     const dxRatio = 1.0;
     const dyRatio = 1.0;
     const margin = 100.0;
 
-    final knittingWidth = unitSize * imageWidth * dxRatio;
-    final knittingHeight = unitSize * imageHeight * dyRatio;
+    final knittingWidth = unitWidth * imageWidth * dxRatio;
+    final knittingHeight = unitHeight * imageHeight * dyRatio;
 
     final viewerController = useTransformationController();
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -97,15 +98,15 @@ class KnittingPatternViewer extends HookWidget {
         decoration: BoxDecoration(
           border: Border.all(),
         ),
-        width: knittingWidth,
-        height: knittingHeight,
+        width: knittingWidth + unitWidth * 0.6,
+        height: knittingHeight + unitHeight * 0.6,
         child: Stack(
           children: [
             for (var y = imageHeight - 1; y > -1; y--)
               for (var x = imageWidth - 1; x > -1; x--) ...{
                 _Stitch(
-                  width: unitSize,
-                  height: unitSize,
+                  width: unitWidth,
+                  height: unitHeight,
                   x: x,
                   y: y,
                   dxRatio: dxRatio,
@@ -157,8 +158,8 @@ class _Stitch extends HookWidget {
     );
 
     return Positioned(
-      left: x * width * dxRatio,
-      top: y * height * dyRatio,
+      left: (x + 0.1) * width * dxRatio,
+      top: (y + 0.1) * height * dyRatio,
       child: SizedBox(
         width: width,
         height: height,
