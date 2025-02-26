@@ -36,14 +36,6 @@ class _TouchablePainter extends CustomPainter {
   final StitchPainterData data;
 
   final path = Path();
-  // 追加
-  final path1 = Path();
-  final path2 = Path();
-  final path3 = Path();
-  final path4 = Path();
-  final innerHole = Path();
-  // 何故かこっちで定義したら、タップした時の挙動がおかしくなる
-  // final outerPath = Path();
   final double offsetX;
   final double offsetY;
   Matrix4 get _matrix => Matrix4.identity()..translate(-offsetX, -offsetY);
@@ -164,8 +156,6 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
       // 上の横の糸
       ..moveTo(size.width * 0.05, size.height * 0.05)
       // 1
-      // ..quadraticBezierTo(size.width * 0.35, -size.height * 0.3,
-      //     size.width * 0.7, -size.height * 0.2)
       ..quadraticBezierTo(
         size.width * 0.75,
         -size.height * 0.4,
@@ -193,7 +183,7 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
         size.width * 0.05,
         size.height * 0.05,
       );
-    //
+
     path
       // 4
       ..moveTo(size.width * 0.1, size.height * 0.2)
@@ -218,6 +208,7 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
         size.width * 0.4,
         size.height * 0.2,
       );
+
     // 右の縦の糸
     path
       // 8
@@ -243,6 +234,7 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
         size.width,
         size.height * 0.1,
       );
+
     canvas.drawPath(path, painter);
   }
 }
@@ -340,8 +332,9 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
         0,
         size.height * 0.5,
       );
+
+    // 右の横の毛糸
     path
-      // 右の横の毛糸
       // 5
       ..moveTo(size.width * 0.55, size.height * 0.38)
       // 6
@@ -372,6 +365,7 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
         size.width * 0.55,
         size.height * 0.38,
       );
+
     canvas.drawPath(path, painter);
   }
 }
@@ -385,7 +379,7 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
   void paint(Canvas canvas, Size size) {
     final painter = Paint()..color = data.color;
 
-// 縦：横＝9:10
+    // 縦：横＝9:10
     // 外側の形状
     final Path outerPath = Path()
       ..moveTo(size.width * 0.05, size.height * 2 / 9)
@@ -428,9 +422,7 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
       );
 
     // 内側の穴
-    // タップで問題が起きたらこっちで宣言
-    // final Path innerHole = Path()
-    innerHole
+    final innerHole = Path()
       //16
       ..moveTo(size.width * 0.85, size.height * 1 / 9)
       // 17
@@ -479,6 +471,7 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
         size.width * 0.4,
         size.height * 3 / 9,
       );
+
     path
       // 10
       ..moveTo(size.width * 0.55, size.height * 2.5 / 9)
@@ -517,8 +510,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
   void paint(Canvas canvas, Size size) {
     final painter = Paint()..color = data.color;
 
-// 縦：横＝10:10(表あみが9:10だから、裏あみは11:10くらいの高さだけど、ループがややこしいから、10:10)
-
+    // 縦：横＝10:10(表あみが9:10だから、裏あみは11:10くらいの高さだけど、ループがややこしいから、10:10)
     path
       ..moveTo(-size.width * 0.05, -size.height * 0.1)
       // 1
@@ -549,7 +541,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
         -size.width * 0.05,
         -size.height * 0.1,
       );
-    // path.addPath(path1, Offset.zero);
+
     path
       // 5
       ..moveTo(size.width * 0.55, size.height * 0.25)
@@ -581,7 +573,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
         size.width * 0.55,
         size.height * 0.25,
       );
-    // path.addPath(path2, Offset.zero);
+
     path
       // 10
       ..moveTo(size.width * 0.65, size.height * 0.4)
@@ -606,6 +598,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
         size.width * 0.9,
         size.height * 0.4,
       );
+
     path
       // 14
       ..moveTo(-size.width * 0.2, size.height * 0.6)
@@ -637,7 +630,6 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
         -size.width * 0.2,
         size.height * 0.6,
       );
-    // path.addPath(path3, Offset.zero);
 
     canvas.drawPath(path, painter);
   }
