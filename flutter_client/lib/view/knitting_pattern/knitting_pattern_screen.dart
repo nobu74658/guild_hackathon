@@ -9,6 +9,7 @@ class KnittingPatternScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
+    final color = useState(Colors.red);
 
     return Scaffold(
       key: scaffoldKey,
@@ -32,50 +33,172 @@ class KnittingPatternScreen extends HookWidget {
           )
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(scaffoldKey.currentState?.context ?? context)
-              .viewPadding
-              .bottom,
-        ),
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () {
-                print('検出');
-              },
-              child: Container(
-                // color: Colors.blue,
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  // 選択中の色にしたい
-                  color: Colors.pink[50],
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(2),
+      bottomNavigationBar: Builder(
+        builder: (scaffoldContext) => Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(scaffoldContext).viewPadding.bottom,
+          ),
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () => showBottomSheet(
+                  context: scaffoldContext, // Scaffoldのcontextを取得
+                  builder: (context) => Container(
+                    height: 250,
+                    width: double.infinity,
+                    // MediaQuery.of(context).size.height * 0.5, // 高さを調整
+                    // color: Colors.white.withOpacity(0.8), // 半透明にする
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Text(
+                                'パレット',
+                                style: TextStyle(
+                                  // width:2,
+                                  // height: 2,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 0,
+                                ),
+                                onPressed: () =>
+                                    Navigator.pop(context), // ボトムシートを閉じる
+                                child: Icon(
+                                    IconData(0xf645,
+                                        fontFamily: 'MaterialIcons'),
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // 色塗りのパレットの色選択
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1,
+                                    ),
+                                    // borderRadius: BorderRadius.circular(2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle),
+                                ),
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle),
+                                ),
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle),
+                                ),
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  // padding: const EdgeInsets.symmetric(
+                                  // horizontal: 10),
+                                  margin: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    // 選択中の色を表示
+                    // color: Colors.pink[50],
+                    color: color.value,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            // DecoratedBox(
-            //   decoration: BoxDecoration(
-            //     color: Colors.pink[50],
-            //     borderRadius: BorderRadius.circular(2),
-            //     border: Border.all(),
-            //   ),
-            //   child: const Text('pk'),
-            // ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Zoom In'),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Zoom Out'),
-            ),
-            // floatingActionButton: FloatingActionButton(onPressed: _onTap())
-          ],
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Zoom In'),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Zoom Out'),
+              ),
+            ],
+          ),
         ),
       ),
       body: LayoutBuilder(
@@ -85,6 +208,4 @@ class KnittingPatternScreen extends HookWidget {
       ),
     );
   }
-
-  // void _onTap() {}
 }
