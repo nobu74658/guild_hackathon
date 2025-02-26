@@ -42,17 +42,24 @@ class KnittingPatternScreen extends HookWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // floatingActionButton
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  // 選択した色にしたい
-                  backgroundColor: Colors.pink[50],
-                  foregroundColor: Colors.grey,
-                  // 影なし
-                  elevation: 0),
-              onPressed: () {},
-              child: const Text('pink'),
+            Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                // 選択中の色にしたい
+                color: Colors.pink[50],
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
+            // DecoratedBox(
+            //   decoration: BoxDecoration(
+            //     color: Colors.pink[50],
+            //     borderRadius: BorderRadius.circular(2),
+            //     border: Border.all(),
+            //   ),
+            //   child: const Text('pk'),
+            // ),
             ElevatedButton(
               onPressed: () {},
               child: const Text('Zoom In'),
@@ -73,5 +80,5 @@ class KnittingPatternScreen extends HookWidget {
     );
   }
 
-  void _onTap() {}
+  // void _onTap() {}
 }
