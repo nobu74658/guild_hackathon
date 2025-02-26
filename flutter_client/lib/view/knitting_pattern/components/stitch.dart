@@ -173,40 +173,76 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
         size.height * 0.1,
       )
       // 2
-      ..quadraticBezierTo(size.width * 1.5, size.height * 0.25,
-          size.width * 1.25, size.height * 0.3)
+      ..quadraticBezierTo(
+        size.width * 1.5,
+        size.height * 0.25,
+        size.width * 1.25,
+        size.height * 0.3,
+      )
       // 3
-      ..quadraticBezierTo(size.width * 0.8, -size.height * 0.15,
-          size.width * 0.3, size.height * 0.2)
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        -size.height * 0.15,
+        size.width * 0.3,
+        size.height * 0.2,
+      )
       // 4
       ..quadraticBezierTo(
-          0, size.height * 0.25, size.width * 0.05, size.height * 0.05);
+        0,
+        size.height * 0.25,
+        size.width * 0.05,
+        size.height * 0.05,
+      );
     //
     path
       // 4
       ..moveTo(size.width * 0.1, size.height * 0.2)
       // 5
-      ..quadraticBezierTo(size.width * 0.2, size.height * 0.8,
-          size.width * 0.56, size.height * 1.1)
+      ..quadraticBezierTo(
+        size.width * 0.2,
+        size.height * 0.8,
+        size.width * 0.56,
+        size.height * 1.1,
+      )
       // 6
-      ..quadraticBezierTo(size.width * 0.75, size.height * 1.1,
-          size.width * 0.75, size.height * 0.9)
+      ..quadraticBezierTo(
+        size.width * 0.75,
+        size.height * 1.1,
+        size.width * 0.75,
+        size.height * 0.9,
+      )
       // 7
-      ..quadraticBezierTo(size.width * 0.6, size.height * 0.4, size.width * 0.4,
-          size.height * 0.2);
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        size.height * 0.4,
+        size.width * 0.4,
+        size.height * 0.2,
+      );
     // 右の縦の糸
     path
       // 8
       ..moveTo(size.width * 0.8, size.height * 0.05)
       // 9
-      ..quadraticBezierTo(size.width * 0.7, size.height * 0.5, size.width * 0.7,
-          size.height * 0.75)
+      ..quadraticBezierTo(
+        size.width * 0.7,
+        size.height * 0.5,
+        size.width * 0.7,
+        size.height * 0.75,
+      )
       // 10
-      ..quadraticBezierTo(size.width * 0.85, size.height * 1.1,
-          size.width * 0.99, size.height * 0.9)
+      ..quadraticBezierTo(
+        size.width * 0.85,
+        size.height * 1.1,
+        size.width * 0.99,
+        size.height * 0.9,
+      )
       // 11
       ..quadraticBezierTo(
-          size.width * 1.1, size.height * 0.3, size.width, size.height * 0.1);
+        size.width * 1.1,
+        size.height * 0.3,
+        size.width,
+        size.height * 0.1,
+      );
     canvas.drawPath(path, painter);
   }
 }
@@ -354,20 +390,42 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
     final Path outerPath = Path()
       ..moveTo(size.width * 0.05, size.height * 2 / 9)
       // 1
-      ..quadraticBezierTo(-size.width * 0.14, size.height * 2.5 / 9,
-          size.width * 0.05, size.height * 4 / 9)
+      ..quadraticBezierTo(
+        -size.width * 0.14,
+        size.height * 2.5 / 9,
+        size.width * 0.05,
+        size.height * 4 / 9,
+      )
       // 2
-      ..quadraticBezierTo(size.width * 0.3, size.height * 4.2 / 9,
-          size.width * 0.55, size.height * 3.2 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.3,
+        size.height * 4.2 / 9,
+        size.width * 0.55,
+        size.height * 3.2 / 9,
+      )
       // 3
-      ..cubicTo(size.width * 0.65, size.height * 2.8 / 9, size.width * 0.85,
-          size.height * 3.5 / 9, size.width * 0.95, size.height * 3 / 9)
+      ..cubicTo(
+        size.width * 0.65,
+        size.height * 2.8 / 9,
+        size.width * 0.85,
+        size.height * 3.5 / 9,
+        size.width * 0.95,
+        size.height * 3 / 9,
+      )
       // 15
-      ..quadraticBezierTo(size.width * 1.1, size.height * 2.5 / 9,
-          size.width * 1.05, size.height / 9)
+      ..quadraticBezierTo(
+        size.width * 1.1,
+        size.height * 2.5 / 9,
+        size.width * 1.05,
+        size.height / 9,
+      )
       // 14
-      ..quadraticBezierTo(size.width * 0.45, -size.height * 6 / 9,
-          -size.width * 0.1, size.height * 2.5 / 9);
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        -size.height * 6 / 9,
+        -size.width * 0.1,
+        size.height * 2.5 / 9,
+      );
 
     // 内側の穴
     // タップで問題が起きたらこっちで宣言
@@ -376,14 +434,22 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
       //16
       ..moveTo(size.width * 0.85, size.height * 1 / 9)
       // 17
-      ..quadraticBezierTo(size.width * 0.6, -size.height * 0.3,
-          size.width * 0.15, size.height * 1.8 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        -size.height * 0.3,
+        size.width * 0.15,
+        size.height * 1.8 / 9,
+      )
       // 16
-      ..quadraticBezierTo(size.width * 0.5, size.height * 1 / 9,
-          size.width * 0.85, size.height * 1 / 9);
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 1 / 9,
+        size.width * 0.85,
+        size.height * 1 / 9,
+      );
 
     // ドーナツの形状を作成（外側 - 内側の穴）
-    Path donutPath =
+    final Path donutPath =
         Path.combine(PathOperation.difference, outerPath, innerHole);
 
     // タップ判定用にpathを設定
@@ -393,26 +459,50 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
       // 6
       ..moveTo(size.width * 0.3, size.height * 0.3)
       // 7
-      ..quadraticBezierTo(size.width * 0.2, size.height * 5 / 9,
-          size.width * 0.3, size.height * 6 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.2,
+        size.height * 5 / 9,
+        size.width * 0.3,
+        size.height * 6 / 9,
+      )
       // 8
-      ..quadraticBezierTo(size.width * 0.45, size.height * 6.5 / 9,
-          size.width * 0.4, size.height * 5 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        size.height * 6.5 / 9,
+        size.width * 0.4,
+        size.height * 5 / 9,
+      )
       // 9
-      ..quadraticBezierTo(size.width * 0.35, size.height * 4.5 / 9,
-          size.width * 0.4, size.height * 3 / 9);
+      ..quadraticBezierTo(
+        size.width * 0.35,
+        size.height * 4.5 / 9,
+        size.width * 0.4,
+        size.height * 3 / 9,
+      );
     path
       // 10
       ..moveTo(size.width * 0.55, size.height * 2.5 / 9)
       // 11
-      ..quadraticBezierTo(size.width * 0.5, size.height * 5 / 9,
-          size.width * 0.55, size.height * 8 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 5 / 9,
+        size.width * 0.55,
+        size.height * 8 / 9,
+      )
       // 12
-      ..quadraticBezierTo(size.width * 0.65, size.height * 9.5 / 9,
-          size.width * 0.75, size.height * 8 / 9)
+      ..quadraticBezierTo(
+        size.width * 0.65,
+        size.height * 9.5 / 9,
+        size.width * 0.75,
+        size.height * 8 / 9,
+      )
       // 13
-      ..quadraticBezierTo(size.width * 0.8, size.height * 5.5 / 9,
-          size.width * 0.75, size.height * 2.5 / 9);
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 5.5 / 9,
+        size.width * 0.75,
+        size.height * 2.5 / 9,
+      );
 
     canvas.drawPath(path, painter);
   }
@@ -432,61 +522,121 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
     path
       ..moveTo(-size.width * 0.05, -size.height * 0.1)
       // 1
-      ..quadraticBezierTo(-size.width * 0.1, size.height * 0, size.width * 0.05,
-          size.height * 0.15)
+      ..quadraticBezierTo(
+        -size.width * 0.1,
+        size.height * 0,
+        size.width * 0.05,
+        size.height * 0.15,
+      )
       // 2
-      ..quadraticBezierTo(size.width * 0.5, size.height * 0.15,
-          size.width * 0.9, size.height * 0.3)
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 0.15,
+        size.width * 0.9,
+        size.height * 0.3,
+      )
       // 3
-      ..quadraticBezierTo(size.width * 1.1, size.height * 0.22,
-          size.width * 1.05, size.height * 0.09)
+      ..quadraticBezierTo(
+        size.width * 1.1,
+        size.height * 0.22,
+        size.width * 1.05,
+        size.height * 0.09,
+      )
       // 4
-      ..quadraticBezierTo(size.width * 0.45, -size.height * 0.15,
-          -size.width * 0.05, -size.height * 0.1);
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        -size.height * 0.15,
+        -size.width * 0.05,
+        -size.height * 0.1,
+      );
     // path.addPath(path1, Offset.zero);
     path
       // 5
       ..moveTo(size.width * 0.55, size.height * 0.25)
       // 6
-      ..quadraticBezierTo(size.width * 0.45, size.height * 0.35,
-          size.width * 0.55, size.height * 0.45)
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        size.height * 0.35,
+        size.width * 0.55,
+        size.height * 0.45,
+      )
       // 7
-      ..quadraticBezierTo(size.width * 0.8, size.height * 0.55,
-          size.width * 1.1, size.height * 0.45)
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 0.55,
+        size.width * 1.1,
+        size.height * 0.45,
+      )
       // 8
-      ..quadraticBezierTo(size.width * 1.2, size.height * 0.35,
-          size.width * 1.05, size.height * 0.25)
+      ..quadraticBezierTo(
+        size.width * 1.2,
+        size.height * 0.35,
+        size.width * 1.05,
+        size.height * 0.25,
+      )
       // 9
-      ..quadraticBezierTo(size.width * 0.8, size.height * 0.3,
-          size.width * 0.55, size.height * 0.25);
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 0.3,
+        size.width * 0.55,
+        size.height * 0.25,
+      );
     // path.addPath(path2, Offset.zero);
     path
       // 10
       ..moveTo(size.width * 0.65, size.height * 0.4)
       // 11
-      ..quadraticBezierTo(size.width * 0.6, size.height * 0.7, size.width * 0.4,
-          size.height * 0.95)
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        size.height * 0.7,
+        size.width * 0.4,
+        size.height * 0.95,
+      )
       // 12
-      ..quadraticBezierTo(size.width * 0.38, size.height * 0.9,
-          size.width * 0.6, size.height * 0.95)
+      ..quadraticBezierTo(
+        size.width * 0.38,
+        size.height * 0.9,
+        size.width * 0.6,
+        size.height * 0.95,
+      )
       // 13
-      ..quadraticBezierTo(size.width * 0.7, size.height * 0.8, size.width * 0.9,
-          size.height * 0.4);
+      ..quadraticBezierTo(
+        size.width * 0.7,
+        size.height * 0.8,
+        size.width * 0.9,
+        size.height * 0.4,
+      );
     path
       // 14
       ..moveTo(-size.width * 0.2, size.height * 0.6)
       // 15
-      ..quadraticBezierTo(-size.width * 0.15, size.height * 0.85,
-          size.width * 0.15, size.height * 0.9)
+      ..quadraticBezierTo(
+        -size.width * 0.15,
+        size.height * 0.85,
+        size.width * 0.15,
+        size.height * 0.9,
+      )
       // 16
-      ..quadraticBezierTo(size.width * 0.3, size.height * 0.85,
-          size.width * 0.25, size.height * 0.75)
+      ..quadraticBezierTo(
+        size.width * 0.3,
+        size.height * 0.85,
+        size.width * 0.25,
+        size.height * 0.75,
+      )
       // 17
-      ..quadraticBezierTo(size.width * 0.1, size.height * 0.75,
-          -size.width * 0.1, size.height * 0.5)
+      ..quadraticBezierTo(
+        size.width * 0.1,
+        size.height * 0.75,
+        -size.width * 0.1,
+        size.height * 0.5,
+      )
       // 18
-      ..quadraticBezierTo(-size.width * 0.15, size.height * 0.45,
-          -size.width * 0.2, size.height * 0.6);
+      ..quadraticBezierTo(
+        -size.width * 0.15,
+        size.height * 0.45,
+        -size.width * 0.2,
+        size.height * 0.6,
+      );
     // path.addPath(path3, Offset.zero);
 
     canvas.drawPath(path, painter);
