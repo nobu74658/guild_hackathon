@@ -42,14 +42,20 @@ class KnittingPatternScreen extends HookWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                // 選択中の色にしたい
-                color: Colors.pink[50],
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(2),
+            GestureDetector(
+              onTap: () {
+                print('検出');
+              },
+              child: Container(
+                // color: Colors.blue,
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  // 選択中の色にしたい
+                  color: Colors.pink[50],
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             // DecoratedBox(
