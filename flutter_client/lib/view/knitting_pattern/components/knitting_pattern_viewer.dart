@@ -114,7 +114,7 @@ class KnittingPatternViewer extends HookWidget {
                   height: knittingType.height,
                   dxRatio: knittingType.dxRatio,
                   dyRatio: knittingType.dyRatio,
-                  x: knittingType.stitchRowIndex(x, y, imageWidth),
+                  x: y.isEven ? x : imageWidth - x - 1,
                   y: y,
                   pixel: image.getPixel(x, y),
                   texture: texture,
