@@ -31,7 +31,15 @@ class KnittingPatternListScreen extends HookWidget {
               ),
             );
           }
-          return ColoredBox(color: Colors.primaries[index % 6]);
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.primaries[index % 6],
+              border: Border.all(
+                color: Colors.white70,
+                width: 2,
+              ),
+            ),
+          );
         },
       ),
     );
