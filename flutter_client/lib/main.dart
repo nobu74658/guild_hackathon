@@ -6,7 +6,6 @@ import 'package:knitting/account/authentication.dart';
 import 'package:knitting/common/router.dart';
 import 'package:knitting/common/theme.dart';
 import 'package:knitting/firebase_options.dart';
-import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
