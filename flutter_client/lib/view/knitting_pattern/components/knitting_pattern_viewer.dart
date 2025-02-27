@@ -68,10 +68,9 @@ class KnittingPatternViewer extends HookWidget {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    final knittingWidth = knittingType.width *
-            imageWidth *
-            knittingType.dxRatio +
-        knittingType.gapRatio.abs() * knittingType.width * (imageHeight - 1);
+    final knittingWidth =
+        knittingType.width * imageWidth * knittingType.dxRatio +
+            knittingType.gapRatio * knittingType.width * (imageHeight - 1);
     final knittingHeight =
         knittingType.height * imageHeight * knittingType.dyRatio;
 
@@ -106,11 +105,11 @@ class KnittingPatternViewer extends HookWidget {
         height: knittingHeight + knittingType.height * 0.6,
         child: Stack(
           children: [
-            for (var y = imageHeight - 1; y > -1; y--)
-              for (var x = 0; x < imageWidth; x++) ...{
+            for (int y = imageHeight - 1; y > -1; y--)
+              for (int x = 0; x < imageWidth; x++) ...{
                 _Stitch(
                   knittingType: knittingType,
-                  x: y.isEven ? x : imageWidth - x - 1,
+                  x: knittingType.xIndex(x, y, imageWidth),
                   y: y,
                   pixel: image.getPixel(x, y),
                   texture: texture,
@@ -152,7 +151,7 @@ class _Stitch extends HookWidget {
     final painter = y.isEven ? knittingType.evenStitch : knittingType.oddStitch;
 
     return Positioned(
-      left: (x + 0.1) * knittingType.width * knittingType.dxRatio +
+      right: (x + 0.1) * knittingType.width * knittingType.dxRatio +
           knittingType.gapRatio * knittingType.width * (y - 1),
       top: (y + 0.1) * knittingType.height * knittingType.dyRatio,
       child: SizedBox(
