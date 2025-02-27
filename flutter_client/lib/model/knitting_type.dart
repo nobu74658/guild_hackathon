@@ -11,6 +11,7 @@ enum KnittingType {
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
     evenStitch: StitchPainter.singleCrochetKnit,
+    gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
   );
 
   const KnittingType._({
@@ -20,6 +21,7 @@ enum KnittingType {
     this.height = 100,
     this.dxRatio = 1.0,
     this.dyRatio = 1.0,
+    this.gapRatio = 0.0,
   });
 
   final CustomPainter Function(StitchPainterData) oddStitch;
@@ -28,4 +30,5 @@ enum KnittingType {
   final double height;
   final double dxRatio;
   final double dyRatio;
+  final double gapRatio;
 }

@@ -68,8 +68,10 @@ class KnittingPatternViewer extends HookWidget {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    final knittingWidth =
-        knittingType.width * imageWidth * knittingType.dxRatio;
+    final knittingWidth = knittingType.width *
+            imageWidth *
+            knittingType.dxRatio +
+        knittingType.gapRatio.abs() * knittingType.width * (imageHeight - 1);
     final knittingHeight =
         knittingType.height * imageHeight * knittingType.dyRatio;
 
@@ -107,13 +109,7 @@ class KnittingPatternViewer extends HookWidget {
             for (var y = imageHeight - 1; y > -1; y--)
               for (var x = 0; x < imageWidth; x++) ...{
                 _Stitch(
-                  painter: y.isEven
-                      ? knittingType.evenStitch
-                      : knittingType.oddStitch,
-                  width: knittingType.width,
-                  height: knittingType.height,
-                  dxRatio: knittingType.dxRatio,
-                  dyRatio: knittingType.dyRatio,
+                  knittingType: knittingType,
                   x: y.isEven ? x : imageWidth - x - 1,
                   y: y,
                   pixel: image.getPixel(x, y),
@@ -129,24 +125,16 @@ class KnittingPatternViewer extends HookWidget {
 
 class _Stitch extends HookWidget {
   const _Stitch({
-    required this.painter,
-    required this.width,
-    required this.height,
+    required this.knittingType,
     required this.x,
     required this.y,
-    required this.dxRatio,
-    required this.dyRatio,
     required this.pixel,
     required this.texture,
   });
 
-  final CustomPainter Function(StitchPainterData) painter;
-  final double width;
-  final double height;
+  final KnittingType knittingType;
   final int x;
   final int y;
-  final double dxRatio;
-  final double dyRatio;
   final img.Pixel pixel;
   final ui.Image texture;
 
@@ -161,12 +149,15 @@ class _Stitch extends HookWidget {
       ),
     );
 
+    final painter = y.isEven ? knittingType.evenStitch : knittingType.oddStitch;
+
     return Positioned(
-      left: (x + 0.1) * width * dxRatio,
-      top: (y + 0.1) * height * dyRatio,
+      left: (x + 0.1) * knittingType.width * knittingType.dxRatio +
+          knittingType.gapRatio * knittingType.width * (y - 1),
+      top: (y + 0.1) * knittingType.height * knittingType.dyRatio,
       child: SizedBox(
-        width: width,
-        height: height,
+        width: knittingType.width,
+        height: knittingType.height,
         child: GestureDetector(
           onTap: () {
             color.value = color.value == Colors.red ? Colors.blue : Colors.red;
