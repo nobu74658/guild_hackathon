@@ -133,15 +133,21 @@ class KnittingPatternScreen extends HookWidget {
                   builder: (context, value, child) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Slider(
-                        value: value,
-                        min: 1,
-                        max: 8,
-                        // スライドしてる位置の値が表示される、無いものを想定してたけどあっても便利かも？
-                        label: value.toStringAsFixed(1),
-                        onChanged: (newValue) {
-                          scale.value = newValue; // スライダーの値を更新
-                        },
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                            trackHeight: 3,
+                            thumbColor: Colors.grey[400],
+                            activeTrackColor: Colors.grey[400]),
+                        child: Slider(
+                          value: value,
+                          min: 1,
+                          max: 8,
+                          // スライドしてる位置の値が表示される、無いものを想定してたけどあっても便利かも？
+                          label: value.toStringAsFixed(1),
+                          onChanged: (newValue) {
+                            scale.value = newValue; // スライダーの値を更新
+                          },
+                        ),
                       ),
                     );
                   },
