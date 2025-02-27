@@ -68,8 +68,10 @@ class KnittingPatternViewer extends HookWidget {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    final knittingWidth = knittingType.width * imageWidth * knittingType.dxRatio;
-    final knittingHeight = knittingType.height * imageHeight * knittingType.dyRatio;
+    final knittingWidth =
+        knittingType.width * imageWidth * knittingType.dxRatio;
+    final knittingHeight =
+        knittingType.height * imageHeight * knittingType.dyRatio;
 
     final viewerController = useTransformationController();
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -103,7 +105,7 @@ class KnittingPatternViewer extends HookWidget {
         child: Stack(
           children: [
             for (var y = imageHeight - 1; y > -1; y--)
-              for (var x = imageWidth - 1; x > -1; x--) ...{
+              for (var x = 0; x < imageWidth; x++) ...{
                 _Stitch(
                   painter: y.isEven
                       ? knittingType.evenStitch
@@ -112,7 +114,7 @@ class KnittingPatternViewer extends HookWidget {
                   height: knittingType.height,
                   dxRatio: knittingType.dxRatio,
                   dyRatio: knittingType.dyRatio,
-                  x: x,
+                  x: knittingType.stitchRowIndex(x, y, imageWidth),
                   y: y,
                   pixel: image.getPixel(x, y),
                   texture: texture,
