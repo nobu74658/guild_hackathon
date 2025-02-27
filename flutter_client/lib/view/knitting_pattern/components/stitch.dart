@@ -75,8 +75,6 @@ class _CrossStitchPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
       ..moveTo(strokeWidth, 0)
       ..lineTo(0, strokeWidth)
@@ -102,8 +100,6 @@ class _KnitPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
       ..moveTo(0, 0)
       // 1. 左上から中央
@@ -149,8 +145,6 @@ class _SingleCrochetKnitPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
       // 上下関係の改善が必要
       // 上の横の糸
@@ -377,8 +371,6 @@ class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     // 縦：横＝9:10
     // 外側の形状
     final Path outerPath = Path()
@@ -508,8 +500,6 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     // 縦：横＝10:10(表あみが9:10だから、裏あみは11:10くらいの高さだけど、ループがややこしいから、10:10)
     path
       ..moveTo(-size.width * 0.05, -size.height * 0.1)

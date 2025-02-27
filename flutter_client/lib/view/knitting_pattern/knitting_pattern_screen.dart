@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 
 class KnittingPatternScreen extends HookWidget {
@@ -35,6 +36,7 @@ class KnittingPatternScreen extends HookWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => ConnectedKnittingPatternViewer(
+          knittingType: KnittingType.singleCrochet,
           maxHeight: constraints.maxHeight,
         ),
       ),
