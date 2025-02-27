@@ -25,6 +25,8 @@ class StitchPainter {
       _SingleCrochetPurlPainter(data);
   static CustomPainter singleCrochetBackLoopOnly(StitchPainterData data) =>
       _SingleCrochetBackLoopOnlyPainter(data);
+  static CustomPainter singleCrochetBackLoopOnlyPurl(StitchPainterData data) =>
+      _SingleCrochetBackLoopOnlyPurlPainter(data);
 }
 
 class _TouchablePainter extends CustomPainter {
@@ -65,6 +67,7 @@ class _TouchablePainter extends CustomPainter {
 }
 
 // クロススティッチ用(刺繍)
+// 後回し
 class _CrossStitchPainter extends _TouchablePainter {
   _CrossStitchPainter(super.data);
 
@@ -72,8 +75,6 @@ class _CrossStitchPainter extends _TouchablePainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
       ..moveTo(strokeWidth, 0)
       ..lineTo(0, strokeWidth)
@@ -93,164 +94,149 @@ class _CrossStitchPainter extends _TouchablePainter {
   }
 }
 
+// メリヤス編み
 class _KnitPainter extends _TouchablePainter {
   _KnitPainter(super.data);
 
-  final double strokeWidth = 30.0;
-
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
-      // 編み物的には時計回りで書いておくと重なった時の前後関係が自然(物による)
       ..moveTo(0, 0)
       // 1. 左上から中央
       ..quadraticBezierTo(
         size.width * 0.2,
         -size.height * 0.2,
-        size.width / 2 - strokeWidth / 2,
+        size.width * 0.35,
         size.height * 0.2,
       )
       // 2. 中央から右
       ..quadraticBezierTo(
         size.width / 2,
-        size.height - strokeWidth,
-        size.width / 2 + strokeWidth / 2,
+        size.height * 0.7,
+        size.width * 0.65,
         size.height * 0.2,
       )
       // 3.
       ..quadraticBezierTo(size.width * 0.8, -size.height * 0.2, size.width, 0)
       // 4.
       ..quadraticBezierTo(
-        size.width + strokeWidth / 2,
+        size.width * 1.15,
         size.height * 0.2,
-        size.width / 2 + strokeWidth,
-        size.height - strokeWidth,
+        size.width * 0.8,
+        size.height * 0.7,
       )
       // 5
       ..quadraticBezierTo(
         size.width / 2,
-        size.height + strokeWidth / 2,
-        size.width / 2 - strokeWidth,
-        size.height - strokeWidth,
+        size.height * 1.15,
+        size.width * 0.2,
+        size.height * 0.7,
       )
-      ..quadraticBezierTo(0 - strokeWidth / 2, size.height * 0.2, 0, 0);
+      ..quadraticBezierTo(0 - size.width * 0.15, size.height * 0.2, 0, 0);
     canvas.drawPath(path, painter);
   }
 }
 
+// 曲線済み
+// 斜行を考える必要あり
 // 輪編みの細編み(single crochet)(表)
 class _SingleCrochetKnitPainter extends _TouchablePainter {
   _SingleCrochetKnitPainter(super.data);
 
-  final double strokeWidth = 45.0;
-
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
-
     path
       // 上下関係の改善が必要
-      ..moveTo(size.width * 0.2, size.height * 0.3)
+      // 上の横の糸
+      ..moveTo(size.width * 0.05, size.height * 0.05)
       // 1
       ..quadraticBezierTo(
-        0,
-        size.height * 0.3,
-        size.width * 0.1,
-        size.height * 0.2,
+        size.width * 0.75,
+        -size.height * 0.4,
+        size.width * 1.4,
+        size.height * 0.1,
       )
       // 2
       ..quadraticBezierTo(
-        size.width * 0.5,
-        -size.height * 0.15,
-        size.width * 0.7,
-        size.height * 0.0,
+        size.width * 1.5,
+        size.height * 0.25,
+        size.width * 1.25,
+        size.height * 0.3,
       )
       // 3
       ..quadraticBezierTo(
-        size.width * 0.75,
-        size.height * 0.1,
-        size.width * 0.7,
-        size.height * 0.1,
+        size.width * 0.8,
+        -size.height * 0.15,
+        size.width * 0.3,
+        size.height * 0.2,
       )
       // 4
       ..quadraticBezierTo(
-        size.width * 0.4,
-        size.height * 0.3,
-        size.width * 0.35,
-        size.height * 0.3,
-      )
+        0,
+        size.height * 0.25,
+        size.width * 0.05,
+        size.height * 0.05,
+      );
+
+    path
+      // 4
+      ..moveTo(size.width * 0.1, size.height * 0.2)
       // 5
       ..quadraticBezierTo(
-        size.width * 0.67,
-        size.height * 0.65,
-        size.width * 0.7,
-        size.height * 0.9,
+        size.width * 0.2,
+        size.height * 0.8,
+        size.width * 0.56,
+        size.height * 1.1,
       )
       // 6
       ..quadraticBezierTo(
-        size.width * 0.7,
-        size.height * 0.5,
-        size.width * 0.8,
-        size.height * 0.1,
+        size.width * 0.75,
+        size.height * 1.1,
+        size.width * 0.75,
+        size.height * 0.9,
       )
       // 7
       ..quadraticBezierTo(
-        size.width * 0.9,
-        size.height * 0.05,
-        size.width,
-        size.height * 0.1,
-      )
+        size.width * 0.6,
+        size.height * 0.4,
+        size.width * 0.4,
+        size.height * 0.2,
+      );
+
+    // 右の縦の糸
+    path
       // 8
-      ..quadraticBezierTo(
-        size.width * 1.02,
-        size.height * 0.7,
-        size.width * 0.9,
-        size.height * 0.9,
-      )
+      ..moveTo(size.width * 0.8, size.height * 0.05)
       // 9
       ..quadraticBezierTo(
-        size.width * 0.8,
-        size.height * 0.95,
         size.width * 0.7,
-        size.height * 0.9,
+        size.height * 0.5,
+        size.width * 0.7,
+        size.height * 0.75,
       )
       // 10
       ..quadraticBezierTo(
-        size.width * 0.7,
-        size.height * 1,
-        size.width * 0.55,
-        size.height * 1,
+        size.width * 0.85,
+        size.height * 1.1,
+        size.width * 0.99,
+        size.height * 0.9,
       )
       // 11
       ..quadraticBezierTo(
-        size.width * 0.08,
-        size.height * 0.55,
-        size.width * 0.07,
-        size.height * 0.25,
+        size.width * 1.1,
+        size.height * 0.3,
+        size.width,
+        size.height * 0.1,
       );
-    // ..lineTo(0, 0 + size.height / 3)
-    // ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
-    // ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-    // ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-    // ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 5)
-    // ..lineTo(size.width - strokeWidth, 0 + size.height / 5)
-    // ..lineTo(size.width / 2, size.height - strokeWidth)
-    // ..lineTo(0 + strokeWidth, 0 + size.height / 3)
-    // ..lineTo(size.width * 0.6, 0 + size.height / 3)
-    // ..lineTo(size.width * 0.6, 0);
 
     canvas.drawPath(path, painter);
   }
 }
 
 // 輪編みの細編み(single crochet)(裏)
-// 重なり方の改善が必要
+// 斜行の需要はそんなにないから、一旦、完成で問題ない
 class _SingleCrochetPurlPainter extends _TouchablePainter {
   _SingleCrochetPurlPainter(super.data);
-
-  final double strokeWidth = 45.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -340,8 +326,9 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
         0,
         size.height * 0.5,
       );
+
+    // 右の横の毛糸
     path
-      // 右の横の毛糸
       // 5
       ..moveTo(size.width * 0.55, size.height * 0.38)
       // 6
@@ -372,32 +359,267 @@ class _SingleCrochetPurlPainter extends _TouchablePainter {
         size.width * 0.55,
         size.height * 0.38,
       );
+
     canvas.drawPath(path, painter);
   }
 }
 
 // 輪編みのすじ編み(single crochet back loop only)
+// 曲線の修正が必要
 class _SingleCrochetBackLoopOnlyPainter extends _TouchablePainter {
-  _SingleCrochetBackLoopOnlyPainter(super.data);
-
-  final double strokeWidth = 3.0;
+  _SingleCrochetBackLoopOnlyPainter(super.color);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final painter = Paint()..color = data.color;
+    // 縦：横＝9:10
+    // 外側の形状
+    final Path outerPath = Path()
+      ..moveTo(size.width * 0.05, size.height * 2 / 9)
+      // 1
+      ..quadraticBezierTo(
+        -size.width * 0.14,
+        size.height * 2.5 / 9,
+        size.width * 0.05,
+        size.height * 4 / 9,
+      )
+      // 2
+      ..quadraticBezierTo(
+        size.width * 0.3,
+        size.height * 4.2 / 9,
+        size.width * 0.55,
+        size.height * 3.2 / 9,
+      )
+      // 3
+      ..cubicTo(
+        size.width * 0.65,
+        size.height * 2.8 / 9,
+        size.width * 0.85,
+        size.height * 3.5 / 9,
+        size.width * 0.95,
+        size.height * 3 / 9,
+      )
+      // 15
+      ..quadraticBezierTo(
+        size.width * 1.1,
+        size.height * 2.5 / 9,
+        size.width * 1.05,
+        size.height / 9,
+      )
+      // 14
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        -size.height * 6 / 9,
+        -size.width * 0.1,
+        size.height * 2.5 / 9,
+      );
+
+    // 内側の穴
+    final innerHole = Path()
+      //16
+      ..moveTo(size.width * 0.85, size.height * 1 / 9)
+      // 17
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        -size.height * 0.3,
+        size.width * 0.15,
+        size.height * 1.8 / 9,
+      )
+      // 16
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 1 / 9,
+        size.width * 0.85,
+        size.height * 1 / 9,
+      );
+
+    // ドーナツの形状を作成（外側 - 内側の穴）
+    final Path donutPath =
+        Path.combine(PathOperation.difference, outerPath, innerHole);
+
+    // タップ判定用にpathを設定
+    path.addPath(donutPath, Offset.zero); // pathにドーナツ形状を代入
 
     path
-      ..moveTo(0, 0)
-      ..lineTo(0, 0 + size.height / 3)
-      ..lineTo(0 + strokeWidth / 4, 0 + size.height / 3)
-      ..lineTo(size.width / 2 - strokeWidth / 2, size.height)
-      ..lineTo(size.width / 2 + strokeWidth / 2, size.height)
-      ..lineTo(size.width - strokeWidth / 4, 0 + size.height / 3)
-      ..lineTo(size.width - strokeWidth, 0 + size.height / 3)
-      ..lineTo(size.width / 2, size.height - strokeWidth)
-      ..lineTo(0 + strokeWidth, 0 + size.height / 3)
-      ..lineTo(size.width, 0 + size.height / 3)
-      ..lineTo(size.width, 0);
+      // 6
+      ..moveTo(size.width * 0.3, size.height * 0.3)
+      // 7
+      ..quadraticBezierTo(
+        size.width * 0.2,
+        size.height * 5 / 9,
+        size.width * 0.3,
+        size.height * 6 / 9,
+      )
+      // 8
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        size.height * 6.5 / 9,
+        size.width * 0.4,
+        size.height * 5 / 9,
+      )
+      // 9
+      ..quadraticBezierTo(
+        size.width * 0.35,
+        size.height * 4.5 / 9,
+        size.width * 0.4,
+        size.height * 3 / 9,
+      );
+
+    path
+      // 10
+      ..moveTo(size.width * 0.55, size.height * 2.5 / 9)
+      // 11
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 5 / 9,
+        size.width * 0.55,
+        size.height * 8 / 9,
+      )
+      // 12
+      ..quadraticBezierTo(
+        size.width * 0.65,
+        size.height * 9.5 / 9,
+        size.width * 0.75,
+        size.height * 8 / 9,
+      )
+      // 13
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 5.5 / 9,
+        size.width * 0.75,
+        size.height * 2.5 / 9,
+      );
+
+    canvas.drawPath(path, painter);
+  }
+}
+
+// 往復編みのすじ編みのための裏あみ(single crochet back loop only　purl)
+// 曲線の修正が必要
+class _SingleCrochetBackLoopOnlyPurlPainter extends _TouchablePainter {
+  _SingleCrochetBackLoopOnlyPurlPainter(super.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // 縦：横＝10:10(表あみが9:10だから、裏あみは11:10くらいの高さだけど、ループがややこしいから、10:10)
+    path
+      ..moveTo(-size.width * 0.05, -size.height * 0.1)
+      // 1
+      ..quadraticBezierTo(
+        -size.width * 0.1,
+        size.height * 0,
+        size.width * 0.05,
+        size.height * 0.15,
+      )
+      // 2
+      ..quadraticBezierTo(
+        size.width * 0.5,
+        size.height * 0.15,
+        size.width * 0.9,
+        size.height * 0.3,
+      )
+      // 3
+      ..quadraticBezierTo(
+        size.width * 1.1,
+        size.height * 0.22,
+        size.width * 1.05,
+        size.height * 0.09,
+      )
+      // 4
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        -size.height * 0.15,
+        -size.width * 0.05,
+        -size.height * 0.1,
+      );
+
+    path
+      // 5
+      ..moveTo(size.width * 0.55, size.height * 0.25)
+      // 6
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        size.height * 0.35,
+        size.width * 0.55,
+        size.height * 0.45,
+      )
+      // 7
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 0.55,
+        size.width * 1.1,
+        size.height * 0.45,
+      )
+      // 8
+      ..quadraticBezierTo(
+        size.width * 1.2,
+        size.height * 0.35,
+        size.width * 1.05,
+        size.height * 0.25,
+      )
+      // 9
+      ..quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 0.3,
+        size.width * 0.55,
+        size.height * 0.25,
+      );
+
+    path
+      // 10
+      ..moveTo(size.width * 0.65, size.height * 0.4)
+      // 11
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        size.height * 0.7,
+        size.width * 0.4,
+        size.height * 0.95,
+      )
+      // 12
+      ..quadraticBezierTo(
+        size.width * 0.38,
+        size.height * 0.9,
+        size.width * 0.6,
+        size.height * 0.95,
+      )
+      // 13
+      ..quadraticBezierTo(
+        size.width * 0.7,
+        size.height * 0.8,
+        size.width * 0.9,
+        size.height * 0.4,
+      );
+
+    path
+      // 14
+      ..moveTo(-size.width * 0.2, size.height * 0.6)
+      // 15
+      ..quadraticBezierTo(
+        -size.width * 0.15,
+        size.height * 0.85,
+        size.width * 0.15,
+        size.height * 0.9,
+      )
+      // 16
+      ..quadraticBezierTo(
+        size.width * 0.3,
+        size.height * 0.85,
+        size.width * 0.25,
+        size.height * 0.75,
+      )
+      // 17
+      ..quadraticBezierTo(
+        size.width * 0.1,
+        size.height * 0.75,
+        -size.width * 0.1,
+        size.height * 0.5,
+      )
+      // 18
+      ..quadraticBezierTo(
+        -size.width * 0.15,
+        size.height * 0.45,
+        -size.width * 0.2,
+        size.height * 0.6,
+      );
 
     canvas.drawPath(path, painter);
   }

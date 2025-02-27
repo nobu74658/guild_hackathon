@@ -5,15 +5,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/knitting_pattern_manager.dart';
+import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/stitch.dart';
 
 class ConnectedKnittingPatternViewer extends ConsumerWidget {
   const ConnectedKnittingPatternViewer({
     required this.maxHeight,
+    required this.knittingType,
     super.key,
   });
 
   final double maxHeight;
+  final KnittingType knittingType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,6 +37,7 @@ class ConnectedKnittingPatternViewer extends ConsumerWidget {
           }
           return KnittingPatternViewer(
             maxHeight: maxHeight,
+            knittingType: knittingType,
             image: snapshot.data![0] as img.Image,
             texture: snapshot.data![1] as ui.Image,
           );
@@ -47,13 +51,15 @@ class ConnectedKnittingPatternViewer extends ConsumerWidget {
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({
-    super.key,
     required this.maxHeight,
+    required this.knittingType,
     required this.image,
     required this.texture,
+    super.key,
   });
 
   final double maxHeight;
+  final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
 
@@ -62,17 +68,15 @@ class KnittingPatternViewer extends HookWidget {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    const unitSize = 100.0;
-    const dxRatio = 1.0;
-    const dyRatio = 1.0;
-    const margin = 100.0;
-
-    final knittingWidth = unitSize * imageWidth * dxRatio;
-    final knittingHeight = unitSize * imageHeight * dyRatio;
+    final knittingWidth =
+        knittingType.width * imageWidth * knittingType.dxRatio +
+            knittingType.gapRatio * knittingType.width * (imageHeight - 1);
+    final knittingHeight =
+        knittingType.height * imageHeight * knittingType.dyRatio;
 
     final viewerController = useTransformationController();
     final deviceWidth = MediaQuery.of(context).size.width;
-    final scale = deviceWidth / (knittingWidth + margin * 2);
+    final scale = deviceWidth / (knittingWidth + knittingType.width * 2);
     useEffect(
       () {
         final offset = Offset(0, maxHeight / scale / 2 - knittingHeight / 2);
@@ -93,26 +97,22 @@ class KnittingPatternViewer extends HookWidget {
       minScale: scale * 0.9,
       constrained: false,
       child: Container(
-        margin: const EdgeInsets.all(margin),
+        margin: EdgeInsets.all(knittingType.width),
         decoration: BoxDecoration(
           border: Border.all(),
         ),
-        width: knittingWidth,
-        height: knittingHeight,
+        width: knittingWidth + knittingType.width * 0.6,
+        height: knittingHeight + knittingType.height * 0.6,
         child: Stack(
           children: [
-            for (var y = imageHeight - 1; y > -1; y--)
-              for (var x = imageWidth - 1; x > -1; x--) ...{
+            for (int y = imageHeight - 1; y > -1; y--)
+              for (int x = 0; x < imageWidth; x++) ...{
                 _Stitch(
-                  width: unitSize,
-                  height: unitSize,
-                  x: x,
+                  knittingType: knittingType,
+                  x: knittingType.xIndex(x, y, imageWidth),
                   y: y,
-                  dxRatio: dxRatio,
-                  dyRatio: dyRatio,
                   pixel: image.getPixel(x, y),
                   texture: texture,
-                  seed: x + y + x * y,
                 ),
               },
           ],
@@ -124,26 +124,18 @@ class KnittingPatternViewer extends HookWidget {
 
 class _Stitch extends HookWidget {
   const _Stitch({
-    required this.width,
-    required this.height,
+    required this.knittingType,
     required this.x,
     required this.y,
-    required this.dxRatio,
-    required this.dyRatio,
     required this.pixel,
     required this.texture,
-    required this.seed,
   });
 
-  final double width;
-  final double height;
+  final KnittingType knittingType;
   final int x;
   final int y;
-  final double dxRatio;
-  final double dyRatio;
   final img.Pixel pixel;
   final ui.Image texture;
-  final int seed;
 
   @override
   Widget build(BuildContext context) {
@@ -156,22 +148,25 @@ class _Stitch extends HookWidget {
       ),
     );
 
+    final painter = y.isEven ? knittingType.evenStitch : knittingType.oddStitch;
+
     return Positioned(
-      left: x * width * dxRatio,
-      top: y * height * dyRatio,
+      right: (x + 0.1) * knittingType.width * knittingType.dxRatio +
+          knittingType.gapRatio * knittingType.width * (y - 1),
+      top: (y + 0.1) * knittingType.height * knittingType.dyRatio,
       child: SizedBox(
-        width: width,
-        height: height,
+        width: knittingType.width,
+        height: knittingType.height,
         child: GestureDetector(
           onTap: () {
             color.value = color.value == Colors.red ? Colors.blue : Colors.red;
           },
           child: CustomPaint(
-            painter: StitchPainter.singleCrochetPurl(
+            painter: painter(
               StitchPainterData(
                 color: color.value,
                 texture: texture,
-                seed: seed,
+                seed: x + y + x * y,
               ),
             ),
           ),
