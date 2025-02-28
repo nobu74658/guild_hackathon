@@ -6,7 +6,7 @@ part 'grpc_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 ClientChannel clientChannel(Ref ref) {
-  const host = '10.0.2.2';
+  const host = 'localhost';
   return ClientChannel(
     host,
     options: const ChannelOptions(
