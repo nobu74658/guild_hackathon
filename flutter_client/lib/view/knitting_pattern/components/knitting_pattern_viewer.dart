@@ -12,34 +12,28 @@ class ConnectedKnittingPatternViewer extends ConsumerWidget {
   const ConnectedKnittingPatternViewer({
     required this.maxHeight,
     required this.knittingType,
+    required this.image,
     super.key,
   });
 
   final double maxHeight;
   final KnittingType knittingType;
+  final img.Image image;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<img.Image> image =
-        ref.watch(knittingPatternManagerProvider).fetchImage();
     final Future<ui.Image> texture =
         ref.watch(knittingPatternManagerProvider).fetchTexture();
 
-    final future = Future.wait([image, texture]);
-
     return FutureBuilder(
-      future: future,
+      future: texture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          final image = snapshot.data;
-          if (image == null) {
-            return const Center(child: Text('Failed to load image'));
-          }
           return KnittingPatternViewer(
             maxHeight: maxHeight,
             knittingType: knittingType,
-            image: snapshot.data![0] as img.Image,
-            texture: snapshot.data![1] as ui.Image,
+            image: image,
+            texture: snapshot.data!,
           );
         } else {
           return const Center(child: CircularProgressIndicator());

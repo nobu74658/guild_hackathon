@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:knitting/model/color_palette_type.dart';
 import 'package:knitting/model/create_type.dart';
 import 'package:knitting/model/knitting_pattern_size.dart';
 import 'package:knitting/model/knitting_type.dart';
@@ -16,7 +18,8 @@ class SettingDialog extends HookConsumerWidget {
     final createType = useState(CreateType.note);
     final selectedImage = useState<XFile?>(null);
     final selectedSize = useState(KnittingPatternSizeType.eight);
-    final selectedKnittingPattern = useState(KnittingType.singleCrochet);
+    final selectedKnittingType = useState(KnittingType.singleCrochet);
+    final selectedColorPalette = useState(ColorPaletteType.first);
 
     return AlertDialog(
       title: const Text(
@@ -52,6 +55,46 @@ class SettingDialog extends HookConsumerWidget {
             ],
           ),
           const Divider(),
+          _Content(
+            label: 'パレット',
+            widget: SizedBox(
+              height: 60,
+              child: DropdownButton(
+                value: selectedColorPalette.value,
+                items: ColorPaletteType.values
+                    .map(
+                      (colorPalette) => DropdownMenuItem(
+                        value: colorPalette,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(colorPalette.label),
+                            Wrap(
+                              children: colorPalette.paletteColors
+                                  .map(
+                                    (color) => Container(
+                                      width: 20,
+                                      height: 20,
+                                      color: color,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    selectedColorPalette.value = value;
+                  }
+                },
+              ),
+            ),
+          ),
+          const Gap(8),
           // サイズ選択
           _Content(
             label: 'サイズ',
@@ -62,6 +105,7 @@ class SettingDialog extends HookConsumerWidget {
                   fontSize: 24,
                   color: Colors.grey[800],
                 ),
+                isExpanded: true,
                 value: selectedSize.value,
                 items: KnittingPatternSizeType.values
                     .map(
@@ -79,17 +123,14 @@ class SettingDialog extends HookConsumerWidget {
               ),
             ),
           ),
-          const Divider(),
           // 編み地の種類選択
-          ListTile(
-            title: const Text(
-              '編み地',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 14),
-            ),
-            trailing: DropdownButton<KnittingType>(
+          const Gap(8),
+          _Content(
+            label: '編み地',
+            widget: DropdownButton<KnittingType>(
+              isExpanded: true,
               // 文字を右寄せにするためにAlign使ったら表示されなくなっちゃった
-              value: selectedKnittingPattern.value,
+              value: selectedKnittingType.value,
               items: KnittingType.values
                   .map(
                     (knittingPattern) => DropdownMenuItem(
@@ -100,7 +141,7 @@ class SettingDialog extends HookConsumerWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
-                  selectedKnittingPattern.value = value;
+                  selectedKnittingType.value = value;
                 }
               },
             ),
@@ -127,9 +168,13 @@ class SettingDialog extends HookConsumerWidget {
                 elevation: 0,
               ),
               onPressed: () {
+                // TODO(nobu): 入力項目のバリデーション
                 Navigator.pop(context, {
+                  'createType': createType.value,
                   'size': selectedSize.value,
-                  'knittingPattern': selectedKnittingPattern.value,
+                  'knittingType': selectedKnittingType.value,
+                  'colorPalette': selectedColorPalette.value.paletteColors,
+                  'image': selectedImage.value,
                 });
               },
               child: const Text(
