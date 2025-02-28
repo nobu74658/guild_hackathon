@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:knitting/app/create_new_pattern_use_case.dart';
 import 'package:knitting/common/color.dart';
@@ -61,7 +64,7 @@ class KnittingPatternListScreen extends HookConsumerWidget {
 
                   final createType = result['createType'];
                   final size = result['size'];
-                  final image = result['image'];
+                  final xFile = result['image'];
                   final colorPalette = result['colorPalette'];
                   final knittingType = result['knittingType'];
 
@@ -74,16 +77,23 @@ class KnittingPatternListScreen extends HookConsumerWidget {
                     return;
                   }
 
-                  if (createType is! CreateType && image is! XFile) {
+                  if (createType is! CreateType && xFile is! XFile) {
                     debugPrint('createType: $createType');
-                    debugPrint('image: $image');
+                    debugPrint('image: $xFile');
 
                     return;
                   }
 
+                  // XFileからimg.Imageに変換
+                  img.Image? imageData;
+                  if (xFile is XFile) {
+                    final bytes = await File(xFile.path).readAsBytes();
+                    imageData = img.decodeImage(bytes);
+                  }
+
                   final param = CreateNewPatternUseCaseParam(
                     size: size,
-                    image: image,
+                    image: imageData,
                     colorPalette: colorPalette,
                     createType: createType,
                   );
