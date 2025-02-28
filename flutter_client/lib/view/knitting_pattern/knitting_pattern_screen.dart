@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/model/color_palette_type.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 

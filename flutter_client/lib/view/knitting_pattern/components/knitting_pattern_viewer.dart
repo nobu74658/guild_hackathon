@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/knitting_pattern_manager.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/stitch.dart';
 
 class ConnectedKnittingPatternViewer extends ConsumerWidget {

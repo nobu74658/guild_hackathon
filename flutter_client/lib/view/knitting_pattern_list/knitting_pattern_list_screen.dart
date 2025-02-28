@@ -8,9 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:knitting/app/create_new_pattern_use_case.dart';
 import 'package:knitting/common/color.dart';
 import 'package:knitting/common/router.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/components/show_dialog.dart';
 import 'package:knitting/view/knitting_pattern_list/components/setting_dialog.dart';
 

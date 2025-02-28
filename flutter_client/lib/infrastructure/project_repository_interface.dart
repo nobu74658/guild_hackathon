@@ -1,4 +1,4 @@
-import 'package:knitting/models/entities/project.dart';
+import 'package:knitting/model/entities/project.dart';
 
 abstract class ProjectRepositoryInterface {
   ProjectRepositoryInterface();

@@ -5,10 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:knitting/model/color_palette_type.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 
 class SettingDialog extends HookConsumerWidget {
   const SettingDialog({super.key});

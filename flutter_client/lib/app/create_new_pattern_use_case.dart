@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/common/use_case.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_new_pattern_use_case.g.dart';

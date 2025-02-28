@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:knitting/infrastructure/project_repository.dart';
 import 'package:knitting/infrastructure/project_repository_interface.dart';
-import 'package:knitting/models/entities/project.dart';
+import 'package:knitting/model/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'project_manager.g.dart';

@@ -4,7 +4,7 @@ import 'package:grpc/grpc.dart';
 import 'package:knitting/build/grpc/projects.pbgrpc.dart' as grpc_projects;
 import 'package:knitting/common/infrastructure/grpc_repository.dart';
 import 'package:knitting/infrastructure/project_repository_interface.dart';
-import 'package:knitting/models/entities/project.dart';
+import 'package:knitting/model/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'project_repository.g.dart';
