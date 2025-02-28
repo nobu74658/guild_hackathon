@@ -1,6 +1,8 @@
+import 'package:knitting/models/entities/project.dart';
+
 abstract class ProjectRepositoryInterface {
   ProjectRepositoryInterface();
 
-  Future<void> fetchProject(String projectId);
-  Future<void> fetchAllProjects();
+  Future<Project> fetchProject(String projectId);
+  Future<List<Project>> fetchAllProjects();
 }

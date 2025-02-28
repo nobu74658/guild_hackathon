@@ -4,6 +4,7 @@ import 'package:grpc/grpc.dart';
 import 'package:knitting/build/grpc/projects.pbgrpc.dart' as grpc_projects;
 import 'package:knitting/common/infrastructure/grpc_repository.dart';
 import 'package:knitting/infrastructure/project_repository_interface.dart';
+import 'package:knitting/models/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'project_repository.g.dart';
@@ -18,7 +19,7 @@ class _ProjectRepository extends ProjectRepositoryInterface {
   final ClientChannel channel;
 
   @override
-  Future<void> fetchProject(String projectId) async {
+  Future<Project> fetchProject(String projectId) async {
     final client = grpc_projects.ProjectServiceClient(channel);
     final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     final request = grpc_projects.GetProjectByProjectIdRequest(id: projectId);
@@ -30,11 +31,16 @@ class _ProjectRepository extends ProjectRepositoryInterface {
         },
       ),
     );
-    print(response);
+    return Project(
+      projectId: response.id,
+      title: response.title,
+      imageUrl: '',
+      colors: List.empty(),
+    );
   }
 
   @override
-  Future<void> fetchAllProjects() async {
+  Future<List<Project>> fetchAllProjects() async {
     final client = grpc_projects.ProjectServiceClient(channel);
     final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -51,6 +57,15 @@ class _ProjectRepository extends ProjectRepositoryInterface {
         },
       ),
     );
-    print(response);
+    return response.projects
+        .map(
+          (project) => Project(
+            projectId: project.id,
+            title: project.title,
+            imageUrl: '',
+            colors: List.empty(),
+          ),
+        )
+        .toList();
   }
 }

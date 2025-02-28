@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:knitting/infrastructure/project_repository.dart';
 import 'package:knitting/infrastructure/project_repository_interface.dart';
+import 'package:knitting/models/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'project_manager.g.dart';
 
 abstract class ProjectManagerInterface {
-  Future<void> fetchProject(String projectId);
-  Future<void> fetchAllProjects();
+  Future<Project> fetchProject(String projectId);
+  Future<List<Project>> fetchAllProjects();
 }
 
 @riverpod
@@ -20,12 +21,12 @@ class _ProjectManager extends ProjectManagerInterface {
   final ProjectRepositoryInterface repository;
 
   @override
-  Future<void> fetchProject(String projectId) async {
-    await repository.fetchProject(projectId);
+  Future<Project> fetchProject(String projectId) async {
+    return repository.fetchProject(projectId);
   }
 
   @override
-  Future<void> fetchAllProjects() async {
-    await repository.fetchAllProjects();
+  Future<List<Project>> fetchAllProjects() async {
+    return repository.fetchAllProjects();
   }
 }
