@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SettingDialog extends HookWidget {
+class SettingDialog extends HookConsumerWidget {
   const SettingDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedSize = useState('8*8');
     final selectedKnittingPattern = useState('メリヤス編み');
     return AlertDialog(
@@ -105,10 +105,10 @@ class SettingDialog extends HookWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                Navigator.pop(context);
-                context.push(
-                  '/edit?size=${selectedSize.value}&knittingPattern=${selectedKnittingPattern.value}',
-                );
+                Navigator.pop(context, {
+                  'size': selectedSize.value,
+                  'knittingPattern': selectedKnittingPattern.value,
+                });
               },
               child: const Text(
                 '作成',

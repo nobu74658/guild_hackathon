@@ -30,6 +30,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   build_runner: ^2.4.15
+  go_router_builder: ^2.8.1
 
 flutter:
   uses-material-design: true
