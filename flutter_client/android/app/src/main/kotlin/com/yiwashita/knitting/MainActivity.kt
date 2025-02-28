@@ -1,4 +1,4 @@
-package com.example.knitting
+package com.yiwashita.knitting
 
 import io.flutter.embedding.android.FlutterActivity
 
