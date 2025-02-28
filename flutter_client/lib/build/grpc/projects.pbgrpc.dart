@@ -48,8 +48,8 @@ class ProjectServiceClient extends $grpc.Client {
     return $createUnaryCall(_$getProjects, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Project> createProject($async.Stream<$0.CreateProjectRequest> request, {$grpc.CallOptions? options}) {
-    return $createStreamingCall(_$createProject, request, options: options).single;
+  $grpc.ResponseFuture<$0.Project> createProject($0.CreateProjectRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$createProject, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Project> getProject($0.GetProjectRequest request, {$grpc.CallOptions? options}) {
@@ -75,8 +75,8 @@ abstract class ProjectServiceBase extends $grpc.Service {
         ($0.GetProjectsResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CreateProjectRequest, $0.Project>(
         'CreateProject',
-        createProject,
-        true,
+        createProject_Pre,
+        false,
         false,
         ($core.List<$core.int> value) => $0.CreateProjectRequest.fromBuffer(value),
         ($0.Project value) => value.writeToBuffer()));
@@ -100,6 +100,10 @@ abstract class ProjectServiceBase extends $grpc.Service {
     return getProjects(call, await request);
   }
 
+  $async.Future<$0.Project> createProject_Pre($grpc.ServiceCall call, $async.Future<$0.CreateProjectRequest> request) async {
+    return createProject(call, await request);
+  }
+
   $async.Future<$0.Project> getProject_Pre($grpc.ServiceCall call, $async.Future<$0.GetProjectRequest> request) async {
     return getProject(call, await request);
   }
@@ -109,7 +113,7 @@ abstract class ProjectServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.GetProjectsResponse> getProjects($grpc.ServiceCall call, $0.GetProjectsRequest request);
-  $async.Future<$0.Project> createProject($grpc.ServiceCall call, $async.Stream<$0.CreateProjectRequest> request);
+  $async.Future<$0.Project> createProject($grpc.ServiceCall call, $0.CreateProjectRequest request);
   $async.Future<$0.Project> getProject($grpc.ServiceCall call, $0.GetProjectRequest request);
   $async.Future<$0.Project> updateProject($grpc.ServiceCall call, $0.UpdateProjectRequest request);
 }

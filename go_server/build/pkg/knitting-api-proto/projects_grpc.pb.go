@@ -30,7 +30,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectServiceClient interface {
 	GetProjects(ctx context.Context, in *GetProjectsRequest, opts ...grpc.CallOption) (*GetProjectsResponse, error)
-	CreateProject(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateProjectRequest, Project], error)
+	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*Project, error)
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*Project, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*Project, error)
 }
@@ -53,18 +53,15 @@ func (c *projectServiceClient) GetProjects(ctx context.Context, in *GetProjectsR
 	return out, nil
 }
 
-func (c *projectServiceClient) CreateProject(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateProjectRequest, Project], error) {
+func (c *projectServiceClient) CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*Project, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], ProjectService_CreateProject_FullMethodName, cOpts...)
+	out := new(Project)
+	err := c.cc.Invoke(ctx, ProjectService_CreateProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[CreateProjectRequest, Project]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ProjectService_CreateProjectClient = grpc.ClientStreamingClient[CreateProjectRequest, Project]
 
 func (c *projectServiceClient) GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*Project, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -91,7 +88,7 @@ func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProj
 // for forward compatibility.
 type ProjectServiceServer interface {
 	GetProjects(context.Context, *GetProjectsRequest) (*GetProjectsResponse, error)
-	CreateProject(grpc.ClientStreamingServer[CreateProjectRequest, Project]) error
+	CreateProject(context.Context, *CreateProjectRequest) (*Project, error)
 	GetProject(context.Context, *GetProjectRequest) (*Project, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*Project, error)
 }
@@ -106,8 +103,8 @@ type UnimplementedProjectServiceServer struct{}
 func (UnimplementedProjectServiceServer) GetProjects(context.Context, *GetProjectsRequest) (*GetProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProjects not implemented")
 }
-func (UnimplementedProjectServiceServer) CreateProject(grpc.ClientStreamingServer[CreateProjectRequest, Project]) error {
-	return status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
+func (UnimplementedProjectServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*Project, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
 }
 func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProjectRequest) (*Project, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProject not implemented")
@@ -153,12 +150,23 @@ func _ProjectService_GetProjects_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_CreateProject_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ProjectServiceServer).CreateProject(&grpc.GenericServerStream[CreateProjectRequest, Project]{ServerStream: stream})
+func _ProjectService_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).CreateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProjectService_CreateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).CreateProject(ctx, req.(*CreateProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ProjectService_CreateProjectServer = grpc.ClientStreamingServer[CreateProjectRequest, Project]
 
 func _ProjectService_GetProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProjectRequest)
@@ -208,6 +216,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProjectService_GetProjects_Handler,
 		},
 		{
+			MethodName: "CreateProject",
+			Handler:    _ProjectService_CreateProject_Handler,
+		},
+		{
 			MethodName: "GetProject",
 			Handler:    _ProjectService_GetProject_Handler,
 		},
@@ -216,12 +228,6 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProjectService_UpdateProject_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "CreateProject",
-			Handler:       _ProjectService_CreateProject_Handler,
-			ClientStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "projects.proto",
 }

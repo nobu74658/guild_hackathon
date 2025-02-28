@@ -5,7 +5,7 @@ package api;
 
 service ProjectService {
   rpc GetProjects(GetProjectsRequest) returns (GetProjectsResponse);
-  rpc CreateProject(stream CreateProjectRequest) returns (Project);
+  rpc CreateProject(CreateProjectRequest) returns (Project);
   rpc GetProject(GetProjectRequest) returns (Project);
   rpc UpdateProject(UpdateProjectRequest) returns (Project);
 }
