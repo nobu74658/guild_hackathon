@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern_list/knitting_pattern_list_screen.dart';
 
@@ -18,16 +19,23 @@ class KnittingPatternListRoute extends GoRouteData {
 
 @TypedGoRoute<KnittingPatternRoute>(path: KnittingPatternScreen.path)
 class KnittingPatternRoute extends GoRouteData {
-  const KnittingPatternRoute({required this.$extra});
+  const KnittingPatternRoute({
+    required this.$extra,
+    required this.knittingType,
+  });
 
   final Object $extra;
+  final String? knittingType;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     if ($extra is! img.Image) {
       throw Exception('extra is null');
     }
-    return KnittingPatternScreen(image: $extra as img.Image);
+    return KnittingPatternScreen(
+      image: $extra as img.Image,
+      knittingType: KnittingType.fromValue(knittingType ?? ''),
+    );
   }
 }
 

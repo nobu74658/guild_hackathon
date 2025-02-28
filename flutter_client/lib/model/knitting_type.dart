@@ -8,11 +8,13 @@ enum KnittingType {
     oddStitch: StitchPainter.singleCrochetKnit,
     evenStitch: StitchPainter.singleCrochetPurl,
     label: '細編み（往復）',
+    value: 'singleCrochet',
   ),
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
     evenStitch: StitchPainter.singleCrochetKnit,
     label: '細編み（表, 輪）',
+    value: 'singleCrochetFrontLoop',
     isEvenRowStartRight: false,
     isOddRowStartRight: false,
     gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
@@ -21,6 +23,7 @@ enum KnittingType {
   const KnittingType._({
     required this.oddStitch,
     required this.evenStitch,
+    required this.value,
     required this.label,
     this.isOddRowStartRight = true,
     this.isEvenRowStartRight = true,
@@ -34,6 +37,7 @@ enum KnittingType {
   final CustomPainter Function(StitchPainterData) oddStitch;
   final CustomPainter Function(StitchPainterData) evenStitch;
   final String label;
+  final String value;
   final bool isOddRowStartRight;
   final bool isEvenRowStartRight;
   final double width;
@@ -47,6 +51,17 @@ enum KnittingType {
       return isEvenRowStartRight ? x : maxWidth - x - 1;
     } else {
       return isOddRowStartRight ? x : maxWidth - x - 1;
+    }
+  }
+
+  static KnittingType fromValue(String value) {
+    switch (value) {
+      case 'singleCrochet':
+        return KnittingType.singleCrochet;
+      case 'singleCrochetFrontLoop':
+        return KnittingType.singleCrochetFrontLoop;
+      default:
+        throw Exception('Unknown value: $value');
     }
   }
 }

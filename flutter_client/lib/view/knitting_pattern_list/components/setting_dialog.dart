@@ -18,7 +18,7 @@ class SettingDialog extends HookConsumerWidget {
     final createType = useState(CreateType.note);
     final selectedImage = useState<XFile?>(null);
     final selectedSize = useState(KnittingPatternSizeType.eight);
-    final selectedKnittingPattern = useState(KnittingType.singleCrochet);
+    final selectedKnittingType = useState(KnittingType.singleCrochet);
     final selectedColorPalette = useState(ColorPaletteType.first);
 
     return AlertDialog(
@@ -130,7 +130,7 @@ class SettingDialog extends HookConsumerWidget {
             widget: DropdownButton<KnittingType>(
               isExpanded: true,
               // 文字を右寄せにするためにAlign使ったら表示されなくなっちゃった
-              value: selectedKnittingPattern.value,
+              value: selectedKnittingType.value,
               items: KnittingType.values
                   .map(
                     (knittingPattern) => DropdownMenuItem(
@@ -141,7 +141,7 @@ class SettingDialog extends HookConsumerWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
-                  selectedKnittingPattern.value = value;
+                  selectedKnittingType.value = value;
                 }
               },
             ),
@@ -168,9 +168,13 @@ class SettingDialog extends HookConsumerWidget {
                 elevation: 0,
               ),
               onPressed: () {
+                // TODO(nobu): 入力項目のバリデーション
                 Navigator.pop(context, {
+                  'createType': createType.value,
                   'size': selectedSize.value,
-                  'knittingPattern': selectedKnittingPattern.value,
+                  'knittingType': selectedKnittingType.value,
+                  'colorPalette': selectedColorPalette.value.paletteColors,
+                  'image': selectedImage.value,
                 });
               },
               child: const Text(

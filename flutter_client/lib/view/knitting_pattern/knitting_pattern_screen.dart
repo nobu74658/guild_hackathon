@@ -8,11 +8,16 @@ import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewe
 import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 
 class KnittingPatternScreen extends HookWidget {
-  const KnittingPatternScreen({required this.image, super.key});
+  const KnittingPatternScreen({
+    required this.image,
+    required this.knittingType,
+    super.key,
+  });
 
   static const path = '/edit';
 
   final img.Image image;
+  final KnittingType knittingType;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +139,8 @@ class KnittingPatternScreen extends HookWidget {
             return Transform.scale(
               scale: value,
               child: ConnectedKnittingPatternViewer(
-                knittingType: KnittingType.singleCrochet,
+                image: image,
+                knittingType: knittingType,
                 maxHeight: constraints.maxHeight,
               ),
             );
