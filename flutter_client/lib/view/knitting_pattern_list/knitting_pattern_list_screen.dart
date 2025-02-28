@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knitting/app/create_new_pattern_use_case.dart';
+import 'package:knitting/common/color.dart';
 import 'package:knitting/common/router.dart';
 import 'package:knitting/view/components/show_dialog.dart';
 import 'package:knitting/view/knitting_pattern_list/components/setting_dialog.dart';
@@ -11,17 +12,26 @@ class KnittingPatternListScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const knittingPatterns = [];
     final border = Border.all(
       color: Colors.white70,
       width: 2,
     );
-
-    // return const Scaffold(
-    //   body: SettingDialog(),
-    // );
+    final appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColor.background,
+        title: SizedBox(
+          height: appBarHeight - 40,
+          child: Image.asset(
+            'assets/logo.png',
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: GridView.builder(
+        itemCount: knittingPatterns.length + 1,
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
