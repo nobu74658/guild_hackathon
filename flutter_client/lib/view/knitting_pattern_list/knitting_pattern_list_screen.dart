@@ -17,13 +17,13 @@ class KnittingPatternListScreen extends HookConsumerWidget {
       color: Colors.white70,
       width: 2,
     );
-    final appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
+    const appBarHeight = kToolbarHeight;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.background,
         title: SizedBox(
-          height: appBarHeight - 40,
+          height: appBarHeight - 10,
           child: Image.asset(
             'assets/logo.png',
           ),
