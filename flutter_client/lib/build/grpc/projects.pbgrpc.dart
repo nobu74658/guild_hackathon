@@ -21,14 +21,22 @@ export 'projects.pb.dart';
 
 @$pb.GrpcServiceName('api.ProjectService')
 class ProjectServiceClient extends $grpc.Client {
-  static final _$getProjectByProjectId = $grpc.ClientMethod<$0.GetProjectByProjectIdRequest, $0.Project>(
-      '/api.ProjectService/GetProjectByProjectId',
-      ($0.GetProjectByProjectIdRequest value) => value.writeToBuffer(),
+  static final _$getProjects = $grpc.ClientMethod<$0.GetProjectsRequest, $0.GetProjectsResponse>(
+      '/api.ProjectService/GetProjects',
+      ($0.GetProjectsRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.GetProjectsResponse.fromBuffer(value));
+  static final _$createProject = $grpc.ClientMethod<$0.CreateProjectRequest, $0.Project>(
+      '/api.ProjectService/CreateProject',
+      ($0.CreateProjectRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Project.fromBuffer(value));
-  static final _$getProjectsByUserId = $grpc.ClientMethod<$0.GetProjectsByUserIdRequest, $0.GetProjectsByUserIdResponse>(
-      '/api.ProjectService/GetProjectsByUserId',
-      ($0.GetProjectsByUserIdRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.GetProjectsByUserIdResponse.fromBuffer(value));
+  static final _$getProject = $grpc.ClientMethod<$0.GetProjectRequest, $0.Project>(
+      '/api.ProjectService/GetProject',
+      ($0.GetProjectRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Project.fromBuffer(value));
+  static final _$updateProject = $grpc.ClientMethod<$0.UpdateProjectRequest, $0.Project>(
+      '/api.ProjectService/UpdateProject',
+      ($0.UpdateProjectRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Project.fromBuffer(value));
 
   ProjectServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -36,12 +44,20 @@ class ProjectServiceClient extends $grpc.Client {
       : super(channel, options: options,
         interceptors: interceptors);
 
-  $grpc.ResponseFuture<$0.Project> getProjectByProjectId($0.GetProjectByProjectIdRequest request, {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$getProjectByProjectId, request, options: options);
+  $grpc.ResponseFuture<$0.GetProjectsResponse> getProjects($0.GetProjectsRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getProjects, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetProjectsByUserIdResponse> getProjectsByUserId($0.GetProjectsByUserIdRequest request, {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$getProjectsByUserId, request, options: options);
+  $grpc.ResponseFuture<$0.Project> createProject($async.Stream<$0.CreateProjectRequest> request, {$grpc.CallOptions? options}) {
+    return $createStreamingCall(_$createProject, request, options: options).single;
+  }
+
+  $grpc.ResponseFuture<$0.Project> getProject($0.GetProjectRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getProject, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Project> updateProject($0.UpdateProjectRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$updateProject, request, options: options);
   }
 }
 
@@ -50,30 +66,50 @@ abstract class ProjectServiceBase extends $grpc.Service {
   $core.String get $name => 'api.ProjectService';
 
   ProjectServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetProjectByProjectIdRequest, $0.Project>(
-        'GetProjectByProjectId',
-        getProjectByProjectId_Pre,
+    $addMethod($grpc.ServiceMethod<$0.GetProjectsRequest, $0.GetProjectsResponse>(
+        'GetProjects',
+        getProjects_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetProjectByProjectIdRequest.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.GetProjectsRequest.fromBuffer(value),
+        ($0.GetProjectsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateProjectRequest, $0.Project>(
+        'CreateProject',
+        createProject,
+        true,
+        false,
+        ($core.List<$core.int> value) => $0.CreateProjectRequest.fromBuffer(value),
         ($0.Project value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetProjectsByUserIdRequest, $0.GetProjectsByUserIdResponse>(
-        'GetProjectsByUserId',
-        getProjectsByUserId_Pre,
+    $addMethod($grpc.ServiceMethod<$0.GetProjectRequest, $0.Project>(
+        'GetProject',
+        getProject_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetProjectsByUserIdRequest.fromBuffer(value),
-        ($0.GetProjectsByUserIdResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.GetProjectRequest.fromBuffer(value),
+        ($0.Project value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateProjectRequest, $0.Project>(
+        'UpdateProject',
+        updateProject_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UpdateProjectRequest.fromBuffer(value),
+        ($0.Project value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Project> getProjectByProjectId_Pre($grpc.ServiceCall call, $async.Future<$0.GetProjectByProjectIdRequest> request) async {
-    return getProjectByProjectId(call, await request);
+  $async.Future<$0.GetProjectsResponse> getProjects_Pre($grpc.ServiceCall call, $async.Future<$0.GetProjectsRequest> request) async {
+    return getProjects(call, await request);
   }
 
-  $async.Future<$0.GetProjectsByUserIdResponse> getProjectsByUserId_Pre($grpc.ServiceCall call, $async.Future<$0.GetProjectsByUserIdRequest> request) async {
-    return getProjectsByUserId(call, await request);
+  $async.Future<$0.Project> getProject_Pre($grpc.ServiceCall call, $async.Future<$0.GetProjectRequest> request) async {
+    return getProject(call, await request);
   }
 
-  $async.Future<$0.Project> getProjectByProjectId($grpc.ServiceCall call, $0.GetProjectByProjectIdRequest request);
-  $async.Future<$0.GetProjectsByUserIdResponse> getProjectsByUserId($grpc.ServiceCall call, $0.GetProjectsByUserIdRequest request);
+  $async.Future<$0.Project> updateProject_Pre($grpc.ServiceCall call, $async.Future<$0.UpdateProjectRequest> request) async {
+    return updateProject(call, await request);
+  }
+
+  $async.Future<$0.GetProjectsResponse> getProjects($grpc.ServiceCall call, $0.GetProjectsRequest request);
+  $async.Future<$0.Project> createProject($grpc.ServiceCall call, $async.Stream<$0.CreateProjectRequest> request);
+  $async.Future<$0.Project> getProject($grpc.ServiceCall call, $0.GetProjectRequest request);
+  $async.Future<$0.Project> updateProject($grpc.ServiceCall call, $0.UpdateProjectRequest request);
 }
