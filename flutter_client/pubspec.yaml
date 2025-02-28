@@ -37,3 +37,22 @@ flutter:
 
   assets:
     - assets/
+    - assets/fonts/
+
+  fonts:
+    - family: Regular
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Regular.otf
+
+    - family: ZenMaruGothic
+      fonts:
+        - asset: assets/fonts/ZenMaruGothic/ZenMaruGothic-Light.ttf
+          weight: 300
+        - asset: assets/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ZenMaruGothic/ZenMaruGothic-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf
+          weight: 900
