@@ -17,7 +17,7 @@ class KnittingPatternManager {
 
   Future<img.Image> fetchImage() async {
     await Future.delayed(const Duration(seconds: 1));
-    final data = await rootBundle.load('assets/flw_min.png');
+    final data = await rootBundle.load('assets/sample.png');
     final bytes = data.buffer.asUint8List();
     final image = img.decodeImage(bytes);
     if (image == null) {
