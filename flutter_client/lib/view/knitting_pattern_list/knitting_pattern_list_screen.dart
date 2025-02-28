@@ -8,6 +8,11 @@ class KnittingPatternListScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = Border.all(
+      color: Colors.white70,
+      width: 2,
+    );
+
     return Scaffold(
       body: GridView.builder(
         gridDelegate:
@@ -15,29 +20,27 @@ class KnittingPatternListScreen extends HookWidget {
         itemBuilder: (context, index) {
           if (index == 0) {
             return Container(
-              decoration: BoxDecoration(color: Colors.grey[200]),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: border,
+              ),
               child: IconButton(
                 color: Colors.grey,
                 iconSize: 100,
                 icon: const Icon(CupertinoIcons.add),
-                onPressed: () => (BuildContext context) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return SettingDialog();
-                    },
-                  );
-                }(context),
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const SettingDialog();
+                  },
+                ),
               ),
             );
           }
           return Container(
             decoration: BoxDecoration(
               color: Colors.primaries[index % 6],
-              border: Border.all(
-                color: Colors.white70,
-                width: 2,
-              ),
+              border: border,
             ),
           );
         },
