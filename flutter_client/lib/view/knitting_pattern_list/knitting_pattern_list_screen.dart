@@ -16,6 +16,10 @@ class KnittingPatternListScreen extends HookConsumerWidget {
       width: 2,
     );
 
+    // return const Scaffold(
+    //   body: SettingDialog(),
+    // );
+
     return Scaffold(
       body: GridView.builder(
         gridDelegate:
@@ -36,7 +40,8 @@ class KnittingPatternListScreen extends HookConsumerWidget {
                     context: context,
                     builder: (context) => const SettingDialog(),
                   );
-                  if (result is! Map<String, String>) {
+
+                  if (result is! Map<String, dynamic>) {
                     return;
                   }
 
