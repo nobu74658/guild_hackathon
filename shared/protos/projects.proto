@@ -4,24 +4,43 @@ option go_package = "pkg/knitting-api-proto";
 package api;
 
 service ProjectService {
-  rpc GetProjectByProjectId(GetProjectByProjectIdRequest) returns (Project);
-  rpc GetProjectsByUserId(GetProjectsByUserIdRequest) returns (GetProjectsByUserIdResponse);
+  rpc GetProjects(GetProjectsRequest) returns (GetProjectsResponse);
+  rpc CreateProject(CreateProjectRequest) returns (Project);
+  rpc GetProject(GetProjectRequest) returns (Project);
+  rpc UpdateProject(UpdateProjectRequest) returns (Project);
 }
 
-message GetProjectByProjectIdRequest {
-  string id = 1;
-}
-
-message GetProjectsByUserIdRequest {
+message GetProjectsRequest {
   string user_id = 1;
 }
 
-message GetProjectsByUserIdResponse {
+message CreateProjectRequest {
+  string user_id = 1;
+  string title = 2;
+  bytes image = 3;
+  repeated string colors = 4;
+  string knitting_type = 5;
+}
+
+message GetProjectRequest {
+  string id = 1;
+}
+
+message UpdateProjectRequest {
+  string id = 1;
+  string title = 2;
+  string knitting_type = 3;
+}
+
+message GetProjectsResponse {
   repeated Project projects = 1;
 }
 
 message Project {
   string id = 1;
-  string title = 2;
-  string user_id = 3;
+  string user_id = 2;
+  string title = 3;
+  string image_url = 4;
+  repeated string colors = 5;
+  string knitting_type = 6;
 }

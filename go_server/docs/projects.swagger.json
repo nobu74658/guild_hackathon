@@ -16,9 +16,9 @@
     "application/json"
   ],
   "paths": {
-    "/api.ProjectService/GetProjectByProjectId": {
+    "/api.ProjectService/CreateProject": {
       "post": {
-        "operationId": "ProjectService_GetProjectByProjectId",
+        "operationId": "ProjectService_CreateProject",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -39,7 +39,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiGetProjectByProjectIdRequest"
+              "$ref": "#/definitions/apiCreateProjectRequest"
             }
           }
         ],
@@ -48,14 +48,14 @@
         ]
       }
     },
-    "/api.ProjectService/GetProjectsByUserId": {
+    "/api.ProjectService/GetProject": {
       "post": {
-        "operationId": "ProjectService_GetProjectsByUserId",
+        "operationId": "ProjectService_GetProject",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetProjectsByUserIdResponse"
+              "$ref": "#/definitions/apiProject"
             }
           },
           "default": {
@@ -71,7 +71,71 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiGetProjectsByUserIdRequest"
+              "$ref": "#/definitions/apiGetProjectRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ProjectService"
+        ]
+      }
+    },
+    "/api.ProjectService/GetProjects": {
+      "post": {
+        "operationId": "ProjectService_GetProjects",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetProjectsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiGetProjectsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ProjectService"
+        ]
+      }
+    },
+    "/api.ProjectService/UpdateProject": {
+      "post": {
+        "operationId": "ProjectService_UpdateProject",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiProject"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateProjectRequest"
             }
           }
         ],
@@ -82,7 +146,31 @@
     }
   },
   "definitions": {
-    "apiGetProjectByProjectIdRequest": {
+    "apiCreateProjectRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knittingType": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetProjectRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -90,7 +178,7 @@
         }
       }
     },
-    "apiGetProjectsByUserIdRequest": {
+    "apiGetProjectsRequest": {
       "type": "object",
       "properties": {
         "userId": {
@@ -98,7 +186,7 @@
         }
       }
     },
-    "apiGetProjectsByUserIdResponse": {
+    "apiGetProjectsResponse": {
       "type": "object",
       "properties": {
         "projects": {
@@ -116,10 +204,36 @@
         "id": {
           "type": "string"
         },
+        "userId": {
+          "type": "string"
+        },
         "title": {
           "type": "string"
         },
-        "userId": {
+        "imageUrl": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knittingType": {
+          "type": "string"
+        }
+      }
+    },
+    "apiUpdateProjectRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "knittingType": {
           "type": "string"
         }
       }

@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS `user_table` (
   `id` varchar(191) NOT NULL,
   `display_name` longtext DEFAULT NULL,
   `photo_url` longtext DEFAULT NULL,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 -- +goose StatementEnd
@@ -11,8 +13,11 @@ CREATE TABLE IF NOT EXISTS `user_table` (
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `project_table` (
   `id` varchar(191) NOT NULL,
-  `title` longtext NOT NULL,
   `user_id` varchar(191) NOT NULL,
+  `title` longtext NOT NULL,
+  `image_url` longtext DEFAULT NULL,
+  `colors` json DEFAULT NULL,
+  `knitting_type` longtext DEFAULT NULL,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   PRIMARY KEY (`id`),

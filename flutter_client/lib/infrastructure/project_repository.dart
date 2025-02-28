@@ -22,8 +22,8 @@ class _ProjectRepository extends ProjectRepositoryInterface {
   Future<Project> fetchProject(String projectId) async {
     final client = grpc_projects.ProjectServiceClient(channel);
     final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    final request = grpc_projects.GetProjectByProjectIdRequest(id: projectId);
-    final response = await client.getProjectByProjectId(
+    final request = grpc_projects.GetProjectRequest(id: projectId);
+    final response = await client.getProject(
       request,
       options: CallOptions(
         metadata: {
@@ -47,9 +47,8 @@ class _ProjectRepository extends ProjectRepositoryInterface {
     if (currentUser == null) {
       throw Exception('User is not authenticated');
     }
-    final request =
-        grpc_projects.GetProjectsByUserIdRequest(userId: currentUser.uid);
-    final response = await client.getProjectsByUserId(
+    final request = grpc_projects.GetProjectsRequest(userId: currentUser.uid);
+    final response = await client.getProjects(
       request,
       options: CallOptions(
         metadata: {
