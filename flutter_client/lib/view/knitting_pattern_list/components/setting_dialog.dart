@@ -10,7 +10,7 @@ class SettingDialog extends HookWidget {
     final selectedKnittingPattern = useState('メリヤス編み');
     return AlertDialog(
       title: const Text(
-        "新規ノート",
+        '新規ノート',
         textAlign: TextAlign.center,
       ),
       content: Column(
@@ -20,7 +20,7 @@ class SettingDialog extends HookWidget {
           // サイズ選択
           ListTile(
             title: const Text(
-              "サイズ",
+              'サイズ',
               textAlign: TextAlign.left,
               style: TextStyle(fontSize: 14),
             ),
@@ -32,10 +32,12 @@ class SettingDialog extends HookWidget {
               ),
               value: selectedSize.value,
               items: ['8*8', '16*16', '24*24', '32*32']
-                  .map((size) => DropdownMenuItem(
-                        value: size,
-                        child: Text(size),
-                      ))
+                  .map(
+                    (size) => DropdownMenuItem(
+                      value: size,
+                      child: Text(size),
+                    ),
+                  )
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -48,7 +50,7 @@ class SettingDialog extends HookWidget {
           // 編み地の種類選択
           ListTile(
             title: const Text(
-              "編み地",
+              '編み地',
               textAlign: TextAlign.left,
               style: TextStyle(fontSize: 14),
             ),
@@ -64,12 +66,14 @@ class SettingDialog extends HookWidget {
                 '細編み(表)', // 本当は'輪編みの'が先頭につく
                 '細編み(裏)', // 本当は'輪編みの'が先頭につく
                 'すじ編み(表)', // 本当は'輪編みの'が先頭につく
-                'すじ編み(裏)' // 本当は'輪編みの'が先頭につく
+                'すじ編み(裏)', // 本当は'輪編みの'が先頭につく
               ]
-                  .map((knittingPattern) => DropdownMenuItem(
-                        value: knittingPattern,
-                        child: Text(knittingPattern),
-                      ))
+                  .map(
+                    (knittingPattern) => DropdownMenuItem(
+                      value: knittingPattern,
+                      child: Text(knittingPattern),
+                    ),
+                  )
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -87,7 +91,7 @@ class SettingDialog extends HookWidget {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                "キャンセル",
+                'キャンセル',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.indigo[400],
@@ -100,14 +104,15 @@ class SettingDialog extends HookWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // Todo(nobu): 新規編集画面に遷移
+                // TODO(nobu): 新規編集画面に遷移
               },
-              child: Text(
-                "作成",
+              child: const Text(
+                '作成',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
