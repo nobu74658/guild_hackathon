@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingDialog extends HookWidget {
   const SettingDialog({super.key});
@@ -104,7 +105,10 @@ class SettingDialog extends HookWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // TODO(nobu): 新規編集画面に遷移
+                Navigator.pop(context);
+                context.push(
+                  '/edit?size=${selectedSize.value}&knittingPattern=${selectedKnittingPattern.value}',
+                );
               },
               child: const Text(
                 '作成',

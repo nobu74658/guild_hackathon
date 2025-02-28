@@ -8,7 +8,6 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      name: 'initial',
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
@@ -17,9 +16,14 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/edit',
-      name: 'edit',
+      path: KnittingPatternScreen.path,
       pageBuilder: (context, state) {
+        final size = state.uri.queryParameters['size'] ?? '8*8';
+        final knittingType =
+            state.uri.queryParameters['knittingType'] ?? 'メリヤス編み';
+
+        debugPrint('size: $size, knittingType: $knittingType');
+
         return MaterialPage(
           key: state.pageKey,
           child: const KnittingPatternScreen(),

@@ -8,6 +8,8 @@ import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 class KnittingPatternScreen extends HookWidget {
   const KnittingPatternScreen({super.key});
 
+  static const path = '/edit';
+
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
