@@ -24,7 +24,6 @@ class KnittingPatternRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    print ('KnittingPatternRoute: ' + $extra.toString());
     if ($extra is! img.Image) {
       throw Exception('extra is null');
     }
