@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/model/color_palette_type.dart';
 import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
@@ -18,15 +19,8 @@ class KnittingPatternScreen extends HookWidget {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     PersistentBottomSheetController? controller;
 
-    final paletteColors = [
-      Colors.yellow,
-      Colors.red,
-      Colors.blue,
-      Colors.purple,
-      Colors.grey,
-      Colors.white,
-    ];
-    final color = useState(paletteColors[0]);
+    final colorPalette = ColorPaletteType.first.paletteColors;
+    final color = useState(colorPalette.first);
     final scale = useValueNotifier<double>(1.0); // useValueNotifier に変更
 
     return Scaffold(
@@ -81,7 +75,7 @@ class KnittingPatternScreen extends HookWidget {
                             color.value = value;
                             Navigator.pop(context);
                           },
-                          paletteColors: paletteColors,
+                          paletteColors: colorPalette,
                           selectedColor: color.value,
                         ),
                         backgroundColor: Colors.white,
