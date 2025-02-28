@@ -1,17 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:knitting/app/create_new_pattern_use_case.dart';
+import 'package:knitting/common/router.dart';
+import 'package:knitting/view/components/show_dialog.dart';
 import 'package:knitting/view/knitting_pattern_list/components/setting_dialog.dart';
 
-class KnittingPatternListScreen extends HookWidget {
+class KnittingPatternListScreen extends HookConsumerWidget {
   const KnittingPatternListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final border = Border.all(
       color: Colors.white70,
       width: 2,
     );
+
+    // return const Scaffold(
+    //   body: SettingDialog(),
+    // );
 
     return Scaffold(
       body: GridView.builder(
@@ -28,12 +35,35 @@ class KnittingPatternListScreen extends HookWidget {
                 color: Colors.grey,
                 iconSize: 100,
                 icon: const Icon(CupertinoIcons.add),
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const SettingDialog();
-                  },
-                ),
+                onPressed: () async {
+                  final result = await showDialog(
+                    context: context,
+                    builder: (context) => const SettingDialog(),
+                  );
+
+                  if (result is! Map<String, dynamic>) {
+                    return;
+                  }
+
+                  final size = result['size'];
+                  final knittingPattern = result['knittingPattern'];
+                  if (size == null || knittingPattern == null) {
+                    return;
+                  }
+
+                  if (context.mounted) {
+                    SD.circular(context);
+
+                    final image = await ref
+                        .read(createNewPatternUseCaseProvider)
+                        .call(null);
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      KnittingPatternRoute($extra: image).push(context);
+                    }
+                  }
+                },
               ),
             );
           }

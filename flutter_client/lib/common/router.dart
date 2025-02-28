@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image/image.dart' as img;
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern_list/knitting_pattern_list_screen.dart';
 
+part 'router.g.dart';
+
+@TypedGoRoute<KnittingPatternListRoute>(path: '/')
+class KnittingPatternListRoute extends GoRouteData {
+  const KnittingPatternListRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const KnittingPatternListScreen();
+  }
+}
+
+@TypedGoRoute<KnittingPatternRoute>(path: KnittingPatternScreen.path)
+class KnittingPatternRoute extends GoRouteData {
+  const KnittingPatternRoute({required this.$extra});
+
+  final Object $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    if ($extra is! img.Image) {
+      throw Exception('extra is null');
+    }
+    return KnittingPatternScreen(image: $extra as img.Image);
+  }
+}
+
 final router = GoRouter(
   initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      name: 'initial',
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const KnittingPatternListScreen(),
-        );
-      },
-    ),
-    GoRoute(
-      path: '/edit',
-      name: 'edit',
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const KnittingPatternScreen(),
-        );
-      },
-    ),
-  ],
+  routes: $appRoutes,
 );

@@ -1,49 +1,82 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:knitting/model/create_type.dart';
+import 'package:knitting/model/knitting_pattern_size.dart';
+import 'package:knitting/model/knitting_type.dart';
 
-class SettingDialog extends HookWidget {
+class SettingDialog extends HookConsumerWidget {
   const SettingDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedSize = useState('8*8');
-    final selectedKnittingPattern = useState('メリヤス編み');
+  Widget build(BuildContext context, WidgetRef ref) {
+    final createType = useState(CreateType.note);
+    final selectedImage = useState<XFile?>(null);
+    final selectedSize = useState(KnittingPatternSizeType.eight);
+    final selectedKnittingPattern = useState(KnittingType.singleCrochet);
+
     return AlertDialog(
       title: const Text(
-        '新規ノート',
+        '編み図作成',
         textAlign: TextAlign.center,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Divider(),
-          // サイズ選択
-          ListTile(
-            title: const Text(
-              'サイズ',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 14),
-            ),
-            trailing: DropdownButton<String>(
-              // 文字を右寄せにするためにAlign使ったら表示されなくなっちゃった
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.grey[800],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _CreateTypeSelectContainer(
+                onTap: (type) => createType.value = type,
+                createType: CreateType.note,
+                selectedCreateType: createType.value,
               ),
-              value: selectedSize.value,
-              items: ['8*8', '16*16', '24*24', '32*32']
-                  .map(
-                    (size) => DropdownMenuItem(
-                      value: size,
-                      child: Text(size),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  selectedSize.value = value;
-                }
-              },
+              _CreateTypeSelectContainer(
+                onTap: (type) async {
+                  final image = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  if (image == null) {
+                    return;
+                  }
+                  selectedImage.value = image;
+                  createType.value = type;
+                },
+                selectedImage: selectedImage.value,
+                createType: CreateType.image,
+                selectedCreateType: createType.value,
+              ),
+            ],
+          ),
+          const Divider(),
+          // サイズ選択
+          _Content(
+            label: 'サイズ',
+            widget: SizedBox(
+              width: double.infinity,
+              child: DropdownButton<KnittingPatternSizeType>(
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.grey[800],
+                ),
+                value: selectedSize.value,
+                items: KnittingPatternSizeType.values
+                    .map(
+                      (sizeType) => DropdownMenuItem(
+                        value: sizeType,
+                        child: Text(sizeType.label),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    selectedSize.value = value;
+                  }
+                },
+              ),
             ),
           ),
           const Divider(),
@@ -54,24 +87,14 @@ class SettingDialog extends HookWidget {
               textAlign: TextAlign.left,
               style: TextStyle(fontSize: 14),
             ),
-            trailing: DropdownButton<String>(
+            trailing: DropdownButton<KnittingType>(
               // 文字を右寄せにするためにAlign使ったら表示されなくなっちゃった
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[800],
-              ),
               value: selectedKnittingPattern.value,
-              items: <String>[
-                'メリヤス編み',
-                '細編み(表)', // 本当は'輪編みの'が先頭につく
-                '細編み(裏)', // 本当は'輪編みの'が先頭につく
-                'すじ編み(表)', // 本当は'輪編みの'が先頭につく
-                'すじ編み(裏)', // 本当は'輪編みの'が先頭につく
-              ]
+              items: KnittingType.values
                   .map(
                     (knittingPattern) => DropdownMenuItem(
                       value: knittingPattern,
-                      child: Text(knittingPattern),
+                      child: Text(knittingPattern.label),
                     ),
                   )
                   .toList(),
@@ -104,7 +127,10 @@ class SettingDialog extends HookWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // TODO(nobu): 新規編集画面に遷移
+                Navigator.pop(context, {
+                  'size': selectedSize.value,
+                  'knittingPattern': selectedKnittingPattern.value,
+                });
               },
               child: const Text(
                 '作成',
@@ -118,6 +144,80 @@ class SettingDialog extends HookWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _CreateTypeSelectContainer extends StatelessWidget {
+  const _CreateTypeSelectContainer({
+    required this.createType,
+    required this.selectedCreateType,
+    required this.onTap,
+    this.selectedImage,
+  });
+
+  final CreateType createType;
+  final CreateType selectedCreateType;
+  final void Function(CreateType) onTap;
+  final XFile? selectedImage;
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () => onTap(createType),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: createType == selectedCreateType
+                  ? Colors.black
+                  : Colors.transparent,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(createType.label),
+              if (selectedImage != null)
+                Image.file(
+                  File(selectedImage!.path),
+                  width: 40,
+                  height: 40,
+                )
+              else
+                Icon(
+                  createType.iconData,
+                  color: Colors.grey[800],
+                  size: 40,
+                ),
+            ],
+          ),
+        ),
+      );
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    required this.label,
+    required this.widget,
+  });
+
+  final String label;
+  final Widget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label),
+          widget,
+        ],
+      ),
     );
   }
 }

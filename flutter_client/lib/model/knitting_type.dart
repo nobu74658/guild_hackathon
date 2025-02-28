@@ -7,10 +7,12 @@ enum KnittingType {
   singleCrochet._(
     oddStitch: StitchPainter.singleCrochetKnit,
     evenStitch: StitchPainter.singleCrochetPurl,
+    label: '細編み（往復）',
   ),
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
     evenStitch: StitchPainter.singleCrochetKnit,
+    label: '細編み（表, 輪）',
     isEvenRowStartRight: false,
     isOddRowStartRight: false,
     gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
@@ -19,6 +21,7 @@ enum KnittingType {
   const KnittingType._({
     required this.oddStitch,
     required this.evenStitch,
+    required this.label,
     this.isOddRowStartRight = true,
     this.isEvenRowStartRight = true,
     this.width = 100,
@@ -30,6 +33,7 @@ enum KnittingType {
 
   final CustomPainter Function(StitchPainterData) oddStitch;
   final CustomPainter Function(StitchPainterData) evenStitch;
+  final String label;
   final bool isOddRowStartRight;
   final bool isEvenRowStartRight;
   final double width;
