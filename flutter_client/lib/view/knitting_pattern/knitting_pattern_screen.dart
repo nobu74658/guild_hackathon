@@ -87,7 +87,6 @@ class _KnittingPatternScreen extends HookWidget {
     required this.image,
     required this.texture,
     required this.knittingType,
-    super.key,
   });
 
   final img.Image image;
