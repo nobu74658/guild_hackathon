@@ -124,14 +124,15 @@ class _KnittingPatternScreen extends HookWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.arrow_turn_up_left),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.arrow_turn_up_right),
-                ),
+                // TODO: undo, redo機能
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: const Icon(CupertinoIcons.arrow_turn_up_left),
+                // ),
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: const Icon(CupertinoIcons.arrow_turn_up_right),
+                // ),
               ],
             ),
           ),
