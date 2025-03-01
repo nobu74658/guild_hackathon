@@ -1,16 +1,60 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/model/types/color_palette_type.dart';
 import 'package:knitting/model/types/knitting_type.dart';
+import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
+import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
-import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 
-class KnittingPatternScreen extends HookWidget {
-  const KnittingPatternScreen({
+class DebugKnittingPatternScreen extends ConsumerWidget {
+  const DebugKnittingPatternScreen({
+    required this.knittingType,
+    required this.backgroundColor,
+    super.key,
+  });
+
+  final KnittingType knittingType;
+  final Color? backgroundColor;
+
+  static const path = '/debug-edit';
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final image = ref.read(knittingPatternManagerProvider).fetchImage();
+    final texture = ref.watch(knittingPatternManagerProvider).fetchTexture();
+    final future = Future.wait([image, texture]);
+
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _KnittingPatternScreen(
+            image: snapshot.data![0] as img.Image,
+            texture: snapshot.data![1] as ui.Image,
+            knittingType: knittingType,
+            backgroundColor: backgroundColor,
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: backgroundColor,
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+}
+
+class ConnectedKnittingPatternScreen extends ConsumerWidget {
+  const ConnectedKnittingPatternScreen({
     required this.image,
     required this.knittingType,
+    required this.backgroundColor,
     super.key,
   });
 
@@ -18,6 +62,46 @@ class KnittingPatternScreen extends HookWidget {
 
   final img.Image image;
   final KnittingType knittingType;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Future<ui.Image> texture =
+        ref.watch(knittingPatternManagerProvider).fetchTexture();
+
+    return FutureBuilder(
+      future: texture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _KnittingPatternScreen(
+            image: image,
+            texture: snapshot.data!,
+            knittingType: knittingType,
+            backgroundColor: backgroundColor,
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: backgroundColor,
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+}
+
+class _KnittingPatternScreen extends HookWidget {
+  const _KnittingPatternScreen({
+    required this.image,
+    required this.texture,
+    required this.knittingType,
+    required this.backgroundColor,
+  });
+
+  final img.Image image;
+  final ui.Image texture;
+  final KnittingType knittingType;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,28 +109,19 @@ class KnittingPatternScreen extends HookWidget {
     PersistentBottomSheetController? controller;
 
     final colorPalette = ColorPaletteType.first.paletteColors;
-    final color = useState(colorPalette.first);
-    final scale = useValueNotifier<double>(1.0); // useValueNotifier に変更
+    final color = useValueNotifier(colorPalette.first);
+    final scale = useValueNotifier<double>(1.0);
+    final selectedKnittingType = useValueNotifier(knittingType);
 
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.arrow_turn_up_left),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.arrow_turn_up_right),
-                ),
-              ],
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(),
           ),
         ],
       ),
@@ -91,15 +166,46 @@ class KnittingPatternScreen extends HookWidget {
                         controller = null;
                       });
                     },
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        color: color.value,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
+                    child: ValueListenableBuilder<Color>(
+                      valueListenable: color,
+                      builder: (context, value, child) {
+                        return Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: value,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        );
+                      },
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (controller != null) {
+                        controller?.close();
+                        controller = null;
+                        return;
+                      }
+
+                      controller = scaffoldKey.currentState?.showBottomSheet(
+                        (context) => KnittingPatternSelector(
+                          selectedKnittingType: selectedKnittingType.value,
+                          onTap: (value) {
+                            selectedKnittingType.value = value;
+                            Navigator.pop(context);
+                          },
+                        ),
+                        backgroundColor: Colors.white,
+                        enableDrag: true,
+                        showDragHandle: true,
+                      );
+                      controller?.closed.then((value) {
+                        controller = null;
+                      });
+                    },
+                    icon: const Icon(Icons.brush_outlined),
                   ),
                 ],
               ),
@@ -135,13 +241,25 @@ class KnittingPatternScreen extends HookWidget {
       body: LayoutBuilder(
         builder: (context, constraints) => ValueListenableBuilder<double>(
           valueListenable: scale,
-          builder: (context, value, child) {
+          builder: (context, scaleValue, child) {
             return Transform.scale(
-              scale: value,
-              child: ConnectedKnittingPatternViewer(
-                image: image,
-                knittingType: knittingType,
-                maxHeight: constraints.maxHeight,
+              scale: scaleValue,
+              child: ValueListenableBuilder<Color>(
+                valueListenable: color,
+                builder: (context, colorValue, child) {
+                  return ValueListenableBuilder<KnittingType>(
+                    valueListenable: selectedKnittingType,
+                    builder: (context, knittingTypeValue, child) {
+                      return KnittingPatternViewer(
+                        image: image,
+                        texture: texture,
+                        knittingType: knittingTypeValue,
+                        maxHeight: constraints.maxHeight,
+                        selectedColor: colorValue,
+                      );
+                    },
+                  );
+                },
               ),
             );
           },

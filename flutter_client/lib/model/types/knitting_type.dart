@@ -9,6 +9,7 @@ enum KnittingType {
     evenStitch: StitchPainter.singleCrochetPurl,
     label: '細編み（往復）',
     value: 'singleCrochet',
+    height: 80,
   ),
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
@@ -17,6 +18,7 @@ enum KnittingType {
     value: 'singleCrochetFrontLoop',
     isEvenRowStartRight: false,
     isOddRowStartRight: false,
+    width: 80,
     gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
   );
 

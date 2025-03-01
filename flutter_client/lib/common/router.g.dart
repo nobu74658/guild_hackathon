@@ -9,6 +9,7 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
       $knittingPatternListRoute,
       $knittingPatternRoute,
+      $debugKnittingPatternRoute,
     ];
 
 RouteBase get $knittingPatternListRoute => GoRouteData.$route(
@@ -63,4 +64,27 @@ extension $KnittingPatternRouteExtension on KnittingPatternRoute {
 
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
+}
+
+RouteBase get $debugKnittingPatternRoute => GoRouteData.$route(
+      path: '/debug-edit',
+      factory: $DebugKnittingPatternRouteExtension._fromState,
+    );
+
+extension $DebugKnittingPatternRouteExtension on DebugKnittingPatternRoute {
+  static DebugKnittingPatternRoute _fromState(GoRouterState state) =>
+      const DebugKnittingPatternRoute();
+
+  String get location => GoRouteData.$location(
+        '/debug-edit',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }

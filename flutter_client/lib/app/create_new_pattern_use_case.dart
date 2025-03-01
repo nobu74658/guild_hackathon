@@ -46,16 +46,15 @@ class CreateNewPatternUseCase
     img.Image? image,
     List<Color> colorPalette,
   ) async {
-    // Convert Flutter Color objects to hex string format (#RRGGBB)
     final hexColorPalette = colorPalette.toHexStrings();
-    print(hexColorPalette);
 
-    final dottedImage = await ref.read(projectManagerProvider).generateDottedImage(
-      image!,
-      size.width,
-      size.height,
-      hexColorPalette,
-    );
+    final dottedImage =
+        await ref.read(projectManagerProvider).generateDottedImage(
+              image!,
+              size.width,
+              size.height,
+              hexColorPalette,
+            );
     return dottedImage;
   }
 
