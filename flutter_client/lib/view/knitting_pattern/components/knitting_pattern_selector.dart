@@ -32,7 +32,7 @@ class KnittingPatternSelector extends StatelessWidget {
                       : FontWeight.normal,
                 ),
               ),
-              // TODO: 編み地の画像を表示
+              // TODO(nobu): 編み地の画像を表示
               onTap: () => onTap(knittingPattern),
             ),
         ],
