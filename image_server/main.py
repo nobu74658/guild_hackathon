@@ -31,6 +31,8 @@ async def convert_image(
 
     input_image_bytes = BytesIO(await image_file.read())
     image = Image.open(input_image_bytes)
+    # open image in gui
+    image.show()
     convert_photo_to_pixel_art = ConvertPhotoToPixelArt(
         image=image,
         output_width=output_width,
@@ -38,6 +40,7 @@ async def convert_image(
         available_colors=available_colors_rgb,
     )
     image = convert_photo_to_pixel_art.convert()
+    image.show()
     output_image_bytes = BytesIO()
     image.save(output_image_bytes, format="PNG")
     return Response(content=output_image_bytes.getvalue(), media_type="image/png")
