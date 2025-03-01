@@ -8,8 +8,9 @@ import 'package:image/image.dart' as img;
 import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/model/color_palette_type.dart';
 import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
+import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
-import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
@@ -110,7 +111,8 @@ class _KnittingPatternScreen extends HookWidget {
 
     final colorPalette = ColorPaletteType.first.paletteColors;
     final color = useValueNotifier(colorPalette.first);
-    final scale = useValueNotifier<double>(1.0); // useValueNotifier に変更
+    final scale = useValueNotifier<double>(1.0);
+    final selectedKnittingType = useState(knittingType);
 
     return Scaffold(
       key: scaffoldKey,
@@ -191,6 +193,32 @@ class _KnittingPatternScreen extends HookWidget {
                       },
                     ),
                   ),
+                  IconButton(
+                    onPressed: () {
+                      if (controller != null) {
+                        controller?.close();
+                        controller = null;
+                        return;
+                      }
+
+                      controller = scaffoldKey.currentState?.showBottomSheet(
+                        (context) => KnittingPatternSelector(
+                          selectedKnittingType: selectedKnittingType.value,
+                          onTap: (value) {
+                            selectedKnittingType.value = value;
+                            Navigator.pop(context);
+                          },
+                        ),
+                        backgroundColor: Colors.white,
+                        enableDrag: true,
+                        showDragHandle: true,
+                      );
+                      controller?.closed.then((value) {
+                        controller = null;
+                      });
+                    },
+                    icon: const Icon(Icons.brush_outlined),
+                  ),
                 ],
               ),
               ValueListenableBuilder<double>(
@@ -234,7 +262,7 @@ class _KnittingPatternScreen extends HookWidget {
                   return KnittingPatternViewer(
                     image: image,
                     texture: texture,
-                    knittingType: knittingType,
+                    knittingType: selectedKnittingType.value,
                     maxHeight: constraints.maxHeight,
                     selectedColor: value,
                   );
