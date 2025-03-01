@@ -112,7 +112,7 @@ class _KnittingPatternScreen extends HookWidget {
     final colorPalette = ColorPaletteType.first.paletteColors;
     final color = useValueNotifier(colorPalette.first);
     final scale = useValueNotifier<double>(1.0);
-    final selectedKnittingType = useState(knittingType);
+    final selectedKnittingType = useValueNotifier(knittingType);
 
     return Scaffold(
       key: scaffoldKey,
@@ -253,18 +253,23 @@ class _KnittingPatternScreen extends HookWidget {
       body: LayoutBuilder(
         builder: (context, constraints) => ValueListenableBuilder<double>(
           valueListenable: scale,
-          builder: (context, value, child) {
+          builder: (context, scaleValue, child) {
             return Transform.scale(
-              scale: value,
+              scale: scaleValue,
               child: ValueListenableBuilder<Color>(
                 valueListenable: color,
-                builder: (context, value, child) {
-                  return KnittingPatternViewer(
-                    image: image,
-                    texture: texture,
-                    knittingType: selectedKnittingType.value,
-                    maxHeight: constraints.maxHeight,
-                    selectedColor: value,
+                builder: (context, colorValue, child) {
+                  return ValueListenableBuilder<KnittingType>(
+                    valueListenable: selectedKnittingType,
+                    builder: (context, knittingTypeValue, child) {
+                      return KnittingPatternViewer(
+                        image: image,
+                        texture: texture,
+                        knittingType: knittingTypeValue,
+                        maxHeight: constraints.maxHeight,
+                        selectedColor: colorValue,
+                      );
+                    },
                   );
                 },
               ),
