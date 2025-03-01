@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -119,22 +118,10 @@ class _KnittingPatternScreen extends HookWidget {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                // TODO: undo, redo機能
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const Icon(CupertinoIcons.arrow_turn_up_left),
-                // ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const Icon(CupertinoIcons.arrow_turn_up_right),
-                // ),
-              ],
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(),
           ),
         ],
       ),
