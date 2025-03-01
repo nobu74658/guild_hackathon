@@ -74,12 +74,18 @@ class _ProjectRepository extends ProjectRepositoryInterface {
   }
 
   @override
-  Future<Image> generateDottedImage(Image image, int width, int height, List<String> colors) async {
+  Future<Image> generateDottedImage(
+    Image image,
+    int width,
+    int height,
+    List<String> colors,
+  ) async {
     final client = grpc_projects.ProjectServiceClient(channel);
-    
+
     // ストリーミングリクエストを作成
-    final requestStream = StreamController<grpc_projects.GenerateDottedImageRequest>();
-    
+    final requestStream =
+        StreamController<grpc_projects.GenerateDottedImageRequest>();
+
     // まず Meta 情報を送信
     requestStream.add(
       grpc_projects.GenerateDottedImageRequest(
@@ -90,27 +96,27 @@ class _ProjectRepository extends ProjectRepositoryInterface {
         ),
       ),
     );
-    
+
     // 次に画像データを送信
     requestStream.add(
       grpc_projects.GenerateDottedImageRequest(
-        image: encodePng(image).toList()
+        image: encodePng(image).toList(),
       ),
     );
-    
+
     // ストリームを閉じる
     requestStream.close();
-    
+
     // レスポンスを待機
     final response = await client.generateDottedImage(requestStream.stream);
-    
+
     // 返却された画像データを Image オブジェクトに変換
     // バイトデータから PNG 画像としてデコードする
     final dottedImage = decodePng(Uint8List.fromList(response.image));
     if (dottedImage == null) {
       throw Exception('Failed to decode the received image');
     }
-    
+
     return dottedImage;
   }
 }
