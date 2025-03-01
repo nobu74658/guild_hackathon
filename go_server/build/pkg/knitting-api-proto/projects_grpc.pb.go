@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProjectService_GetProjects_FullMethodName   = "/api.ProjectService/GetProjects"
-	ProjectService_CreateProject_FullMethodName = "/api.ProjectService/CreateProject"
-	ProjectService_GetProject_FullMethodName    = "/api.ProjectService/GetProject"
-	ProjectService_UpdateProject_FullMethodName = "/api.ProjectService/UpdateProject"
+	ProjectService_GetProjects_FullMethodName         = "/api.ProjectService/GetProjects"
+	ProjectService_GenerateDottedImage_FullMethodName = "/api.ProjectService/GenerateDottedImage"
+	ProjectService_CreateProject_FullMethodName       = "/api.ProjectService/CreateProject"
+	ProjectService_GetProject_FullMethodName          = "/api.ProjectService/GetProject"
+	ProjectService_UpdateProject_FullMethodName       = "/api.ProjectService/UpdateProject"
 )
 
 // ProjectServiceClient is the client API for ProjectService service.
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectServiceClient interface {
 	GetProjects(ctx context.Context, in *GetProjectsRequest, opts ...grpc.CallOption) (*GetProjectsResponse, error)
+	GenerateDottedImage(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[GenerateDottedImageRequest, GenerateDottedImageResponse], error)
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*Project, error)
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*Project, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*Project, error)
@@ -52,6 +54,19 @@ func (c *projectServiceClient) GetProjects(ctx context.Context, in *GetProjectsR
 	}
 	return out, nil
 }
+
+func (c *projectServiceClient) GenerateDottedImage(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[GenerateDottedImageRequest, GenerateDottedImageResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], ProjectService_GenerateDottedImage_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GenerateDottedImageRequest, GenerateDottedImageResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ProjectService_GenerateDottedImageClient = grpc.ClientStreamingClient[GenerateDottedImageRequest, GenerateDottedImageResponse]
 
 func (c *projectServiceClient) CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*Project, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -88,6 +103,7 @@ func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProj
 // for forward compatibility.
 type ProjectServiceServer interface {
 	GetProjects(context.Context, *GetProjectsRequest) (*GetProjectsResponse, error)
+	GenerateDottedImage(grpc.ClientStreamingServer[GenerateDottedImageRequest, GenerateDottedImageResponse]) error
 	CreateProject(context.Context, *CreateProjectRequest) (*Project, error)
 	GetProject(context.Context, *GetProjectRequest) (*Project, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*Project, error)
@@ -102,6 +118,9 @@ type UnimplementedProjectServiceServer struct{}
 
 func (UnimplementedProjectServiceServer) GetProjects(context.Context, *GetProjectsRequest) (*GetProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) GenerateDottedImage(grpc.ClientStreamingServer[GenerateDottedImageRequest, GenerateDottedImageResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method GenerateDottedImage not implemented")
 }
 func (UnimplementedProjectServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*Project, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
@@ -149,6 +168,13 @@ func _ProjectService_GetProjects_Handler(srv interface{}, ctx context.Context, d
 	}
 	return interceptor(ctx, in, info, handler)
 }
+
+func _ProjectService_GenerateDottedImage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ProjectServiceServer).GenerateDottedImage(&grpc.GenericServerStream[GenerateDottedImageRequest, GenerateDottedImageResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ProjectService_GenerateDottedImageServer = grpc.ClientStreamingServer[GenerateDottedImageRequest, GenerateDottedImageResponse]
 
 func _ProjectService_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateProjectRequest)
@@ -228,6 +254,12 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProjectService_UpdateProject_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GenerateDottedImage",
+			Handler:       _ProjectService_GenerateDottedImage_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "projects.proto",
 }

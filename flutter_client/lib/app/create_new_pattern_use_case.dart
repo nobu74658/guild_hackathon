@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/knitting_pattern_manager.dart';
+import 'package:knitting/app/project_manager.dart';
+import 'package:knitting/common/extensions/color_extensions.dart';
 import 'package:knitting/common/use_case.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_new_pattern_use_case.g.dart';
@@ -45,9 +46,16 @@ class CreateNewPatternUseCase
     img.Image? image,
     List<Color> colorPalette,
   ) async {
-    // TODO(backend): ドット絵化APIを叩く(input: size, image, List<Color>)
-    final image = await ref.read(knittingPatternManagerProvider).fetchImage();
-    return image;
+    final hexColorPalette = colorPalette.toHexStrings();
+
+    final dottedImage =
+        await ref.read(projectManagerProvider).generateDottedImage(
+              image!,
+              size.width,
+              size.height,
+              hexColorPalette,
+            );
+    return dottedImage;
   }
 
   Future<img.Image> _createImage(

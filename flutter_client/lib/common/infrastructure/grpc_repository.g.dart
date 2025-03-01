@@ -6,7 +6,7 @@ part of 'grpc_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$clientChannelHash() => r'84c91e825a5ab4c63b6f0f47ec709a338053060a';
+String _$clientChannelHash() => r'2bed5a59a4f0e62d45a9c204f0fc7f9017e502fa';
 
 /// See also [clientChannel].
 @ProviderFor(clientChannel)

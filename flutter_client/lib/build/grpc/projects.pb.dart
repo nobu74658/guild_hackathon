@@ -11,6 +11,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class GetProjectsRequest extends $pb.GeneratedMessage {
@@ -61,6 +62,159 @@ class GetProjectsRequest extends $pb.GeneratedMessage {
   $core.bool hasUserId() => $_has(0);
   @$pb.TagNumber(1)
   void clearUserId() => clearField(1);
+}
+
+enum GenerateDottedImageRequest_Value {
+  meta, 
+  image, 
+  notSet
+}
+
+class GenerateDottedImageRequest extends $pb.GeneratedMessage {
+  factory GenerateDottedImageRequest({
+    Meta? meta,
+    $core.List<$core.int>? image,
+  }) {
+    final $result = create();
+    if (meta != null) {
+      $result.meta = meta;
+    }
+    if (image != null) {
+      $result.image = image;
+    }
+    return $result;
+  }
+  GenerateDottedImageRequest._() : super();
+  factory GenerateDottedImageRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GenerateDottedImageRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static const $core.Map<$core.int, GenerateDottedImageRequest_Value> _GenerateDottedImageRequest_ValueByTag = {
+    1 : GenerateDottedImageRequest_Value.meta,
+    2 : GenerateDottedImageRequest_Value.image,
+    0 : GenerateDottedImageRequest_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GenerateDottedImageRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'api'), createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<Meta>(1, _omitFieldNames ? '' : 'meta', subBuilder: Meta.create)
+    ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'image', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GenerateDottedImageRequest clone() => GenerateDottedImageRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GenerateDottedImageRequest copyWith(void Function(GenerateDottedImageRequest) updates) => super.copyWith((message) => updates(message as GenerateDottedImageRequest)) as GenerateDottedImageRequest;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GenerateDottedImageRequest create() => GenerateDottedImageRequest._();
+  GenerateDottedImageRequest createEmptyInstance() => create();
+  static $pb.PbList<GenerateDottedImageRequest> createRepeated() => $pb.PbList<GenerateDottedImageRequest>();
+  @$core.pragma('dart2js:noInline')
+  static GenerateDottedImageRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateDottedImageRequest>(create);
+  static GenerateDottedImageRequest? _defaultInstance;
+
+  GenerateDottedImageRequest_Value whichValue() => _GenerateDottedImageRequest_ValueByTag[$_whichOneof(0)]!;
+  void clearValue() => clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  Meta get meta => $_getN(0);
+  @$pb.TagNumber(1)
+  set meta(Meta v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasMeta() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMeta() => clearField(1);
+  @$pb.TagNumber(1)
+  Meta ensureMeta() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get image => $_getN(1);
+  @$pb.TagNumber(2)
+  set image($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasImage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearImage() => clearField(2);
+}
+
+class Meta extends $pb.GeneratedMessage {
+  factory Meta({
+    $fixnum.Int64? width,
+    $fixnum.Int64? height,
+    $core.Iterable<$core.String>? colors,
+  }) {
+    final $result = create();
+    if (width != null) {
+      $result.width = width;
+    }
+    if (height != null) {
+      $result.height = height;
+    }
+    if (colors != null) {
+      $result.colors.addAll(colors);
+    }
+    return $result;
+  }
+  Meta._() : super();
+  factory Meta.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Meta.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Meta', package: const $pb.PackageName(_omitMessageNames ? '' : 'api'), createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'width')
+    ..aInt64(2, _omitFieldNames ? '' : 'height')
+    ..pPS(3, _omitFieldNames ? '' : 'colors')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Meta clone() => Meta()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Meta copyWith(void Function(Meta) updates) => super.copyWith((message) => updates(message as Meta)) as Meta;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Meta create() => Meta._();
+  Meta createEmptyInstance() => create();
+  static $pb.PbList<Meta> createRepeated() => $pb.PbList<Meta>();
+  @$core.pragma('dart2js:noInline')
+  static Meta getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Meta>(create);
+  static Meta? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get width => $_getI64(0);
+  @$pb.TagNumber(1)
+  set width($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasWidth() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWidth() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get height => $_getI64(1);
+  @$pb.TagNumber(2)
+  set height($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasHeight() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHeight() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.String> get colors => $_getList(2);
 }
 
 class CreateProjectRequest extends $pb.GeneratedMessage {
@@ -289,6 +443,56 @@ class UpdateProjectRequest extends $pb.GeneratedMessage {
   $core.bool hasKnittingType() => $_has(2);
   @$pb.TagNumber(3)
   void clearKnittingType() => clearField(3);
+}
+
+class GenerateDottedImageResponse extends $pb.GeneratedMessage {
+  factory GenerateDottedImageResponse({
+    $core.List<$core.int>? image,
+  }) {
+    final $result = create();
+    if (image != null) {
+      $result.image = image;
+    }
+    return $result;
+  }
+  GenerateDottedImageResponse._() : super();
+  factory GenerateDottedImageResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GenerateDottedImageResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GenerateDottedImageResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'api'), createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(1, _omitFieldNames ? '' : 'image', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GenerateDottedImageResponse clone() => GenerateDottedImageResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GenerateDottedImageResponse copyWith(void Function(GenerateDottedImageResponse) updates) => super.copyWith((message) => updates(message as GenerateDottedImageResponse)) as GenerateDottedImageResponse;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GenerateDottedImageResponse create() => GenerateDottedImageResponse._();
+  GenerateDottedImageResponse createEmptyInstance() => create();
+  static $pb.PbList<GenerateDottedImageResponse> createRepeated() => $pb.PbList<GenerateDottedImageResponse>();
+  @$core.pragma('dart2js:noInline')
+  static GenerateDottedImageResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateDottedImageResponse>(create);
+  static GenerateDottedImageResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get image => $_getN(0);
+  @$pb.TagNumber(1)
+  set image($core.List<$core.int> v) { $_setBytes(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasImage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearImage() => clearField(1);
 }
 
 class GetProjectsResponse extends $pb.GeneratedMessage {

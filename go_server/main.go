@@ -75,10 +75,10 @@ func main() {
 		},
 	)
 
-	logger.Info("Now starting server at : 443")
+	logger.Info("Now starting server at port 443")
 	http2Server := &http2.Server{}
 	http1Server := &http.Server{Handler: h2c.NewHandler(handler, http2Server)}
-	lis, err := net.Listen("tcp", ": 443")
+	lis, err := net.Listen("tcp", ":443")
 	if err != nil {
 		panic(err)
 	}

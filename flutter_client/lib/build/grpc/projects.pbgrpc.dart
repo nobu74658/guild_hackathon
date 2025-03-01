@@ -25,6 +25,10 @@ class ProjectServiceClient extends $grpc.Client {
       '/api.ProjectService/GetProjects',
       ($0.GetProjectsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.GetProjectsResponse.fromBuffer(value));
+  static final _$generateDottedImage = $grpc.ClientMethod<$0.GenerateDottedImageRequest, $0.GenerateDottedImageResponse>(
+      '/api.ProjectService/GenerateDottedImage',
+      ($0.GenerateDottedImageRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.GenerateDottedImageResponse.fromBuffer(value));
   static final _$createProject = $grpc.ClientMethod<$0.CreateProjectRequest, $0.Project>(
       '/api.ProjectService/CreateProject',
       ($0.CreateProjectRequest value) => value.writeToBuffer(),
@@ -46,6 +50,10 @@ class ProjectServiceClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.GetProjectsResponse> getProjects($0.GetProjectsRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getProjects, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.GenerateDottedImageResponse> generateDottedImage($async.Stream<$0.GenerateDottedImageRequest> request, {$grpc.CallOptions? options}) {
+    return $createStreamingCall(_$generateDottedImage, request, options: options).single;
   }
 
   $grpc.ResponseFuture<$0.Project> createProject($0.CreateProjectRequest request, {$grpc.CallOptions? options}) {
@@ -73,6 +81,13 @@ abstract class ProjectServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetProjectsRequest.fromBuffer(value),
         ($0.GetProjectsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GenerateDottedImageRequest, $0.GenerateDottedImageResponse>(
+        'GenerateDottedImage',
+        generateDottedImage,
+        true,
+        false,
+        ($core.List<$core.int> value) => $0.GenerateDottedImageRequest.fromBuffer(value),
+        ($0.GenerateDottedImageResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CreateProjectRequest, $0.Project>(
         'CreateProject',
         createProject_Pre,
@@ -113,6 +128,7 @@ abstract class ProjectServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.GetProjectsResponse> getProjects($grpc.ServiceCall call, $0.GetProjectsRequest request);
+  $async.Future<$0.GenerateDottedImageResponse> generateDottedImage($grpc.ServiceCall call, $async.Stream<$0.GenerateDottedImageRequest> request);
   $async.Future<$0.Project> createProject($grpc.ServiceCall call, $0.CreateProjectRequest request);
   $async.Future<$0.Project> getProject($grpc.ServiceCall call, $0.GetProjectRequest request);
   $async.Future<$0.Project> updateProject($grpc.ServiceCall call, $0.UpdateProjectRequest request);
