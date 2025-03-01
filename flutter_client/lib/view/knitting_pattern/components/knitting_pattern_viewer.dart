@@ -12,6 +12,7 @@ class KnittingPatternViewer extends HookWidget {
     required this.knittingType,
     required this.image,
     required this.texture,
+    required this.selectedColor,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class KnittingPatternViewer extends HookWidget {
   final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
+  final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,7 @@ class KnittingPatternViewer extends HookWidget {
                   y: y,
                   pixel: image.getPixel(x, y),
                   texture: texture,
+                  selectedColor: selectedColor,
                 ),
               },
           ],
@@ -86,6 +89,7 @@ class _Stitch extends HookWidget {
     required this.y,
     required this.pixel,
     required this.texture,
+    required this.selectedColor,
   });
 
   final KnittingType knittingType;
@@ -93,6 +97,7 @@ class _Stitch extends HookWidget {
   final int y;
   final img.Pixel pixel;
   final ui.Image texture;
+  final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +120,7 @@ class _Stitch extends HookWidget {
         width: knittingType.width,
         height: knittingType.height,
         child: GestureDetector(
-          onTap: () {
-            color.value = color.value == Colors.red ? Colors.blue : Colors.red;
-          },
+          onTap: () => color.value = selectedColor,
           child: CustomPaint(
             painter: painter(
               StitchPainterData(

@@ -99,7 +99,7 @@ class _KnittingPatternScreen extends HookWidget {
     PersistentBottomSheetController? controller;
 
     final colorPalette = ColorPaletteType.first.paletteColors;
-    final color = useState(colorPalette.first);
+    final color = useValueNotifier(colorPalette.first);
     final scale = useValueNotifier<double>(1.0); // useValueNotifier に変更
 
     return Scaffold(
@@ -165,14 +165,19 @@ class _KnittingPatternScreen extends HookWidget {
                         controller = null;
                       });
                     },
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        color: color.value,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
+                    child: ValueListenableBuilder<Color>(
+                      valueListenable: color,
+                      builder: (context, value, child) {
+                        return Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: value,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -212,11 +217,17 @@ class _KnittingPatternScreen extends HookWidget {
           builder: (context, value, child) {
             return Transform.scale(
               scale: value,
-              child: KnittingPatternViewer(
-                image: image,
-                texture: texture,
-                knittingType: knittingType,
-                maxHeight: constraints.maxHeight,
+              child: ValueListenableBuilder<Color>(
+                valueListenable: color,
+                builder: (context, value, child) {
+                  return KnittingPatternViewer(
+                    image: image,
+                    texture: texture,
+                    knittingType: knittingType,
+                    maxHeight: constraints.maxHeight,
+                    selectedColor: value,
+                  );
+                },
               ),
             );
           },
