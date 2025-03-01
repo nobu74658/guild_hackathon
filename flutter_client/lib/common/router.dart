@@ -39,6 +39,18 @@ class KnittingPatternRoute extends GoRouteData {
   }
 }
 
+@TypedGoRoute<DebugKnittingPatternRoute>(path: DebugKnittingPatternScreen.path)
+class DebugKnittingPatternRoute extends GoRouteData {
+  const DebugKnittingPatternRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugKnittingPatternScreen(
+      knittingType: KnittingType.singleCrochet,
+    );
+  }
+}
+
 final router = GoRouter(
   initialLocation: '/',
   routes: $appRoutes,

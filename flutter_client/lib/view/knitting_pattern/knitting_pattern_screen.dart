@@ -11,6 +11,41 @@ import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 
+class DebugKnittingPatternScreen extends ConsumerWidget {
+  const DebugKnittingPatternScreen({
+    required this.knittingType,
+    super.key,
+  });
+
+  final KnittingType knittingType;
+
+  static const path = '/debug-edit';
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final image = ref.read(knittingPatternManagerProvider).fetchImage();
+    final texture = ref.watch(knittingPatternManagerProvider).fetchTexture();
+    final future = Future.wait([image, texture]);
+
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _KnittingPatternScreen(
+            image: snapshot.data![0] as img.Image,
+            texture: snapshot.data![1] as ui.Image,
+            knittingType: knittingType,
+          );
+        } else {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+}
+
 class ConnectedKnittingPatternScreen extends ConsumerWidget {
   const ConnectedKnittingPatternScreen({
     required this.image,
@@ -32,7 +67,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
       future: texture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return KnittingPatternScreen(
+          return _KnittingPatternScreen(
             image: image,
             texture: snapshot.data!,
             knittingType: knittingType,
@@ -47,8 +82,8 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
   }
 }
 
-class KnittingPatternScreen extends HookWidget {
-  const KnittingPatternScreen({
+class _KnittingPatternScreen extends HookWidget {
+  const _KnittingPatternScreen({
     required this.image,
     required this.texture,
     required this.knittingType,
