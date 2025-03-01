@@ -35,6 +35,7 @@ class KnittingPatternRoute extends GoRouteData {
     return ConnectedKnittingPatternScreen(
       image: $extra as img.Image,
       knittingType: KnittingType.fromValue(knittingType ?? ''),
+      backgroundColor: Colors.grey[300],
     );
   }
 }
@@ -45,8 +46,9 @@ class DebugKnittingPatternRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const DebugKnittingPatternScreen(
+    return DebugKnittingPatternScreen(
       knittingType: KnittingType.singleCrochet,
+      backgroundColor: Colors.grey[300],
     );
   }
 }

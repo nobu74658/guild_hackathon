@@ -14,10 +14,12 @@ import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
     required this.knittingType,
+    required this.backgroundColor,
     super.key,
   });
 
   final KnittingType knittingType;
+  final Color? backgroundColor;
 
   static const path = '/debug-edit';
 
@@ -35,10 +37,12 @@ class DebugKnittingPatternScreen extends ConsumerWidget {
             image: snapshot.data![0] as img.Image,
             texture: snapshot.data![1] as ui.Image,
             knittingType: knittingType,
+            backgroundColor: backgroundColor,
           );
         } else {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: backgroundColor,
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
       },
@@ -50,6 +54,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
   const ConnectedKnittingPatternScreen({
     required this.image,
     required this.knittingType,
+    required this.backgroundColor,
     super.key,
   });
 
@@ -57,6 +62,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
 
   final img.Image image;
   final KnittingType knittingType;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,10 +77,12 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
             image: image,
             texture: snapshot.data!,
             knittingType: knittingType,
+            backgroundColor: backgroundColor,
           );
         } else {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: backgroundColor,
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
       },
@@ -87,11 +95,13 @@ class _KnittingPatternScreen extends HookWidget {
     required this.image,
     required this.texture,
     required this.knittingType,
+    required this.backgroundColor,
   });
 
   final img.Image image;
   final ui.Image texture;
   final KnittingType knittingType;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +114,7 @@ class _KnittingPatternScreen extends HookWidget {
 
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: [
