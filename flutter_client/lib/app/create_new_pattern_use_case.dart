@@ -47,8 +47,6 @@ class CreateNewPatternUseCase
   ) async {
     // TODO(backend): ドット絵化APIを叩く(input: size, image, List<Color>)
     final image = await ref.read(knittingPatternManagerProvider).fetchImage();
-    await Future.delayed(const Duration(seconds: 1));
-    // 画像をドット絵化する処理
     return image;
   }
 
