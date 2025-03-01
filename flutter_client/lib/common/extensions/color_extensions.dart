@@ -1,19 +1,21 @@
+// ignore_for_file: deprecated_member_use
+// TODO(nobu): don't use deprecated_member
 import 'package:flutter/material.dart';
 
 extension ColorExtension on Color {
   /// Converts a Color to a hex string in the format #RRGGBB
   String toHex() {
-    final colorStr = value.toRadixString(16).toString();
+    final colorStr = value.toRadixString(16);
     if (colorStr.length == 8) {
       final hexcolor = colorStr.substring(2);
       final transparent = colorStr.substring(0, 2);
-    if (transparent == "ff") {
-      return "#" + hexcolor;
+      if (transparent == 'ff') {
+        return '#$hexcolor';
+      } else {
+        return '#$hexcolor$transparent';
+      }
     } else {
-      return "#" + hexcolor + transparent;
-    }
-    } else {
-      return "#" + colorStr + "00";
+      return '#${colorStr}00';
     }
   }
 }
