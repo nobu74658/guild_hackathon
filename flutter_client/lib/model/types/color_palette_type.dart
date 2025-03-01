@@ -6,6 +6,8 @@ enum ColorPaletteType {
     Colors.grey,
     Colors.blueAccent,
     Colors.black,
+    Colors.teal,
+    Colors.yellow,
   ]),
   second('パレット2', [
     Colors.green,
