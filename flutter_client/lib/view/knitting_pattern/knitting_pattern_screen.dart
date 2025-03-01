@@ -1,14 +1,18 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/model/color_palette_type.dart';
 import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 import 'package:knitting/view/knitting_pattern/components/palette_circle.dart';
 
-class KnittingPatternScreen extends HookWidget {
-  const KnittingPatternScreen({
+class ConnectedKnittingPatternScreen extends ConsumerWidget {
+  const ConnectedKnittingPatternScreen({
     required this.image,
     required this.knittingType,
     super.key,
@@ -17,6 +21,42 @@ class KnittingPatternScreen extends HookWidget {
   static const path = '/edit';
 
   final img.Image image;
+  final KnittingType knittingType;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Future<ui.Image> texture =
+        ref.watch(knittingPatternManagerProvider).fetchTexture();
+
+    return FutureBuilder(
+      future: texture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return KnittingPatternScreen(
+            image: image,
+            texture: snapshot.data!,
+            knittingType: knittingType,
+          );
+        } else {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+}
+
+class KnittingPatternScreen extends HookWidget {
+  const KnittingPatternScreen({
+    required this.image,
+    required this.texture,
+    required this.knittingType,
+    super.key,
+  });
+
+  final img.Image image;
+  final ui.Image texture;
   final KnittingType knittingType;
 
   @override
@@ -138,8 +178,9 @@ class KnittingPatternScreen extends HookWidget {
           builder: (context, value, child) {
             return Transform.scale(
               scale: value,
-              child: ConnectedKnittingPatternViewer(
+              child: KnittingPatternViewer(
                 image: image,
+                texture: texture,
                 knittingType: knittingType,
                 maxHeight: constraints.maxHeight,
               ),

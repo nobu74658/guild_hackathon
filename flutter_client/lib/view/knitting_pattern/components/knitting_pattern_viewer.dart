@@ -2,46 +2,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/stitch.dart';
-
-class ConnectedKnittingPatternViewer extends ConsumerWidget {
-  const ConnectedKnittingPatternViewer({
-    required this.maxHeight,
-    required this.knittingType,
-    required this.image,
-    super.key,
-  });
-
-  final double maxHeight;
-  final KnittingType knittingType;
-  final img.Image image;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final Future<ui.Image> texture =
-        ref.watch(knittingPatternManagerProvider).fetchTexture();
-
-    return FutureBuilder(
-      future: texture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return KnittingPatternViewer(
-            maxHeight: maxHeight,
-            knittingType: knittingType,
-            image: image,
-            texture: snapshot.data!,
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-}
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({

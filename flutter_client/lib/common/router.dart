@@ -17,7 +17,7 @@ class KnittingPatternListRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<KnittingPatternRoute>(path: KnittingPatternScreen.path)
+@TypedGoRoute<KnittingPatternRoute>(path: ConnectedKnittingPatternScreen.path)
 class KnittingPatternRoute extends GoRouteData {
   const KnittingPatternRoute({
     required this.$extra,
@@ -32,7 +32,7 @@ class KnittingPatternRoute extends GoRouteData {
     if ($extra is! img.Image) {
       throw Exception('extra is null');
     }
-    return KnittingPatternScreen(
+    return ConnectedKnittingPatternScreen(
       image: $extra as img.Image,
       knittingType: KnittingType.fromValue(knittingType ?? ''),
     );
