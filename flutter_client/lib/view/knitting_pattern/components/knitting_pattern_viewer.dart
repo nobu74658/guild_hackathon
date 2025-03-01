@@ -2,46 +2,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/knitting_pattern_manager.dart';
 import 'package:knitting/model/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/stitch.dart';
-
-class ConnectedKnittingPatternViewer extends ConsumerWidget {
-  const ConnectedKnittingPatternViewer({
-    required this.maxHeight,
-    required this.knittingType,
-    required this.image,
-    super.key,
-  });
-
-  final double maxHeight;
-  final KnittingType knittingType;
-  final img.Image image;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final Future<ui.Image> texture =
-        ref.watch(knittingPatternManagerProvider).fetchTexture();
-
-    return FutureBuilder(
-      future: texture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return KnittingPatternViewer(
-            maxHeight: maxHeight,
-            knittingType: knittingType,
-            image: image,
-            texture: snapshot.data!,
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-}
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({
@@ -49,6 +12,7 @@ class KnittingPatternViewer extends HookWidget {
     required this.knittingType,
     required this.image,
     required this.texture,
+    required this.selectedColor,
     super.key,
   });
 
@@ -56,6 +20,7 @@ class KnittingPatternViewer extends HookWidget {
   final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
+  final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +60,8 @@ class KnittingPatternViewer extends HookWidget {
         decoration: BoxDecoration(
           border: Border.all(),
         ),
-        width: knittingWidth + knittingType.width * 0.6,
-        height: knittingHeight + knittingType.height * 0.6,
+        width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
+        height: knittingHeight,
         child: Stack(
           children: [
             for (int y = imageHeight - 1; y > -1; y--)
@@ -107,6 +72,7 @@ class KnittingPatternViewer extends HookWidget {
                   y: y,
                   pixel: image.getPixel(x, y),
                   texture: texture,
+                  selectedColor: selectedColor,
                 ),
               },
           ],
@@ -123,6 +89,7 @@ class _Stitch extends HookWidget {
     required this.y,
     required this.pixel,
     required this.texture,
+    required this.selectedColor,
   });
 
   final KnittingType knittingType;
@@ -130,6 +97,7 @@ class _Stitch extends HookWidget {
   final int y;
   final img.Pixel pixel;
   final ui.Image texture;
+  final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +120,7 @@ class _Stitch extends HookWidget {
         width: knittingType.width,
         height: knittingType.height,
         child: GestureDetector(
-          onTap: () {
-            color.value = color.value == Colors.red ? Colors.blue : Colors.red;
-          },
+          onTap: () => color.value = selectedColor,
           child: CustomPaint(
             painter: painter(
               StitchPainterData(
