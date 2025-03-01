@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 enum ColorPaletteType {
   first('パレット1', [
+    Colors.white,
+    Colors.grey,
+    Colors.blueAccent,
+    Colors.black,
+  ]),
+  second('パレット2', [
     Colors.green,
     Colors.orange,
     Colors.pink,
@@ -9,7 +15,7 @@ enum ColorPaletteType {
     Colors.black,
     Colors.teal,
   ]),
-  second('パレット2', [
+  third('パレット3', [
     Colors.yellow,
     Colors.red,
     Colors.blue,

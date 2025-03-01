@@ -136,7 +136,6 @@ func (s *Project_server) GenerateDottedImage(stream knitting_api_proto.ProjectSe
 		return fmt.Errorf("failed to parse url: %v", err)
 	}
 	q := url.Query()
-	fmt.Println(meta)
 	// Add output dimensions if provided
 	if meta.Width > 0 && meta.Height > 0 {
 		q.Set("output_width", fmt.Sprintf("%d", meta.Width))
