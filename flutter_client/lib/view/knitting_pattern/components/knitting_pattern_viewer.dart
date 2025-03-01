@@ -60,8 +60,8 @@ class KnittingPatternViewer extends HookWidget {
         decoration: BoxDecoration(
           border: Border.all(),
         ),
-        width: knittingWidth + knittingType.width * 0.6,
-        height: knittingHeight + knittingType.height * 0.6,
+        width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
+        height: knittingHeight,
         child: Stack(
           children: [
             for (int y = imageHeight - 1; y > -1; y--)
