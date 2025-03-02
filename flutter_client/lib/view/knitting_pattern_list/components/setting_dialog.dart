@@ -1,10 +1,11 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
+import 'package:knitting/app/use_case/pick_image_use_case.dart';
 import 'package:knitting/model/color_palette_type.dart';
 import 'package:knitting/model/create_type.dart';
 import 'package:knitting/model/knitting_pattern_size.dart';
@@ -16,7 +17,7 @@ class SettingDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final createType = useState(CreateType.note);
-    final selectedImage = useState<XFile?>(null);
+    final selectedImage = useState<Uint8List?>(null);
     final selectedSize = useState(KnittingPatternSizeType.eight);
     final selectedKnittingType = useState(KnittingType.singleCrochet);
     final selectedColorPalette = useState(ColorPaletteType.first);
@@ -40,8 +41,8 @@ class SettingDialog extends HookConsumerWidget {
               ),
               _CreateTypeSelectContainer(
                 onTap: (type) async {
-                  final image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
+                  final image =
+                      await ref.read(pickImageUseCaseProvider).call(null);
                   if (image == null) {
                     return;
                   }
@@ -168,14 +169,18 @@ class SettingDialog extends HookConsumerWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // TODO(nobu): 入力項目のバリデーション
-                Navigator.pop(context, {
-                  'createType': createType.value,
-                  'size': selectedSize.value,
-                  'knittingType': selectedKnittingType.value,
-                  'colorPalette': selectedColorPalette.value.paletteColors,
-                  'image': selectedImage.value,
-                });
+                final image = selectedImage.value != null
+                    ? img.decodeImage(selectedImage.value!)
+                    : null;
+
+                final result = CreateNewPatternUseCaseParam(
+                  size: selectedSize.value,
+                  image: image,
+                  createType: createType.value,
+                  colorPalette: selectedColorPalette.value.paletteColors,
+                );
+
+                Navigator.pop(context, (result, selectedKnittingType.value));
               },
               child: const Text(
                 '作成',
@@ -204,7 +209,7 @@ class _CreateTypeSelectContainer extends StatelessWidget {
   final CreateType createType;
   final CreateType selectedCreateType;
   final void Function(CreateType) onTap;
-  final XFile? selectedImage;
+  final Uint8List? selectedImage;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -225,10 +230,11 @@ class _CreateTypeSelectContainer extends StatelessWidget {
             children: [
               Text(createType.label),
               if (selectedImage != null)
-                Image.file(
-                  File(selectedImage!.path),
+                Image.memory(
+                  selectedImage!,
                   width: 40,
                   height: 40,
+                  fit: BoxFit.cover,
                 )
               else
                 Icon(
