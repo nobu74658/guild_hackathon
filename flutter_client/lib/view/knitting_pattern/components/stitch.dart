@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -30,22 +29,17 @@ class StitchPainter {
 }
 
 class _TouchablePainter extends CustomPainter {
-  _TouchablePainter(this.data)
-      : offsetX = Random(data.seed).nextDouble() * 100 + 100,
-        offsetY = Random(data.seed).nextDouble() * 100 + 100;
+  _TouchablePainter(this.data);
   final StitchPainterData data;
 
   final path = Path();
-  final double offsetX;
-  final double offsetY;
-  Matrix4 get _matrix => Matrix4.identity()..translate(-offsetX, -offsetY);
   Paint get painter => Paint()
     ..shader = ImageShader(
       data.texture,
       TileMode.repeated,
       TileMode.repeated,
-      _matrix.storage,
-      filterQuality: FilterQuality.high,
+      Matrix4.identity().storage,
+      filterQuality: FilterQuality.low,
     )
     ..colorFilter = ColorFilter.mode(data.color, BlendMode.plus);
 
