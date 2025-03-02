@@ -145,6 +145,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  cli_util:
+    dependency: transitive
+    description:
+      name: cli_util
+      sha256: ff6785f7e9e3c38ac98b2fb035701789de90154024a75b6cb926445e83197d1c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.2"
   clock:
     dependency: transitive
     description:
@@ -350,6 +358,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.5"
+  flutter_launcher_icons:
+    dependency: "direct main"
+    description:
+      name: flutter_launcher_icons
+      sha256: bfa04787c85d80ecb3f8777bde5fc10c3de809240c48fa061a2c2bf15ea5211c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -568,6 +584,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.1"
+  image_picker_web:
+    dependency: "direct main"
+    description:
+      name: image_picker_web
+      sha256: b5cf4faf66714f17b3e86b37a39d19743603163a08b968b28cadfc5df1dc2b75
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   image_picker_windows:
     dependency: transitive
     description:

@@ -2,7 +2,7 @@ name: knitting
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.1.1+2
+version: 0.1.2+3
 
 environment:
   sdk: ^3.6.0
@@ -25,6 +25,8 @@ dependencies:
   go_router: ^14.8.1
   gap: ^3.0.1
   image_picker: ^1.1.2
+  image_picker_web: ^4.0.0
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -33,11 +35,19 @@ dev_dependencies:
   build_runner: ^2.4.15
   go_router_builder: ^2.8.1
 
+flutter_icons:
+  ios: true
+  image_path: "assets/images/icon.png"
+  remove_alpha_ios: true
+  android: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/icon.png"
+
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/images/
     - assets/fonts/
 
   fonts:

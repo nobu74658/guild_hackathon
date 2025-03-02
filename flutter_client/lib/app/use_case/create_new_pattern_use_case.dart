@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/knitting_pattern_manager.dart';
+import 'package:knitting/app/manager/knitting_pattern_manager.dart';
 import 'package:knitting/common/use_case.dart';
 import 'package:knitting/model/create_type.dart';
 import 'package:knitting/model/knitting_pattern_size.dart';
