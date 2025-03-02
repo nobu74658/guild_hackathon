@@ -26,7 +26,7 @@ class KnittingPatternListScreen extends HookConsumerWidget {
         title: SizedBox(
           height: appBarHeight - 10,
           child: Image.asset(
-            'assets/logo.png',
+            'assets/images/logo.png',
           ),
         ),
         centerTitle: true,
