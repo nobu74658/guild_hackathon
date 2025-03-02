@@ -1,0 +1,109 @@
+name: publish
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        description: Please Choice Bump Target
+        options:
+          - build
+          - patch
+          - minor
+          - major
+
+jobs:
+  if-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event.inputs.bump == 'patch'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read Flutter version from .fvmrc
+        id: flutter_version
+        run: echo "FLUTTER_VERSION=$(awk -F'\"' '/flutter/ {print $4}' ./flutter_client/.fvmrc)" >> $GITHUB_ENV
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
+
+      - name: version up by cider
+        run: |
+          echo choice: ${{ github.event.inputs.bump }}
+          flutter pub get
+          flutter pub global activate cider
+          flutter pub global run cider bump ${{ github.event.inputs.bump }} --bump-build
+          echo "BUMP_VERSION=$(flutter pub global run cider version)" >> $GITHUB_ENV
+
+      - name: Commit And Push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Bump version to $BUMP_VERSION"
+          git push
+
+      - name: Generate Environment Variables
+        run: |
+          echo "BUMP_VERSION_WITH_V=v${{ env.BUMP_VERSION }}" | grep -o -E ".*[0-9]+\.[0-9]+\.[0-9]+" >> $GITHUB_ENV
+
+      - name: Create Release Note & Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit ${{ env.BUMP_VERSION_WITH_V }} --draft=false
+          gh pr create \
+            -B release \
+            -t "Release v$BUMP_VERSION" \
+            -b "Release v$BUMP_VERSION" \
+            -a ${{ github.actor }}
+
+  if-not-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event.inputs.bump != 'patch'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read Flutter version from .fvmrc
+        id: flutter_version
+        run: echo "FLUTTER_VERSION=$(awk -F'\"' '/flutter/ {print $4}' ./flutter_client/.fvmrc)" >> $GITHUB_ENV
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
+
+      - name: version up by cider
+        run: |
+          echo choice: ${{ github.event.inputs.bump }}
+          flutter pub get
+          flutter pub global activate cider
+          flutter pub global run cider bump patch --keep-build
+          echo "LATEST_VERSION=$(flutter pub global run cider version)" >> $GITHUB_ENV
+          flutter pub global run cider bump ${{ github.event.inputs.bump }} --bump-build
+          echo "BUMP_VERSION=$(flutter pub global run cider version)" >> $GITHUB_ENV
+
+      - name: Commit And Push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Bump version to $BUMP_VERSION"
+          git push
+
+      - name: Generate Environment Variables
+        run: |
+          echo "LATEST_VERSION_WITH_V=v${{ env.LATEST_VERSION }}" | grep -o -E ".*[0-9]+\.[0-9]+\.[0-9]+" >> $GITHUB_ENV
+          echo "BUMP_VERSION_WITH_V=v${{ env.BUMP_VERSION }}" | grep -o -E ".*[0-9]+\.[0-9]+\.[0-9]+" >> $GITHUB_ENV
+
+      - name: Create Release Note & Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit ${{ env.LATEST_VERSION_WITH_V }} --tag ${{ env.BUMP_VERSION_WITH_V }} --title "${{ env.BUMP_VERSION_WITH_V }} 🌈"
+          gh release edit ${{ env.BUMP_VERSION_WITH_V }} --draft=false
+          gh pr create \
+            -B release \
+            -t "Release v$BUMP_VERSION" \
+            -b "Release v$BUMP_VERSION" \
+            -a ${{ github.actor }}
