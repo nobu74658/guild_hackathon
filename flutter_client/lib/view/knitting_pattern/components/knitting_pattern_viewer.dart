@@ -95,6 +95,7 @@ class _Stitch extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final imageState = useState(image);
+    DateTime? tapDownTime;
 
     final painter =
         imageHeight.isEven ? knittingType.evenStitch : knittingType.oddStitch;
@@ -112,6 +113,17 @@ class _Stitch extends HookWidget {
       height: imageHeight * knittingType.height * knittingType.dyRatio,
       child: GestureDetector(
         onTapDown: (TapDownDetails details) {
+          tapDownTime = DateTime.now();
+        },
+        onTapUp: (TapUpDetails details) {
+          if (tapDownTime == null) {
+            return;
+          }
+          final Duration duration = DateTime.now().difference(tapDownTime!);
+          if (duration.inMilliseconds > 300) {
+            return;
+          }
+
           final RenderBox renderBox = context.findRenderObject()! as RenderBox;
           final Offset localPosition =
               renderBox.globalToLocal(details.globalPosition);
