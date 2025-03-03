@@ -135,11 +135,10 @@ class SingleCrochetKnitPainter extends _TouchablePainter {
   SingleCrochetKnitPainter(super.data);
 
   final List<Path> pathList = [];
-  int get indexList => data.image.width * data.image.height;
+  int get pixelCount => data.image.width * data.image.height;
 
   @override
   void paint(Canvas canvas, Size size) {
-    print('paint single crochet knit');
     pathList.clear();
 
     for (int y = 0; y < data.image.height; y++) {
@@ -155,7 +154,7 @@ class SingleCrochetKnitPainter extends _TouchablePainter {
   }
 
   int? getTappedIndex(Offset position) {
-    for (int i = 0; i < indexList; i++) {
+    for (int i = 0; i < pixelCount; i++) {
       if (pathList[i].contains(position)) {
         return i;
       }
@@ -179,7 +178,7 @@ class SingleCrochetKnitPainter extends _TouchablePainter {
         pixel.g.toInt(),
         pixel.b.toInt(),
       );
-      
+
     final Path path = Path();
     path
       // 上下関係の改善が必要
