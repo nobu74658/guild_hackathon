@@ -8,14 +8,12 @@ class StitchPainterData {
   StitchPainterData({
     required this.knittingType,
     required this.image,
-    required this.colors,
     required this.texture,
   });
 
   final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
-  final List<Color> colors;
 }
 
 class StitchPainter {
@@ -55,8 +53,7 @@ class _TouchablePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TouchablePainter oldDelegate) {
-    // TODO(nobu): 編み方が変更された時にも再描画する
-    return oldDelegate.data.colors != data.colors;
+    return true;
   }
 }
 
@@ -174,8 +171,16 @@ class SingleCrochetKnitPainter extends _TouchablePainter {
         data.knittingType.dxRatio *
         (data.image.height - y - 1);
 
+    final pixel = data.image.getPixel(x, y);
+    final painter = Paint()
+      ..color = Color.fromARGB(
+        pixel.a.toInt(),
+        pixel.r.toInt(),
+        pixel.g.toInt(),
+        pixel.b.toInt(),
+      );
+      
     final Path path = Path();
-    final painter = Paint()..color = data.colors[x + y * data.image.width];
     path
       // 上下関係の改善が必要
       // 上の横の糸

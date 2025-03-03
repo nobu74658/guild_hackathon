@@ -94,18 +94,15 @@ class _Stitch extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = useState(
-      List.generate(imageWidth * imageHeight, (_) => Colors.white),
-    );
+    final imageState = useState(image);
 
     final painter =
         imageHeight.isEven ? knittingType.evenStitch : knittingType.oddStitch;
 
     final SingleCrochetKnitPainter painter0 = SingleCrochetKnitPainter(
       StitchPainterData(
-        image: image,
+        image: imageState.value,
         knittingType: knittingType,
-        colors: color.value,
         texture: texture,
       ),
     );
@@ -121,10 +118,17 @@ class _Stitch extends HookWidget {
 
           final int? index = painter0.getTappedIndex(localPosition);
           if (index != null) {
-            color.value = List.generate(
-              imageWidth * imageHeight,
-              (i) => i == index ? selectedColor : color.value[i],
+            final img.Image newImage = imageState.value.clone();
+            final int x = index % image.width;
+            final int y = index ~/ image.width;
+            final color = img.ColorInt32.rgba(
+              (selectedColor.r * 255).toInt(),
+              (selectedColor.g * 255).toInt(),
+              (selectedColor.b * 255).toInt(),
+              (selectedColor.a * 255).toInt(),
             );
+            newImage.setPixel(x, y, color);
+            imageState.value = newImage;
           }
         },
         child: RepaintBoundary(
