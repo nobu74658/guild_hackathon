@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/model/knitting_type.dart';
-import 'package:knitting/view/knitting_pattern/components/stitch.dart';
+import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({
@@ -97,16 +97,12 @@ class _Stitch extends HookWidget {
     final imageState = useState(image);
     DateTime? tapDownTime;
 
-    final painter =
-        imageHeight.isEven ? knittingType.evenStitch : knittingType.oddStitch;
-
-    final SingleCrochetKnitPainter painter0 = SingleCrochetKnitPainter(
-      StitchPainterData(
-        image: imageState.value,
-        knittingType: knittingType,
-        texture: texture,
-      ),
+    final data = KnittingPainterData(
+      knittingType: knittingType,
+      image: imageState.value,
+      texture: texture,
     );
+    final painter = KnittingPainter(data);
 
     return SizedBox(
       width: imageWidth * knittingType.width * knittingType.dxRatio,
@@ -128,7 +124,7 @@ class _Stitch extends HookWidget {
           final Offset localPosition =
               renderBox.globalToLocal(details.globalPosition);
 
-          final int? index = painter0.getTappedIndex(localPosition);
+          final int? index = painter.getTappedIndex(localPosition);
           if (index != null) {
             final img.Image newImage = imageState.value.clone();
             final int x = index % image.width;
@@ -144,7 +140,7 @@ class _Stitch extends HookWidget {
           }
         },
         child: RepaintBoundary(
-          child: CustomPaint(painter: painter0),
+          child: CustomPaint(painter: painter),
         ),
       ),
     );
