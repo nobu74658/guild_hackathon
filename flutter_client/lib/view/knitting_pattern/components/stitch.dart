@@ -4,22 +4,26 @@ import 'package:flutter/material.dart';
 
 class StitchPainterData {
   StitchPainterData({
+    required this.unitWidth,
     required this.color,
+    required this.colors,
     required this.texture,
     required this.seed,
   });
 
+  final double unitWidth;
   final Color color;
   final ui.Image texture;
   final int seed;
+  final List<Color> colors;
 }
 
 class StitchPainter {
   static CustomPainter crossStitch(StitchPainterData data) =>
       _CrossStitchPainter(data);
   static CustomPainter knit(StitchPainterData data) => _KnitPainter(data);
-  static CustomPainter singleCrochetKnit(StitchPainterData data) =>
-      _SingleCrochetKnitPainter(data);
+  static SingleCrochetKnitPainter singleCrochetKnit(StitchPainterData data) =>
+      SingleCrochetKnitPainter(data);
   static CustomPainter singleCrochetPurl(StitchPainterData data) =>
       _SingleCrochetPurlPainter(data);
   static CustomPainter singleCrochetBackLoopOnly(StitchPainterData data) =>
@@ -33,15 +37,15 @@ class _TouchablePainter extends CustomPainter {
   final StitchPainterData data;
 
   final path = Path();
-  Paint get painter => Paint()
-    ..shader = ImageShader(
-      data.texture,
-      TileMode.repeated,
-      TileMode.repeated,
-      Matrix4.identity().storage,
-      filterQuality: FilterQuality.low,
-    )
-    ..colorFilter = ColorFilter.mode(data.color, BlendMode.plus);
+  Paint get painter => Paint()..color = data.color;
+  // ..shader = ImageShader(
+  //   data.texture,
+  //   TileMode.repeated,
+  //   TileMode.repeated,
+  //   Matrix4.identity().storage,
+  //   filterQuality: FilterQuality.low,
+  // )
+  // ..colorFilter = ColorFilter.mode(data.color, BlendMode.plus);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -134,95 +138,138 @@ class _KnitPainter extends _TouchablePainter {
 // 曲線済み
 // 斜行を考える必要あり
 // 輪編みの細編み(single crochet)(表)
-class _SingleCrochetKnitPainter extends _TouchablePainter {
-  _SingleCrochetKnitPainter(super.data);
+class SingleCrochetKnitPainter extends _TouchablePainter {
+  SingleCrochetKnitPainter(super.data);
+
+  final List<double> dxList = [];
+  final List<Path> pathList = [];
 
   @override
   void paint(Canvas canvas, Size size) {
+    print('paint');
+    dxList.clear();
+    pathList.clear();
+
+    for (double dx = 0; dx < size.width; dx += data.unitWidth * 1.5) {
+      _paintUnit(canvas, size, dx);
+    }
+  }
+
+  @override
+  bool shouldRepaint(SingleCrochetKnitPainter oldDelegate) {
+    return false;
+  }
+
+  @override
+  bool hitTest(Offset position) {
+    for (int i = 0; i < dxList.length; i++) {
+      if (pathList[i].contains(position)) {
+        print('Tapped dx index: $i'); // 何番目の dx か出力
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// **どの dx のパスがタップされたかを判定**
+  int? getTappedIndex(Offset position) {
+    for (int i = 0; i < dxList.length; i++) {
+      if (pathList[i].contains(position)) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+  void _paintUnit(Canvas canvas, Size size, double dx) {
+    final Path path = Path();
+    final painter = Paint()..color = data.colors[dxList.length];
     path
       // 上下関係の改善が必要
       // 上の横の糸
-      ..moveTo(size.width * 0.05, size.height * 0.05)
+      ..moveTo(data.unitWidth * 0.05 + dx, size.height * 0.05)
       // 1
       ..quadraticBezierTo(
-        size.width * 0.75,
+        data.unitWidth * 0.75 + dx,
         -size.height * 0.4,
-        size.width * 1.4,
+        data.unitWidth * 1.4 + dx,
         size.height * 0.1,
       )
       // 2
       ..quadraticBezierTo(
-        size.width * 1.5,
+        data.unitWidth * 1.5 + dx,
         size.height * 0.25,
-        size.width * 1.25,
+        data.unitWidth * 1.25 + dx,
         size.height * 0.3,
       )
       // 3
       ..quadraticBezierTo(
-        size.width * 0.8,
+        data.unitWidth * 0.8 + dx,
         -size.height * 0.15,
-        size.width * 0.3,
+        data.unitWidth * 0.3 + dx,
         size.height * 0.2,
       )
       // 4
       ..quadraticBezierTo(
-        0,
+        0 + dx,
         size.height * 0.25,
-        size.width * 0.05,
+        data.unitWidth * 0.05 + dx,
         size.height * 0.05,
       );
 
     path
       // 4
-      ..moveTo(size.width * 0.1, size.height * 0.2)
+      ..moveTo(data.unitWidth * 0.1 + dx, size.height * 0.2)
       // 5
       ..quadraticBezierTo(
-        size.width * 0.2,
+        data.unitWidth * 0.2 + dx,
         size.height * 0.8,
-        size.width * 0.56,
+        data.unitWidth * 0.56 + dx,
         size.height * 1.1,
       )
       // 6
       ..quadraticBezierTo(
-        size.width * 0.75,
+        data.unitWidth * 0.75 + dx,
         size.height * 1.1,
-        size.width * 0.75,
+        data.unitWidth * 0.75 + dx,
         size.height * 0.9,
       )
       // 7
       ..quadraticBezierTo(
-        size.width * 0.6,
+        data.unitWidth * 0.6 + dx,
         size.height * 0.4,
-        size.width * 0.4,
+        data.unitWidth * 0.4 + dx,
         size.height * 0.2,
       );
 
     // 右の縦の糸
     path
       // 8
-      ..moveTo(size.width * 0.8, size.height * 0.05)
+      ..moveTo(data.unitWidth * 0.8 + dx, size.height * 0.05)
       // 9
       ..quadraticBezierTo(
-        size.width * 0.7,
+        data.unitWidth * 0.7 + dx,
         size.height * 0.5,
-        size.width * 0.7,
+        data.unitWidth * 0.7 + dx,
         size.height * 0.75,
       )
       // 10
       ..quadraticBezierTo(
-        size.width * 0.85,
+        data.unitWidth * 0.85 + dx,
         size.height * 1.1,
-        size.width * 0.99,
+        data.unitWidth * 0.99 + dx,
         size.height * 0.9,
       )
       // 11
       ..quadraticBezierTo(
-        size.width * 1.1,
+        data.unitWidth * 1.1 + dx,
         size.height * 0.3,
-        size.width,
+        data.unitWidth + dx,
         size.height * 0.1,
       );
 
+    pathList.add(path);
+    dxList.add(dx);
     canvas.drawPath(path, painter);
   }
 }

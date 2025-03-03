@@ -65,16 +65,13 @@ class KnittingPatternViewer extends HookWidget {
         child: Stack(
           children: [
             for (int y = imageHeight - 1; y > -1; y--)
-              for (int x = 0; x < imageWidth; x++) ...{
-                _Stitch(
-                  knittingType: knittingType,
-                  x: knittingType.xIndex(x, y, imageWidth),
-                  y: y,
-                  pixel: image.getPixel(x, y),
-                  texture: texture,
-                  selectedColor: selectedColor,
-                ),
-              },
+              _Stitch(
+                knittingType: knittingType,
+                imageWidth: imageWidth,
+                y: y,
+                texture: texture,
+                selectedColor: selectedColor,
+              ),
           ],
         ),
       ),
@@ -85,50 +82,59 @@ class KnittingPatternViewer extends HookWidget {
 class _Stitch extends HookWidget {
   const _Stitch({
     required this.knittingType,
-    required this.x,
+    required this.imageWidth,
     required this.y,
-    required this.pixel,
     required this.texture,
     required this.selectedColor,
   });
 
   final KnittingType knittingType;
-  final int x;
+  final int imageWidth;
   final int y;
-  final img.Pixel pixel;
   final ui.Image texture;
   final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
-    final color = useState(
-      Color.fromARGB(
-        pixel.a.toInt(),
-        pixel.r.toInt(),
-        pixel.g.toInt(),
-        pixel.b.toInt(),
-      ),
-    );
+    final color = useState(List.generate(imageWidth, (_) => Colors.white));
 
     final painter = y.isEven ? knittingType.evenStitch : knittingType.oddStitch;
 
+    final SingleCrochetKnitPainter painter0 = SingleCrochetKnitPainter(
+      StitchPainterData(
+        unitWidth: knittingType.width * knittingType.dxRatio,
+        color: Colors.orange,
+        colors: color.value,
+        texture: texture,
+        seed: 0,
+      ),
+    );
     return Positioned(
-      right: (x + 0.1) * knittingType.width * knittingType.dxRatio +
-          knittingType.gapRatio * knittingType.width * (y - 1),
+      // right: (x + 0.1) * knittingType.width * knittingType.dxRatio +
+      // knittingType.gapRatio * knittingType.width * (y - 1),
       top: (y + 0.1) * knittingType.height * knittingType.dyRatio,
       child: SizedBox(
-        width: knittingType.width,
+        width: imageWidth * knittingType.width * knittingType.dxRatio,
         height: knittingType.height,
         child: GestureDetector(
-          onTap: () => color.value = selectedColor,
+          onTapDown: (TapDownDetails details) {
+            final RenderBox renderBox =
+                context.findRenderObject()! as RenderBox;
+            final Offset localPosition =
+                renderBox.globalToLocal(details.globalPosition);
+
+            final int? index = painter0.getTappedIndex(localPosition);
+            if (index != null) {
+              print('tapped: $index');
+              color.value = [
+                ...color.value.sublist(0, index),
+                selectedColor,
+                ...color.value.sublist(index + 1),
+              ];
+            }
+          },
           child: CustomPaint(
-            painter: painter(
-              StitchPainterData(
-                color: color.value,
-                texture: texture,
-                seed: x + y + x * y,
-              ),
-            ),
+            painter: painter0,
           ),
         ),
       ),
