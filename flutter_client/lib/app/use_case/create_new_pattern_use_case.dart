@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/manager/knitting_pattern_manager.dart';
 import 'package:knitting/common/use_case.dart';
 import 'package:knitting/model/create_type.dart';
 import 'package:knitting/model/knitting_pattern_size.dart';
@@ -45,9 +44,18 @@ class CreateNewPatternUseCase
     img.Image? image,
     List<Color> colorPalette,
   ) async {
+    if (image == null) {
+      throw Exception('image is null');
+    }
+
+    final resizedImage = img.copyResize(
+      image,
+      width: size.width,
+      height: size.height,
+    );
     // TODO(backend): ドット絵化APIを叩く(input: size, image, List<Color>)
-    final image = await ref.read(knittingPatternManagerProvider).fetchImage();
-    return image;
+
+    return resizedImage;
   }
 
   Future<img.Image> _createImage(

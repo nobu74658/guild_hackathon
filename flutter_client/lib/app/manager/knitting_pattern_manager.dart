@@ -16,7 +16,6 @@ class KnittingPatternManager {
   KnittingPatternManager();
 
   Future<img.Image> fetchImage() async {
-    await Future.delayed(const Duration(seconds: 1));
     final data = await rootBundle.load('assets/images/penguin.png');
     final bytes = data.buffer.asUint8List();
     final image = img.decodeImage(bytes);
