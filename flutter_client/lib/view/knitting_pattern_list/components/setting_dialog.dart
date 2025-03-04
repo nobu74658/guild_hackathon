@@ -6,10 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
 import 'package:knitting/app/use_case/pick_image_use_case.dart';
-import 'package:knitting/model/color_palette_type.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 
 class SettingDialog extends HookConsumerWidget {
   const SettingDialog({super.key});

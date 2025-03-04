@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/app/manager/project_manager.dart';
+import 'package:knitting/common/extension/color_extension.dart';
 import 'package:knitting/common/use_case.dart';
-import 'package:knitting/model/create_type.dart';
-import 'package:knitting/model/knitting_pattern_size.dart';
+import 'package:knitting/model/types/create_type.dart';
+import 'package:knitting/model/types/knitting_pattern_size.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_new_pattern_use_case.g.dart';
@@ -47,15 +49,16 @@ class CreateNewPatternUseCase
     if (image == null) {
       throw Exception('image is null');
     }
+    final hexColorPalette = colorPalette.toHexStrings();
 
-    final resizedImage = img.copyResize(
-      image,
-      width: size.width,
-      height: size.height,
-    );
-    // TODO(backend): ドット絵化APIを叩く(input: size, image, List<Color>)
-
-    return resizedImage;
+    final dottedImage =
+        await ref.read(projectManagerProvider).generateDottedImage(
+              image,
+              size.width,
+              size.height,
+              hexColorPalette,
+            );
+    return dottedImage;
   }
 
   Future<img.Image> _createImage(

@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/manager/knitting_pattern_manager.dart';
-import 'package:knitting/model/color_palette_type.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/app/manager/asset_image_manager.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
@@ -14,19 +13,21 @@ import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewe
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
     required this.knittingType,
+    required this.colorPalette,
     required this.backgroundColor,
     super.key,
   });
 
   final KnittingType knittingType;
+  final List<Color> colorPalette;
   final Color? backgroundColor;
 
   static const path = '/debug-edit';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final image = ref.read(knittingPatternManagerProvider).fetchImage();
-    final texture = ref.watch(knittingPatternManagerProvider).fetchTexture();
+    final image = ref.read(assetImageManagerProvider).fetchImage();
+    final texture = ref.read(assetImageManagerProvider).fetchTexture();
     final future = Future.wait([image, texture]);
 
     return FutureBuilder(
@@ -37,6 +38,7 @@ class DebugKnittingPatternScreen extends ConsumerWidget {
             image: snapshot.data![0] as img.Image,
             texture: snapshot.data![1] as ui.Image,
             knittingType: knittingType,
+            colorPalette: colorPalette,
             backgroundColor: backgroundColor,
           );
         } else {
@@ -54,6 +56,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
   const ConnectedKnittingPatternScreen({
     required this.image,
     required this.knittingType,
+    required this.colorPalette,
     required this.backgroundColor,
     super.key,
   });
@@ -62,12 +65,13 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
 
   final img.Image image;
   final KnittingType knittingType;
+  final List<Color> colorPalette;
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<ui.Image> texture =
-        ref.watch(knittingPatternManagerProvider).fetchTexture();
+        ref.watch(assetImageManagerProvider).fetchTexture();
 
     return FutureBuilder(
       future: texture,
@@ -77,6 +81,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
             image: image,
             texture: snapshot.data!,
             knittingType: knittingType,
+            colorPalette: colorPalette,
             backgroundColor: backgroundColor,
           );
         } else {
@@ -95,12 +100,14 @@ class _KnittingPatternScreen extends HookWidget {
     required this.image,
     required this.texture,
     required this.knittingType,
+    required this.colorPalette,
     required this.backgroundColor,
   });
 
   final img.Image image;
   final ui.Image texture;
   final KnittingType knittingType;
+  final List<Color> colorPalette;
   final Color? backgroundColor;
 
   @override
@@ -108,7 +115,6 @@ class _KnittingPatternScreen extends HookWidget {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     PersistentBottomSheetController? controller;
 
-    final colorPalette = ColorPaletteType.first.paletteColors;
     final color = useValueNotifier(colorPalette.first);
     final scale = useValueNotifier<double>(1.0);
     final selectedKnittingType = useValueNotifier(knittingType);

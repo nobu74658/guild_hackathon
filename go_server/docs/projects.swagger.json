@@ -48,6 +48,39 @@
         ]
       }
     },
+    "/api.ProjectService/GenerateDottedImage": {
+      "post": {
+        "operationId": "ProjectService_GenerateDottedImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGenerateDottedImageResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiGenerateDottedImageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ProjectService"
+        ]
+      }
+    },
     "/api.ProjectService/GetProject": {
       "post": {
         "operationId": "ProjectService_GetProject",
@@ -170,6 +203,27 @@
         }
       }
     },
+    "apiGenerateDottedImageRequest": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/apiMeta"
+        },
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "apiGenerateDottedImageResponse": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "apiGetProjectRequest": {
       "type": "object",
       "properties": {
@@ -194,6 +248,25 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/apiProject"
+          }
+        }
+      }
+    },
+    "apiMeta": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "string",
+          "format": "int64"
+        },
+        "height": {
+          "type": "string",
+          "format": "int64"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

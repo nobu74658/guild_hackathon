@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/painters/stitch_painter.dart';
 
 class KnittingPainterData {

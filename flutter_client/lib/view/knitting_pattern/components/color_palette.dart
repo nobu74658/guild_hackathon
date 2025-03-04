@@ -78,7 +78,7 @@ class _PaletteCircle extends StatelessWidget {
         radius: radius,
         backgroundColor: color == selectedColor ? Colors.blue : Colors.grey,
         child: CircleAvatar(
-          radius: color == selectedColor ? radius - 2 : radius,
+          radius: radius - 2,
           backgroundColor: color,
         ),
       ),
