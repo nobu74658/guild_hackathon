@@ -3,12 +3,13 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grpc/grpc.dart';
-import 'package:image/image.dart';
+import 'package:image/image.dart' as img;
 import 'package:knitting/build/grpc/projects.pbgrpc.dart' as grpc_projects;
-import 'package:knitting/common/infrastructure/grpc_repository.dart';
-import 'package:knitting/infrastructure/project_repository_interface.dart';
+import 'package:knitting/infra/grpc_repository.dart';
+import 'package:knitting/infra/project_repository_interface.dart';
 import 'package:knitting/model/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +20,9 @@ ProjectRepositoryInterface projectRepository(Ref ref) =>
     _ProjectRepository(channel: ref.watch(clientChannelProvider));
 
 class _ProjectRepository extends ProjectRepositoryInterface {
-  _ProjectRepository({required this.channel});
+  _ProjectRepository({required this.channel}) {
+    debugPrint('ProjectRepository instance created');
+  }
 
   final ClientChannel channel;
 
@@ -74,8 +77,8 @@ class _ProjectRepository extends ProjectRepositoryInterface {
   }
 
   @override
-  Future<Image> generateDottedImage(
-    Image image,
+  Future<img.Image> generateDottedImage(
+    img.Image image,
     int width,
     int height,
     List<String> colors,
@@ -100,7 +103,7 @@ class _ProjectRepository extends ProjectRepositoryInterface {
     // 次に画像データを送信
     requestStream.add(
       grpc_projects.GenerateDottedImageRequest(
-        image: encodePng(image).toList(),
+        image: img.encodePng(image).toList(),
       ),
     );
 
@@ -112,7 +115,7 @@ class _ProjectRepository extends ProjectRepositoryInterface {
 
     // 返却された画像データを Image オブジェクトに変換
     // バイトデータから PNG 画像としてデコードする
-    final dottedImage = decodePng(Uint8List.fromList(response.image));
+    final dottedImage = img.decodePng(Uint8List.fromList(response.image));
     if (dottedImage == null) {
       throw Exception('Failed to decode the received image');
     }

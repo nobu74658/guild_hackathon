@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart';
-import 'package:knitting/infrastructure/project_repository.dart';
-import 'package:knitting/infrastructure/project_repository_interface.dart';
+import 'package:knitting/infra/project_repository.dart';
+import 'package:knitting/infra/project_repository_interface.dart';
 import 'package:knitting/model/entities/project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

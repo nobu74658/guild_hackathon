@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug dev", // ローカル開発環境 (FakeRepositoryを使用)
+            "program": "flutter_client/lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--dart-define-from-file=dart_defines/dev.env",
+            ]
+        },
+        {
+            "name": "Debug stg", // ステージング環境
+            "program": "flutter_client/lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--dart-define-from-file=dart_defines/stg.env"
+            ]
+        },
+        {
+            "name": "Release prod", // 本番環境
+            "program": "flutter_client/lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--dart-define-from-file=dart_defines/prod.env"
+            ]
+        }
+    ]
+}

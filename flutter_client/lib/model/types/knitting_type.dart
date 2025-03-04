@@ -1,7 +1,6 @@
 // ignore_for_file: unused_element
 
-import 'package:flutter/material.dart';
-import 'package:knitting/view/knitting_pattern/components/stitch.dart';
+import 'package:knitting/view/knitting_pattern/painters/stitch_painter.dart';
 
 enum KnittingType {
   singleCrochet._(
@@ -9,8 +8,7 @@ enum KnittingType {
     evenStitch: StitchPainter.singleCrochetPurl,
     label: '細編み（往復）',
     value: 'singleCrochet',
-    isEvenRowStartRight: false,
-    height: 80,
+    height: 800,
   ),
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
@@ -19,7 +17,7 @@ enum KnittingType {
     value: 'singleCrochetFrontLoop',
     isEvenRowStartRight: false,
     isOddRowStartRight: false,
-    width: 80,
+    width: 800,
     gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
   );
 
@@ -30,15 +28,15 @@ enum KnittingType {
     required this.label,
     this.isOddRowStartRight = true,
     this.isEvenRowStartRight = true,
-    this.width = 100,
-    this.height = 100,
+    this.width = 1000,
+    this.height = 1000,
     this.dxRatio = 1.0,
     this.dyRatio = 1.0,
     this.gapRatio = 0.0,
   });
 
-  final CustomPainter Function(StitchPainterData) oddStitch;
-  final CustomPainter Function(StitchPainterData) evenStitch;
+  final AbstractStitchPainter Function(StitchPainterData data) oddStitch;
+  final AbstractStitchPainter Function(StitchPainterData data) evenStitch;
   final String label;
   final String value;
   final bool isOddRowStartRight;
@@ -48,14 +46,6 @@ enum KnittingType {
   final double dxRatio;
   final double dyRatio;
   final double gapRatio;
-
-  int xIndex(int x, int y, int maxWidth) {
-    if (y.isEven) {
-      return isEvenRowStartRight ? x : maxWidth - x - 1;
-    } else {
-      return isOddRowStartRight ? x : maxWidth - x - 1;
-    }
-  }
 
   static KnittingType fromValue(String value) {
     switch (value) {

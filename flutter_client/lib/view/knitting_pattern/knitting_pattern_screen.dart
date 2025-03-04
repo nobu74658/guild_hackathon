@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/knitting_pattern_manager.dart';
+import 'package:knitting/app/manager/asset_image_manager.dart';
 import 'package:knitting/model/types/color_palette_type.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
@@ -25,8 +25,8 @@ class DebugKnittingPatternScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final image = ref.read(knittingPatternManagerProvider).fetchImage();
-    final texture = ref.watch(knittingPatternManagerProvider).fetchTexture();
+    final image = ref.read(assetImageManagerProvider).fetchImage();
+    final texture = ref.read(assetImageManagerProvider).fetchTexture();
     final future = Future.wait([image, texture]);
 
     return FutureBuilder(
@@ -67,7 +67,7 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<ui.Image> texture =
-        ref.watch(knittingPatternManagerProvider).fetchTexture();
+        ref.watch(assetImageManagerProvider).fetchTexture();
 
     return FutureBuilder(
       future: texture,

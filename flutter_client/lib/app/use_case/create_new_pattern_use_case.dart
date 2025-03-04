@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/app/project_manager.dart';
-import 'package:knitting/common/extensions/color_extensions.dart';
+import 'package:knitting/app/manager/project_manager.dart';
+import 'package:knitting/common/extension/color_extension.dart';
 import 'package:knitting/common/use_case.dart';
 import 'package:knitting/model/types/create_type.dart';
 import 'package:knitting/model/types/knitting_pattern_size.dart';
@@ -46,11 +46,14 @@ class CreateNewPatternUseCase
     img.Image? image,
     List<Color> colorPalette,
   ) async {
+    if (image == null) {
+      throw Exception('image is null');
+    }
     final hexColorPalette = colorPalette.toHexStrings();
 
     final dottedImage =
         await ref.read(projectManagerProvider).generateDottedImage(
-              image!,
+              image,
               size.width,
               size.height,
               hexColorPalette,
