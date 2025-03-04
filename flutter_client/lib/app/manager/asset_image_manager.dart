@@ -6,14 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'knitting_pattern_manager.g.dart';
+part 'asset_image_manager.g.dart';
 
 @riverpod
-KnittingPatternManager knittingPatternManager(Ref ref) =>
-    KnittingPatternManager();
+AssetImageManager assetImageManager(Ref ref) => AssetImageManager();
 
-class KnittingPatternManager {
-  KnittingPatternManager();
+class AssetImageManager {
+  AssetImageManager();
 
   Future<img.Image> fetchImage() async {
     final data = await rootBundle.load('assets/images/penguin.png');
