@@ -83,8 +83,11 @@ class KnittingPatternListScreen extends HookConsumerWidget {
                           if (context.mounted) {
                             Navigator.pop(context);
                             KnittingPatternRoute(
-                              $extra: image,
-                              knittingType: result.$2.value,
+                              $extra: KnittingPatternRouteData(
+                                image: image,
+                                knittingType: result.$2,
+                                colorPalette: result.$1.colorPalette,
+                              ),
                             ).push(context);
                           }
                         }

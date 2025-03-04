@@ -43,15 +43,11 @@ RouteBase get $knittingPatternRoute => GoRouteData.$route(
 extension $KnittingPatternRouteExtension on KnittingPatternRoute {
   static KnittingPatternRoute _fromState(GoRouterState state) =>
       KnittingPatternRoute(
-        knittingType: state.uri.queryParameters['knitting-type'],
-        $extra: state.extra as Object,
+        $extra: state.extra as KnittingPatternRouteData,
       );
 
   String get location => GoRouteData.$location(
         '/edit',
-        queryParams: {
-          if (knittingType != null) 'knitting-type': knittingType,
-        },
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);
