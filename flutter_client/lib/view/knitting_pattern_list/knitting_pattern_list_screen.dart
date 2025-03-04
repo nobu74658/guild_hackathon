@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:knitting/app/manager/project_manager.dart';
 import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
 import 'package:knitting/common/color.dart';
 import 'package:knitting/common/router.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/components/show_dialog.dart';
 import 'package:knitting/view/knitting_pattern_list/components/setting_dialog.dart';
 
@@ -31,56 +32,77 @@ class KnittingPatternListScreen extends HookConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: GridView.builder(
-        itemCount: knittingPatterns.length + 1,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: border,
-              ),
-              child: IconButton(
-                color: Colors.grey,
-                iconSize: 100,
-                icon: const Icon(CupertinoIcons.add),
-                onPressed: () async {
-                  final result = await showDialog<
-                      (CreateNewPatternUseCaseParam, KnittingType)>(
-                    context: context,
-                    builder: (context) => const SettingDialog(),
-                  );
-
-                  if (result == null) {
-                    return;
-                  }
-
-                  if (context.mounted) {
-                    SD.circular(context);
-
-                    final image = await ref
-                        .read(createNewPatternUseCaseProvider)
-                        .call(result.$1);
-
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                      KnittingPatternRoute(
-                        $extra: image,
-                        knittingType: result.$2.value,
-                      ).push(context);
-                    }
-                  }
-                },
-              ),
+      body: FutureBuilder(
+        future: ref.read(projectManagerProvider).fetchAllProjects(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.primaries[index % 6],
-              border: border,
-            ),
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('通信エラーが発生しました'),
+            );
+          }
+          if (snapshot.hasData) {
+            return GridView.builder(
+              itemCount: knittingPatterns.length + 1,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: border,
+                    ),
+                    child: IconButton(
+                      color: Colors.grey,
+                      iconSize: 100,
+                      icon: const Icon(CupertinoIcons.add),
+                      onPressed: () async {
+                        final result = await showDialog<
+                            (CreateNewPatternUseCaseParam, KnittingType)>(
+                          context: context,
+                          builder: (context) => const SettingDialog(),
+                        );
+
+                        if (result == null) {
+                          return;
+                        }
+
+                        if (context.mounted) {
+                          SD.circular(context);
+
+                          final image = await ref
+                              .read(createNewPatternUseCaseProvider)
+                              .call(result.$1);
+
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            KnittingPatternRoute(
+                              $extra: image,
+                              knittingType: result.$2.value,
+                            ).push(context);
+                          }
+                        }
+                      },
+                    ),
+                  );
+                }
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.primaries[index % 6],
+                    border: border,
+                  ),
+                );
+              },
+            );
+          }
+          return const Center(
+            child: Text('No data available'),
           );
         },
       ),

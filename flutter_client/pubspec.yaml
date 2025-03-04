@@ -25,6 +25,7 @@ dependencies:
   go_router: ^14.8.1
   gap: ^3.0.1
   image_picker: ^1.1.2
+  fixnum: ^1.1.1
   image_picker_web: ^4.0.0
   flutter_launcher_icons: ^0.14.3
 

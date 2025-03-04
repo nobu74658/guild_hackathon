@@ -25,6 +25,38 @@ const GetProjectsRequest$json = {
 final $typed_data.Uint8List getProjectsRequestDescriptor = $convert.base64Decode(
     'ChJHZXRQcm9qZWN0c1JlcXVlc3QSFwoHdXNlcl9pZBgBIAEoCVIGdXNlcklk');
 
+@$core.Deprecated('Use generateDottedImageRequestDescriptor instead')
+const GenerateDottedImageRequest$json = {
+  '1': 'GenerateDottedImageRequest',
+  '2': [
+    {'1': 'meta', '3': 1, '4': 1, '5': 11, '6': '.api.Meta', '9': 0, '10': 'meta'},
+    {'1': 'image', '3': 2, '4': 1, '5': 12, '9': 0, '10': 'image'},
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `GenerateDottedImageRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateDottedImageRequestDescriptor = $convert.base64Decode(
+    'ChpHZW5lcmF0ZURvdHRlZEltYWdlUmVxdWVzdBIfCgRtZXRhGAEgASgLMgkuYXBpLk1ldGFIAF'
+    'IEbWV0YRIWCgVpbWFnZRgCIAEoDEgAUgVpbWFnZUIHCgV2YWx1ZQ==');
+
+@$core.Deprecated('Use metaDescriptor instead')
+const Meta$json = {
+  '1': 'Meta',
+  '2': [
+    {'1': 'width', '3': 1, '4': 1, '5': 3, '10': 'width'},
+    {'1': 'height', '3': 2, '4': 1, '5': 3, '10': 'height'},
+    {'1': 'colors', '3': 3, '4': 3, '5': 9, '10': 'colors'},
+  ],
+};
+
+/// Descriptor for `Meta`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List metaDescriptor = $convert.base64Decode(
+    'CgRNZXRhEhQKBXdpZHRoGAEgASgDUgV3aWR0aBIWCgZoZWlnaHQYAiABKANSBmhlaWdodBIWCg'
+    'Zjb2xvcnMYAyADKAlSBmNvbG9ycw==');
+
 @$core.Deprecated('Use createProjectRequestDescriptor instead')
 const CreateProjectRequest$json = {
   '1': 'CreateProjectRequest',
@@ -69,6 +101,18 @@ const UpdateProjectRequest$json = {
 final $typed_data.Uint8List updateProjectRequestDescriptor = $convert.base64Decode(
     'ChRVcGRhdGVQcm9qZWN0UmVxdWVzdBIOCgJpZBgBIAEoCVICaWQSFAoFdGl0bGUYAiABKAlSBX'
     'RpdGxlEiMKDWtuaXR0aW5nX3R5cGUYAyABKAlSDGtuaXR0aW5nVHlwZQ==');
+
+@$core.Deprecated('Use generateDottedImageResponseDescriptor instead')
+const GenerateDottedImageResponse$json = {
+  '1': 'GenerateDottedImageResponse',
+  '2': [
+    {'1': 'image', '3': 1, '4': 1, '5': 12, '10': 'image'},
+  ],
+};
+
+/// Descriptor for `GenerateDottedImageResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateDottedImageResponseDescriptor = $convert.base64Decode(
+    'ChtHZW5lcmF0ZURvdHRlZEltYWdlUmVzcG9uc2USFAoFaW1hZ2UYASABKAxSBWltYWdl');
 
 @$core.Deprecated('Use getProjectsResponseDescriptor instead')
 const GetProjectsResponse$json = {

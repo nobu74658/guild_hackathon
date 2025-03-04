@@ -10,6 +10,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -75,6 +76,110 @@ func (s *Project_server) GetProjects(ctx context.Context, in *knitting_api_proto
 	return response, nil
 }
 
+func (s *Project_server) GenerateDottedImage(stream knitting_api_proto.ProjectService_GenerateDottedImageServer) error {
+	var (
+		meta       *knitting_api_proto.Meta
+		imageBytes []byte
+	)
+	for {
+		res, err := stream.Recv()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return fmt.Errorf("failed to receive request: %v", err)
+		}
+
+		if res.GetMeta() != nil {
+			meta = res.GetMeta()
+		}
+
+		if res.GetImage() != nil {
+			imageBytes = res.GetImage()
+		}
+	}
+
+	// Check if we received all necessary data
+	if meta == nil {
+		return fmt.Errorf("missing meta information")
+	}
+	if imageBytes == nil {
+		return fmt.Errorf("missing image data")
+	}
+
+	// Create a multipart form request
+	form := bytes.NewBuffer(nil)
+	mw := multipart.NewWriter(form)
+
+	// Add the image file to the form
+	part, err := mw.CreateFormFile("image_file", "image.png")
+	if err != nil {
+		return fmt.Errorf("failed to create form file: %v", err)
+	}
+
+	if _, err := part.Write(imageBytes); err != nil {
+		return fmt.Errorf("failed to write image bytes: %v", err)
+	}
+
+	// Close the writer to finalize the form
+	if err := mw.Close(); err != nil {
+		return fmt.Errorf("failed to close form writer: %v", err)
+	}
+
+	// Create the HTTP request
+	base_url := "http://localhost:8000/api/convert"
+	// add query params
+	url, err := url.Parse(base_url)
+	if err != nil {
+		return fmt.Errorf("failed to parse url: %v", err)
+	}
+	q := url.Query()
+	// Add output dimensions if provided
+	if meta.Width > 0 && meta.Height > 0 {
+		q.Set("output_width", fmt.Sprintf("%d", meta.Width))
+		q.Set("output_height", fmt.Sprintf("%d", meta.Height))
+	}
+	for _, color := range meta.Colors {
+		q.Add("available_colors_hex", color)
+	}
+	url.RawQuery = q.Encode()
+	image_api_url := url.String()
+	req, err := http.NewRequestWithContext(stream.Context(), "POST", image_api_url, form)
+	if err != nil {
+		return fmt.Errorf("failed to create request: %v", err)
+	}
+
+	// Set the content type to include the multipart boundary
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+
+	// Execute the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to send request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Check response status
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("API request failed with status code: %d", resp.StatusCode)
+	}
+
+	// Read the response (converted image)
+	convertedImageBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to read response: %v", err)
+	}
+
+	// Send the response back to the client
+	response := &knitting_api_proto.GenerateDottedImageResponse{
+		Image: convertedImageBytes,
+	}
+	return stream.SendAndClose(response)
+}
+
 func (s *Project_server) CreateProject(ctx context.Context, in *knitting_api_proto.CreateProjectRequest) (*knitting_api_proto.Project, error) {
 	image_bytes := in.Image
 
@@ -98,7 +203,7 @@ func (s *Project_server) CreateProject(ctx context.Context, in *knitting_api_pro
 
 	// Add available colors if provided
 	for _, color := range in.Colors {
-		if err := mw.WriteField("avalilable_colors_hex", color); err != nil {
+		if err := mw.WriteField("available_colors_hex", color); err != nil {
 			return nil, fmt.Errorf("failed to add color: %v", err)
 		}
 	}

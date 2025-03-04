@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern_list/knitting_pattern_list_screen.dart';
 

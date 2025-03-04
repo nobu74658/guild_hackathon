@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:knitting/model/knitting_type.dart';
+import 'package:knitting/model/types/knitting_type.dart';
 
 class KnittingPatternSelector extends StatelessWidget {
   const KnittingPatternSelector({
