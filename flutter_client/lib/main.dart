@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:knitting/common/overrides.dart';
 import 'package:knitting/common/router.dart';
 import 'package:knitting/common/theme.dart';
 import 'package:knitting/common/util/authentication.dart';
@@ -15,8 +16,9 @@ void main() async {
   final User? _ = await Authentication.signInAnonymously();
 
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      overrides: Overrides.value,
+      child: const MyApp(),
     ),
   );
 }
