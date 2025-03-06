@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '561731936896',
     projectId: 'yiwashita-guild-hackason',
     storageBucket: 'yiwashita-guild-hackason.firebasestorage.app',
-    iosClientId: '561731936896-bfjuqt8bhjni80cgta8jc7kvtrpq578h.apps.googleusercontent.com',
+    iosClientId:
+        '561731936896-bfjuqt8bhjni80cgta8jc7kvtrpq578h.apps.googleusercontent.com',
     iosBundleId: 'com.yiwashita.knitting',
   );
 }

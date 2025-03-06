@@ -10,7 +10,12 @@ part 'project_manager.g.dart';
 abstract class ProjectManagerInterface {
   Future<Project> fetchProject(String projectId);
   Future<List<Project>> fetchAllProjects();
-  Future<Image> generateDottedImage(Image image, int width, int height, List<String> colors);
+  Future<Image> generateDottedImage(
+    Image image,
+    int width,
+    int height,
+    List<String> colors,
+  );
 }
 
 @riverpod
@@ -33,7 +38,12 @@ class _ProjectManager extends ProjectManagerInterface {
   }
 
   @override
-  Future<Image> generateDottedImage(Image image, int width, int height, List<String> colors) {
+  Future<Image> generateDottedImage(
+    Image image,
+    int width,
+    int height,
+    List<String> colors,
+  ) {
     return repository.generateDottedImage(image, width, height, colors);
   }
 }

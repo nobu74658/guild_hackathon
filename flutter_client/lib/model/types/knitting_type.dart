@@ -1,4 +1,5 @@
 // ignore_for_file: unused_element
+// 選択肢に表示される編み地
 
 import 'package:knitting/view/knitting_pattern/painters/stitch_painter.dart';
 
@@ -18,17 +19,39 @@ enum KnittingType {
     value: 'singleCrochetFrontLoop',
     isEvenRowStartRight: false,
     isOddRowStartRight: false,
-    width: 800,
+    // width: 800,
     gapRatio: 1 / 8, // TODO(nobu): 負の値に対応する
-  );
+  ),
+  singleCrochetBackLoopOnly._(
+    oddStitch: StitchPainter.singleCrochetBackLoopOnly,
+    evenStitch: StitchPainter.singleCrochetBackLoopOnly,
+    label: 'すじ編み',
+    value: 'singleCrochetBackLoopOnly',
+    height: 800,
+  ),
+  knit._(
+    oddStitch: StitchPainter.knit,
+    evenStitch: StitchPainter.knit,
+    value: 'knit',
+    label: 'メリヤス編み',
+  ),
+  // 不要なんだけど、見た目の確認のために表示
+  singleCrochetPurl._(
+    oddStitch: StitchPainter.singleCrochetPurl,
+    evenStitch: StitchPainter.singleCrochetPurl,
+    label: '細編み(裏あみ)',
+    value: 'singleCrochet',
+    // height: 800,
+  ),
+  ;
 
   const KnittingType._({
     required this.oddStitch,
     required this.evenStitch,
     required this.value,
     required this.label,
-    this.isOddRowStartRight = true,
-    this.isEvenRowStartRight = true,
+    this.isOddRowStartRight = true, //左右の重なり
+    this.isEvenRowStartRight = true, //左右の重なり
     this.width = 1000,
     this.height = 1000,
     this.dxRatio = 1.0,
