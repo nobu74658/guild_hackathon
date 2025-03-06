@@ -51,6 +51,10 @@ abstract class AbstractStitchPainter {
 
   double get width => data.knittingData.knittingType.width;
   double get height => data.knittingData.knittingType.height;
+  double get certainWidthGap =>
+      data.y.isEven ? data.knittingData.knittingType.certainWidthGap : 0;
+  double get certainHeightGap =>
+      data.y.isEven ? data.knittingData.knittingType.certainHeightGap : 0;
   double get dx => data.x * width;
   double get dy => data.y * height;
   double get dxGap =>
