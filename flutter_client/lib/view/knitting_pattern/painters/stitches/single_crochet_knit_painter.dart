@@ -3,6 +3,8 @@ part of '../stitch_painter.dart';
 // 曲線済み
 // 斜行を考える必要あり
 // 輪編みの細編み(single crochet)(表)
+// ４号だと思うなら修正する必要あり
+// ６号だと問題ない可能性もある
 class _SingleCrochetKnitPainter extends AbstractStitchPainter {
   _SingleCrochetKnitPainter(super.data);
 
@@ -43,7 +45,7 @@ class _SingleCrochetKnitPainter extends AbstractStitchPainter {
         width * 0.05 + dx + dxGap,
         height * 0.05 + dy,
       );
-
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
     path
       // 4
       ..moveTo(
@@ -71,6 +73,7 @@ class _SingleCrochetKnitPainter extends AbstractStitchPainter {
         width * 0.4 + dx + dxGap,
         height * 0.2 + dy,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     // 右の縦の糸
     path
@@ -100,6 +103,8 @@ class _SingleCrochetKnitPainter extends AbstractStitchPainter {
         width + dx + dxGap,
         height * 0.1 + dy,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
+
     return path;
   }
 }
