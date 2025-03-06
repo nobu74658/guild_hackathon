@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 

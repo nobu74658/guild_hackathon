@@ -124,18 +124,16 @@ class _Stitch extends HookWidget {
           final Offset localPosition =
               renderBox.globalToLocal(details.globalPosition);
 
-          final int? index = painter.getTappedIndex(localPosition);
-          if (index != null) {
+          final point = painter.getTappedIndex(localPosition);
+          if (point != null) {
             final img.Image newImage = imageState.value.clone();
-            final int x = index % image.width;
-            final int y = index ~/ image.width;
             final color = img.ColorInt32.rgba(
               (selectedColor.r * 255).toInt(),
               (selectedColor.g * 255).toInt(),
               (selectedColor.b * 255).toInt(),
               (selectedColor.a * 255).toInt(),
             );
-            newImage.setPixel(x, y, color);
+            newImage.setPixel(point.$1, point.$2, color);
             imageState.value = newImage;
           }
         },

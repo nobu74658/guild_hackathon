@@ -20,7 +20,6 @@ class KnittingPainterData {
 class KnittingPainter extends CustomPainter {
   KnittingPainter(this.data);
 
-  int get _pixelCount => data.image.width * data.image.height;
   final List<Path> _pathList = [];
 
   final KnittingPainterData data;
@@ -29,11 +28,11 @@ class KnittingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (int y = 0; y < data.image.height; y++) {
+    for (int y = data.image.height - 1; y > -1; y--) {
       for (int x = 0; x < data.image.width; x++) {
         final isStartRight = y.isEven
             ? data.knittingType.isEvenRowStartRight
-            : !data.knittingType.isEvenRowStartRight;
+            : data.knittingType.isOddRowStartRight;
         final stitchPainterData = StitchPainterData(
           x: _xIndex(x, isStartRight),
           y: y,
@@ -58,16 +57,15 @@ class KnittingPainter extends CustomPainter {
     return true;
   }
 
-  int? getTappedIndex(Offset position) {
-    for (int i = 0; i < _pixelCount; i++) {
-      final x = i % data.image.width;
-      final y = i ~/ data.image.width;
-      final isStartRight = y.isEven
-          ? data.knittingType.isEvenRowStartRight
-          : !data.knittingType.isEvenRowStartRight;
-      final xIndex = _xIndex(x, isStartRight);
-      if (_pathList[y * data.image.width + xIndex].contains(position)) {
-        return i;
+  (int, int)? getTappedIndex(Offset position) {
+    for (int y = 0; y < data.image.height; y++) {
+      for (int x = 0; x < data.image.width; x++) {
+        final isStartRight = y.isOdd
+            ? data.knittingType.isEvenRowStartRight
+            : data.knittingType.isOddRowStartRight;
+        if (_pathList[y * data.image.width + x].contains(position)) {
+          return (_xIndex(x, isStartRight), data.image.height - y - 1);
+        }
       }
     }
     return null;
