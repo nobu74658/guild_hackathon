@@ -8,6 +8,7 @@ enum KnittingType {
     evenStitch: StitchPainter.singleCrochetPurl,
     label: '細編み（往復）',
     value: 'singleCrochet',
+    isEvenRowStartRight: false,
     height: 800,
   ),
   singleCrochetFrontLoop._(
