@@ -10,7 +10,9 @@ class _SingleCrochetPurlPainter extends AbstractStitchPainter {
     path
       // 一番上の横の糸
       ..moveTo(
-          width * 0.25 + dx + dxGap + widthGap, height * 0.3 + dy + heightGap)
+        width * 0.25 + dx + dxGap + widthGap,
+        height * 0.3 + dy + heightGap,
+      )
       // 1
       ..quadraticBezierTo(
         0 + dx + dxGap + widthGap,
@@ -42,7 +44,9 @@ class _SingleCrochetPurlPainter extends AbstractStitchPainter {
       // 右上から中央の左斜めの糸
       // 10
       ..moveTo(
-          width * 0.65 + dx + dxGap + widthGap, height * 0.55 + dy + heightGap)
+        width * 0.65 + dx + dxGap + widthGap,
+        height * 0.55 + dy + heightGap,
+      )
       // 11
       ..quadraticBezierTo(
         width * 0.45 + dx + dxGap + widthGap,
