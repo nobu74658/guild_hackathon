@@ -7,8 +7,11 @@ import 'package:image/image.dart' as img;
 import 'package:knitting/app/manager/asset_image_manager.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
+import 'package:knitting/view/knitting_pattern/components/color_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
+
+enum BottomSheetType { color, knittingType }
 
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
@@ -117,6 +120,7 @@ class _KnittingPatternScreen extends HookWidget {
 
     final color = useValueNotifier(colorPalette.first);
     final selectedKnittingType = useValueNotifier(knittingType);
+    BottomSheetType? lastSelectedBottomSheet;
 
     return Scaffold(
       key: scaffoldKey,
@@ -147,69 +151,47 @@ class _KnittingPatternScreen extends HookWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GestureDetector(
+                    ColorSelector(
+                      colorPalette: colorPalette,
+                      color: color,
                       onTap: () {
-                        if (controller != null) {
-                          controller?.close();
-                          controller = null;
-                          return;
-                        }
-
-                        controller = scaffoldKey.currentState?.showBottomSheet(
-                          (context) => ColorPalette(
+                        final newController = _showBottomSheet(
+                          widget: ColorPalette(
                             onTap: (value) {
                               color.value = value;
                               Navigator.pop(context);
+                              lastSelectedBottomSheet = null;
                             },
                             paletteColors: colorPalette,
                             selectedColor: color.value,
                           ),
-                          backgroundColor: Colors.white,
-                          enableDrag: true,
-                          showDragHandle: true,
+                          bottomSheetType: BottomSheetType.color,
+                          lastSelectedBottomSheet: lastSelectedBottomSheet,
+                          scaffoldKey: scaffoldKey,
+                          controller: controller,
                         );
-                        controller?.closed.then((value) {
-                          controller = null;
-                        });
+                        controller = newController;
+                        lastSelectedBottomSheet = BottomSheetType.color;
                       },
-                      child: ValueListenableBuilder<Color>(
-                        valueListenable: color,
-                        builder: (context, value, child) {
-                          return Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: value,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          );
-                        },
-                      ),
                     ),
                     IconButton(
                       onPressed: () {
-                        if (controller != null) {
-                          controller?.close();
-                          controller = null;
-                          return;
-                        }
-
-                        controller = scaffoldKey.currentState?.showBottomSheet(
-                          (context) => KnittingPatternSelector(
-                            selectedKnittingType: selectedKnittingType.value,
+                        final newController = _showBottomSheet(
+                          widget: KnittingPatternSelector(
                             onTap: (value) {
                               selectedKnittingType.value = value;
+                              lastSelectedBottomSheet = null;
                               Navigator.pop(context);
                             },
+                            selectedKnittingType: selectedKnittingType.value,
                           ),
-                          backgroundColor: Colors.white,
-                          enableDrag: true,
-                          showDragHandle: true,
+                          scaffoldKey: scaffoldKey,
+                          controller: controller,
+                          bottomSheetType: BottomSheetType.knittingType,
+                          lastSelectedBottomSheet: lastSelectedBottomSheet,
                         );
-                        controller?.closed.then((value) {
-                          controller = null;
-                        });
+                        controller = newController;
+                        lastSelectedBottomSheet = BottomSheetType.knittingType;
                       },
                       icon: const Icon(Icons.brush_outlined),
                     ),
@@ -240,5 +222,27 @@ class _KnittingPatternScreen extends HookWidget {
         ),
       ),
     );
+  }
+
+  PersistentBottomSheetController? _showBottomSheet({
+    required Widget widget,
+    required GlobalKey<ScaffoldState> scaffoldKey,
+    required PersistentBottomSheetController? controller,
+    required BottomSheetType bottomSheetType,
+    required BottomSheetType? lastSelectedBottomSheet,
+  }) {
+    if (controller != null && bottomSheetType == lastSelectedBottomSheet) {
+      controller.close();
+      controller = null;
+      return null;
+    }
+
+    controller = scaffoldKey.currentState?.showBottomSheet(
+      (context) => widget,
+      backgroundColor: Colors.white,
+      enableDrag: true,
+      showDragHandle: true,
+    );
+    return controller;
   }
 }
