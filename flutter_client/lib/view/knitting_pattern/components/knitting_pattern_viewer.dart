@@ -1,12 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/model/types/knitting_type.dart';
+import 'package:knitting/view/knitting_pattern/components/grid_with_dividers.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
-import 'package:knitting/view/knitting_pattern/components/grid_with_dividers.dart';
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({
@@ -32,6 +34,10 @@ class KnittingPatternViewer extends HookWidget {
   Widget build(BuildContext context) {
     final imageWidth = image.width;
     final imageHeight = image.height;
+
+    // Add state for grid customization
+    final showGridNumbers = useState(true);
+    final highlightPosition = useState<(int, int)?>(null);
 
     final knittingWidth =
         knittingType.width * imageWidth * knittingType.dxRatio +
@@ -63,9 +69,29 @@ class KnittingPatternViewer extends HookWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: resetViewer,
-        child: const Icon(Icons.replay_outlined),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'toggleGridNumbers',
+            mini: true,
+            onPressed: () => showGridNumbers.value = !showGridNumbers.value,
+            child: const Icon(
+              Icons.format_list_numbered,
+              size: 20,
+            ),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            mini: true,
+            heroTag: 'resetView',
+            onPressed: resetViewer,
+            child: const Icon(
+              Icons.replay_outlined,
+              size: 20,
+            ),
+          ),
+        ],
       ),
       body: InteractiveViewer(
         boundaryMargin: const EdgeInsets.all(double.infinity),
@@ -73,36 +99,53 @@ class KnittingPatternViewer extends HookWidget {
         maxScale: 10,
         minScale: scale * 0.9,
         constrained: false,
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.all(knittingType.width),
-              width: knittingWidth,
-              height: knittingHeight,
-              child: _Stitch(
-                image: image,
-                knittingType: knittingType,
-                imageWidth: imageWidth,
-                imageHeight: imageHeight,
-                texture: texture,
-                selectedColor: selectedColor,
-                editModeType: editModeType,
+        child: Padding(
+          padding: const EdgeInsets.all(
+            40,
+          ), // Increase padding on all sides for numbers
+          child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.all(knittingType.width),
+                width: knittingWidth,
+                height: knittingHeight,
+                child: _Stitch(
+                  image: image,
+                  knittingType: knittingType,
+                  imageWidth: imageWidth,
+                  imageHeight: imageHeight,
+                  texture: texture,
+                  selectedColor: selectedColor,
+                  editModeType: editModeType,
+                  onPositionSelected: (x, y) =>
+                      highlightPosition.value = (x, y),
+                ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(knittingType.width),
-              width: knittingWidth,
-              height: knittingHeight,
-              child: KnittingGridWithDividers(
-                totalRows: imageWidth,
-                totalColumns: imageHeight,
-                cellWidth: knittingType.width * knittingType.dxRatio,
-                cellHeight: knittingType.height * knittingType.dyRatio,
-                certainWidthGap: knittingType.certainHeightGap,
-                gapRatio: knittingType.gapRatio,
+              Container(
+                margin: EdgeInsets.all(knittingType.width),
+                width: knittingWidth,
+                height: knittingHeight,
+                child: KnittingGridWithDividers(
+                  totalRows: imageWidth,
+                  totalColumns: imageHeight,
+                  cellWidth: knittingType.width * knittingType.dxRatio,
+                  cellHeight: knittingType.height * knittingType.dyRatio,
+                  certainWidthGap: knittingType.certainHeightGap,
+                  gapRatio: knittingType.gapRatio,
+                  showNumbers: showGridNumbers.value,
+                  numberFontSize: 60.0, // Larger font size
+                  numberPadding: 100.0, // More padding
+                  highlightedRow: highlightPosition.value?.$1,
+                  highlightedColumn: highlightPosition.value?.$2,
+                  highlightColor: Colors.blue.withOpacity(0.3),
+                  regularNumberColor: Colors.black87,
+                  specialNumberColor: Colors.red.shade800,
+                  specialNumberFontSize: 60.0,
+                  numberBackgroundOpacity: 0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -118,6 +161,7 @@ class _Stitch extends HookWidget {
     required this.texture,
     required this.selectedColor,
     required this.editModeType,
+    this.onPositionSelected,
   });
 
   final img.Image image;
@@ -127,6 +171,7 @@ class _Stitch extends HookWidget {
   final ui.Image texture;
   final ValueNotifier<Color> selectedColor;
   final ValueNotifier<EditModeType> editModeType;
+  final Function(int x, int y)? onPositionSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +210,9 @@ class _Stitch extends HookWidget {
 
           final point = painter.getTappedIndex(localPosition);
           if (point != null) {
+            // Notify about position selection
+            onPositionSelected?.call(point.$1, point.$2);
+
             if (editModeType.value == EditModeType.paint) {
               final img.Image newImage = imageState.value.clone();
               final color = img.ColorInt32.rgba(
