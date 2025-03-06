@@ -15,6 +15,7 @@ class KnittingPatternViewer extends HookWidget {
     required this.texture,
     required this.selectedColor,
     required this.editModeType,
+    required this.backgroundColor,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class KnittingPatternViewer extends HookWidget {
   final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
+  final Color? backgroundColor;
   final ValueNotifier<Color> selectedColor;
   final ValueNotifier<EditModeType> editModeType;
 
@@ -39,40 +41,53 @@ class KnittingPatternViewer extends HookWidget {
     final viewerController = useTransformationController();
     final deviceWidth = MediaQuery.of(context).size.width;
     final scale = deviceWidth / (knittingWidth + knittingType.width * 2);
+
+    void resetViewer() {
+      final offset = Offset(0, maxHeight / scale / 2 - knittingHeight / 2);
+
+      viewerController.value = Matrix4.identity()
+        ..scale(scale)
+        ..translate(offset.dx, offset.dy);
+
+      return;
+    }
+
     useEffect(
       () {
-        final offset = Offset(0, maxHeight / scale / 2 - knittingHeight / 2);
-
-        viewerController.value = Matrix4.identity()
-          ..scale(scale)
-          ..translate(offset.dx, offset.dy);
-
+        resetViewer();
         return null;
       },
       [],
     );
 
-    return InteractiveViewer(
-      boundaryMargin: const EdgeInsets.all(double.infinity),
-      transformationController: viewerController,
-      maxScale: 10,
-      minScale: scale * 0.9,
-      constrained: false,
-      child: Container(
-        margin: EdgeInsets.all(knittingType.width),
-        decoration: BoxDecoration(
-          border: Border.all(),
-        ),
-        width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
-        height: knittingHeight,
-        child: _Stitch(
-          image: image,
-          knittingType: knittingType,
-          imageWidth: imageWidth,
-          imageHeight: imageHeight,
-          texture: texture,
-          selectedColor: selectedColor,
-          editModeType: editModeType,
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: resetViewer,
+        child: const Icon(Icons.replay_outlined),
+      ),
+      body: InteractiveViewer(
+        boundaryMargin: const EdgeInsets.all(double.infinity),
+        transformationController: viewerController,
+        maxScale: 10,
+        minScale: scale * 0.9,
+        constrained: false,
+        child: Container(
+          margin: EdgeInsets.all(knittingType.width),
+          decoration: BoxDecoration(
+            border: Border.all(),
+          ),
+          width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
+          height: knittingHeight,
+          child: _Stitch(
+            image: image,
+            knittingType: knittingType,
+            imageWidth: imageWidth,
+            imageHeight: imageHeight,
+            texture: texture,
+            selectedColor: selectedColor,
+            editModeType: editModeType,
+          ),
         ),
       ),
     );

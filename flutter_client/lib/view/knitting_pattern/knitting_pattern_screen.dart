@@ -134,7 +134,6 @@ class _KnittingPatternScreen extends HookWidget {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: const [
@@ -143,6 +142,22 @@ class _KnittingPatternScreen extends HookWidget {
             child: Row(),
           ),
         ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) => ValueListenableBuilder<KnittingType>(
+          valueListenable: selectedKnittingType,
+          builder: (context, knittingTypeValue, child) {
+            return KnittingPatternViewer(
+              image: image,
+              texture: texture,
+              knittingType: knittingTypeValue,
+              maxHeight: constraints.maxHeight,
+              selectedColor: color,
+              backgroundColor: backgroundColor,
+              editModeType: editModeType,
+            );
+          },
+        ),
       ),
       bottomNavigationBar: ColoredBox(
         color: Colors.white,
@@ -242,21 +257,6 @@ class _KnittingPatternScreen extends HookWidget {
               ],
             ),
           ),
-        ),
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => ValueListenableBuilder<KnittingType>(
-          valueListenable: selectedKnittingType,
-          builder: (context, knittingTypeValue, child) {
-            return KnittingPatternViewer(
-              image: image,
-              texture: texture,
-              knittingType: knittingTypeValue,
-              maxHeight: constraints.maxHeight,
-              selectedColor: color,
-              editModeType: editModeType,
-            );
-          },
         ),
       ),
     );
