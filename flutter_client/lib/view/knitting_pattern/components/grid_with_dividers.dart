@@ -216,26 +216,27 @@ class _GridPainter extends CustomPainter {
 
       // Draw row numbers on the left side
       if (showLeftNumbers && i < totalRows) {
-        final bool isSpecial = (i + 1) % specialNumberFrequency == 0;
+        final bool isSpecial = i % specialNumberFrequency == 0;
         _drawText(
           canvas: canvas,
-          text: (i + 1).toString(),
+          text: (totalRows - i).toString(),
           position: Offset(-numberPadding - 15, y + effectiveCellHeight / 2),
           fontSize: isSpecial ? specialNumberFontSize : numberFontSize,
           color: isSpecial ? specialNumberColor : regularNumberColor,
           alignment: TextAlign.right,
           withBackground: true,
-          backgroundColor: Colors.white.withOpacity(numberBackgroundOpacity),
+          backgroundColor: const Color.fromARGB(255, 56, 56, 56)
+              .withOpacity(numberBackgroundOpacity),
           isSpecial: isSpecial,
         );
       }
 
       // Draw row numbers on the right side
       if (showRightNumbers && i < totalRows) {
-        final bool isSpecial = (i + 1) % specialNumberFrequency == 0;
+        final bool isSpecial = i % specialNumberFrequency == 0;
         _drawText(
           canvas: canvas,
-          text: (i + 1).toString(),
+          text: (totalRows - i).toString(),
           position: Offset(
             size.width + numberPadding + 15,
             y + effectiveCellHeight / 2,
@@ -273,11 +274,13 @@ class _GridPainter extends CustomPainter {
     // Draw column numbers on the top
     if (showTopNumbers) {
       for (int j = 0; j < totalColumns; j++) {
-        final bool isSpecial = (j + 1) % specialNumberFrequency == 0;
-        final x = j * effectiveCellWidth + effectiveCellWidth / 2;
+        final bool isSpecial = j % specialNumberFrequency == 0;
+        final x = j * effectiveCellWidth +
+            effectiveCellWidth / 2 +
+            gapRatio * (totalRows - 1) * effectiveCellWidth;
         _drawText(
           canvas: canvas,
-          text: (j + 1).toString(),
+          text: (totalColumns - j).toString(),
           position: Offset(x, -numberPadding - 15),
           fontSize: isSpecial ? specialNumberFontSize : numberFontSize,
           color: isSpecial ? specialNumberColor : regularNumberColor,
@@ -292,11 +295,11 @@ class _GridPainter extends CustomPainter {
     // Draw column numbers on the bottom
     if (showBottomNumbers) {
       for (int j = 0; j < totalColumns; j++) {
-        final bool isSpecial = (j + 1) % specialNumberFrequency == 0;
+        final bool isSpecial = j % specialNumberFrequency == 0;
         final x = j * effectiveCellWidth + effectiveCellWidth / 2;
         _drawText(
           canvas: canvas,
-          text: (j + 1).toString(),
+          text: (totalColumns - j).toString(),
           position: Offset(x, size.height + numberPadding + 15),
           fontSize: isSpecial ? specialNumberFontSize : numberFontSize,
           color: isSpecial ? specialNumberColor : regularNumberColor,
