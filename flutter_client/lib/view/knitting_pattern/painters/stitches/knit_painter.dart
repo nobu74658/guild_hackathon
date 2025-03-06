@@ -22,7 +22,12 @@ class _KnitPainter extends AbstractStitchPainter {
         height * 0.2 + dy,
       )
       // 3.
-      ..quadraticBezierTo(width * 0.8 + dx + dxGap, -height * 0.2 + dy, width + dx + dxGap, dy) // Added dxGap
+      ..quadraticBezierTo(
+        width * 0.8 + dx + dxGap,
+        -height * 0.2 + dy,
+        width + dx + dxGap,
+        dy,
+      ) // Added dxGap
       // 4.
       ..quadraticBezierTo(
         width * 1.15 + dx + dxGap, // Added dxGap
@@ -37,7 +42,12 @@ class _KnitPainter extends AbstractStitchPainter {
         width * 0.2 + dx + dxGap, // Added dxGap
         height * 0.7 + dy,
       )
-      ..quadraticBezierTo(0 - width * 0.15 + dx + dxGap, height * 0.2 + dy, dx + dxGap, dy); // Added dxGap
+      ..quadraticBezierTo(
+        0 - width * 0.15 + dx + dxGap,
+        height * 0.2 + dy,
+        dx + dxGap,
+        dy,
+      ); // Added dxGap
     return path;
   }
 }

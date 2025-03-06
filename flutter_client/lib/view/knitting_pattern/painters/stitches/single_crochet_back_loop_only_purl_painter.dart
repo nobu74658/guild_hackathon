@@ -36,6 +36,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends AbstractStitchPainter {
         dx + -width * 0.05 + dxGap,
         dy + -height * 0.1,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     path
       // 5
@@ -68,6 +69,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends AbstractStitchPainter {
         dx + width * 0.55 + dxGap,
         dy + height * 0.25,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     path
       // 10
@@ -93,6 +95,7 @@ class _SingleCrochetBackLoopOnlyPurlPainter extends AbstractStitchPainter {
         dx + width * 0.9 + dxGap,
         dy + height * 0.4,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     path
       // 14
