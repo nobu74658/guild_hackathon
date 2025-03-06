@@ -16,7 +16,6 @@ class KnittingGridWithDividers extends StatelessWidget {
     this.specialLineColor = Colors.black,
     this.regularLineWidth = 0.5,
     this.specialLineWidth = 2.0,
-    this.showNumbers = true,
     this.numberColor = Colors.black,
     this.numberFontSize = 12.0,
     this.numberPadding = 2.0,
@@ -44,7 +43,6 @@ class KnittingGridWithDividers extends StatelessWidget {
   final double specialLineWidth;
   final double certainWidthGap;
   final double gapRatio;
-  final bool showNumbers;
   final Color numberColor;
   final double numberFontSize;
   final double numberPadding;
@@ -85,17 +83,16 @@ class KnittingGridWithDividers extends StatelessWidget {
         specialLineWidth: specialLineWidth,
         certainWidthGap: certainWidthGap,
         gapRatio: gapRatio,
-        showNumbers: showNumbers,
         numberColor: numberColor,
         numberFontSize: numberFontSize,
         numberPadding: numberPadding,
         highlightedRow: highlightedRow,
         highlightedColumn: highlightedColumn,
         highlightColor: highlightColor,
-        showLeftNumbers: showLeftNumbers && showNumbers,
-        showRightNumbers: showRightNumbers && showNumbers,
-        showTopNumbers: showTopNumbers && showNumbers,
-        showBottomNumbers: showBottomNumbers && showNumbers,
+        showLeftNumbers: showLeftNumbers,
+        showRightNumbers: showRightNumbers,
+        showTopNumbers: showTopNumbers,
+        showBottomNumbers: showBottomNumbers,
         specialNumberFrequency: specialNumberFrequency,
         regularNumberColor: effectiveRegularNumberColor,
         specialNumberColor: effectiveSpecialNumberColor,
@@ -119,7 +116,6 @@ class _GridPainter extends CustomPainter {
     required this.specialLineWidth,
     required this.certainWidthGap,
     required this.gapRatio,
-    required this.showNumbers,
     required this.numberColor,
     required this.numberFontSize,
     required this.numberPadding,
@@ -147,7 +143,6 @@ class _GridPainter extends CustomPainter {
   final double specialLineWidth;
   final double certainWidthGap;
   final double gapRatio;
-  final bool showNumbers;
   final Color numberColor;
   final double numberFontSize;
   final double numberPadding;

@@ -36,7 +36,7 @@ class KnittingPatternViewer extends HookWidget {
     final imageHeight = image.height;
 
     // Add state for grid customization
-    final showGridNumbers = useState(true);
+    final showGrid = useState(true);
 
     final knittingWidth =
         knittingType.width * imageWidth * knittingType.dxRatio +
@@ -74,7 +74,7 @@ class KnittingPatternViewer extends HookWidget {
           FloatingActionButton(
             heroTag: 'toggleGridNumbers',
             mini: true,
-            onPressed: () => showGridNumbers.value = !showGridNumbers.value,
+            onPressed: () => showGrid.value = !showGrid.value,
             child: const Icon(
               Icons.format_list_numbered,
               size: 20,
@@ -118,28 +118,28 @@ class KnittingPatternViewer extends HookWidget {
                   editModeType: editModeType,
                 ),
               ),
-              IgnorePointer(
-                child: Container(
-                  margin: EdgeInsets.all(knittingType.width),
-                  width: knittingWidth,
-                  height: knittingHeight,
-                  child: KnittingGridWithDividers(
-                    totalRows: imageWidth,
-                    totalColumns: imageHeight,
-                    cellWidth: knittingType.width * knittingType.dxRatio,
-                    cellHeight: knittingType.height * knittingType.dyRatio,
-                    certainWidthGap: knittingType.certainHeightGap,
-                    gapRatio: knittingType.gapRatio,
-                    showNumbers: showGridNumbers.value,
-                    numberFontSize: 60.0, // Larger font size
-                    numberPadding: 100.0, // More padding
-                    regularNumberColor: Colors.black87,
-                    specialNumberColor: Colors.red.shade800,
-                    specialNumberFontSize: 60.0,
-                    numberBackgroundOpacity: 0,
+              if (showGrid.value)
+                IgnorePointer(
+                  child: Container(
+                    margin: EdgeInsets.all(knittingType.width),
+                    width: knittingWidth,
+                    height: knittingHeight,
+                    child: KnittingGridWithDividers(
+                      totalRows: imageWidth,
+                      totalColumns: imageHeight,
+                      cellWidth: knittingType.width * knittingType.dxRatio,
+                      cellHeight: knittingType.height * knittingType.dyRatio,
+                      certainWidthGap: knittingType.certainHeightGap,
+                      gapRatio: knittingType.gapRatio,
+                      numberFontSize: 60.0, // Larger font size
+                      numberPadding: 100.0, // More padding
+                      regularNumberColor: Colors.black87,
+                      specialNumberColor: Colors.red.shade800,
+                      specialNumberFontSize: 60.0,
+                      numberBackgroundOpacity: 0,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
