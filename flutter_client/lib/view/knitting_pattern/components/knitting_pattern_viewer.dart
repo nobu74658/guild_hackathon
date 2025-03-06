@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/model/types/knitting_type.dart';
+import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 
 class KnittingPatternViewer extends HookWidget {
@@ -13,6 +14,7 @@ class KnittingPatternViewer extends HookWidget {
     required this.image,
     required this.texture,
     required this.selectedColor,
+    required this.editModeType,
     super.key,
   });
 
@@ -20,7 +22,8 @@ class KnittingPatternViewer extends HookWidget {
   final KnittingType knittingType;
   final img.Image image;
   final ui.Image texture;
-  final Color selectedColor;
+  final ValueNotifier<Color> selectedColor;
+  final ValueNotifier<EditModeType> editModeType;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +72,7 @@ class KnittingPatternViewer extends HookWidget {
           imageHeight: imageHeight,
           texture: texture,
           selectedColor: selectedColor,
+          editModeType: editModeType,
         ),
       ),
     );
@@ -83,6 +87,7 @@ class _Stitch extends HookWidget {
     required this.imageHeight,
     required this.texture,
     required this.selectedColor,
+    required this.editModeType,
   });
 
   final img.Image image;
@@ -90,7 +95,8 @@ class _Stitch extends HookWidget {
   final int imageWidth;
   final int imageHeight;
   final ui.Image texture;
-  final Color selectedColor;
+  final ValueNotifier<Color> selectedColor;
+  final ValueNotifier<EditModeType> editModeType;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +114,9 @@ class _Stitch extends HookWidget {
       width: imageWidth * knittingType.width * knittingType.dxRatio,
       height: imageHeight * knittingType.height * knittingType.dyRatio,
       child: GestureDetector(
+        child: RepaintBoundary(
+          child: CustomPaint(painter: painter),
+        ),
         onTapDown: (TapDownDetails details) {
           tapDownTime = DateTime.now();
         },
@@ -126,20 +135,31 @@ class _Stitch extends HookWidget {
 
           final point = painter.getTappedIndex(localPosition);
           if (point != null) {
-            final img.Image newImage = imageState.value.clone();
-            final color = img.ColorInt32.rgba(
-              (selectedColor.r * 255).toInt(),
-              (selectedColor.g * 255).toInt(),
-              (selectedColor.b * 255).toInt(),
-              (selectedColor.a * 255).toInt(),
-            );
-            newImage.setPixel(point.$1, point.$2, color);
-            imageState.value = newImage;
+            if (editModeType.value == EditModeType.paint) {
+              final img.Image newImage = imageState.value.clone();
+              final color = img.ColorInt32.rgba(
+                (selectedColor.value.r * 255).toInt(),
+                (selectedColor.value.g * 255).toInt(),
+                (selectedColor.value.b * 255).toInt(),
+                (selectedColor.value.a * 255).toInt(),
+              );
+              newImage.setPixel(point.$1, point.$2, color);
+              imageState.value = newImage;
+            }
+            if (editModeType.value == EditModeType.dropper) {
+              final color = imageState.value.getPixel(
+                point.$1,
+                point.$2,
+              );
+              selectedColor.value = Color.fromARGB(
+                color.a.toInt(),
+                color.r.toInt(),
+                color.g.toInt(),
+                color.b.toInt(),
+              );
+            }
           }
         },
-        child: RepaintBoundary(
-          child: CustomPaint(painter: painter),
-        ),
       ),
     );
   }

@@ -245,20 +245,16 @@ class _KnittingPatternScreen extends HookWidget {
         ),
       ),
       body: LayoutBuilder(
-        builder: (context, constraints) => ValueListenableBuilder<Color>(
-          valueListenable: color,
-          builder: (context, colorValue, child) {
-            return ValueListenableBuilder<KnittingType>(
-              valueListenable: selectedKnittingType,
-              builder: (context, knittingTypeValue, child) {
-                return KnittingPatternViewer(
-                  image: image,
-                  texture: texture,
-                  knittingType: knittingTypeValue,
-                  maxHeight: constraints.maxHeight,
-                  selectedColor: colorValue,
-                );
-              },
+        builder: (context, constraints) => ValueListenableBuilder<KnittingType>(
+          valueListenable: selectedKnittingType,
+          builder: (context, knittingTypeValue, child) {
+            return KnittingPatternViewer(
+              image: image,
+              texture: texture,
+              knittingType: knittingTypeValue,
+              maxHeight: constraints.maxHeight,
+              selectedColor: color,
+              editModeType: editModeType,
             );
           },
         ),
