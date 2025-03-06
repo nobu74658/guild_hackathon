@@ -31,6 +31,13 @@ class KnittingPatternListScreen extends HookConsumerWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                PaletteListRoute().push(context);
+              },
+              icon: const Icon(Icons.palette_outlined))
+        ],
       ),
       body: FutureBuilder(
         future: ref.read(projectManagerProvider).fetchAllProjects(),

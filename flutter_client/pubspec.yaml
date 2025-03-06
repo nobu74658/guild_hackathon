@@ -28,6 +28,7 @@ dependencies:
   fixnum: ^1.1.1
   image_picker_web: ^4.0.0
   flutter_launcher_icons: ^0.14.3
+  flutter_colorpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:
