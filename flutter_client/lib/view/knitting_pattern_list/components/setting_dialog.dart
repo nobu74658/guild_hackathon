@@ -61,6 +61,7 @@ class SettingDialog extends HookConsumerWidget {
             widget: SizedBox(
               height: 60,
               child: DropdownButton(
+                isExpanded: true,
                 value: selectedColorPalette.value,
                 items: ColorPaletteType.values
                     .map(
