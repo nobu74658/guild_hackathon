@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
+import 'package:knitting/view/knitting_pattern/components/grid_with_dividers.dart';
 
 class KnittingPatternViewer extends HookWidget {
   const KnittingPatternViewer({
@@ -72,22 +73,36 @@ class KnittingPatternViewer extends HookWidget {
         maxScale: 10,
         minScale: scale * 0.9,
         constrained: false,
-        child: Container(
-          margin: EdgeInsets.all(knittingType.width),
-          decoration: BoxDecoration(
-            border: Border.all(),
-          ),
-          width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
-          height: knittingHeight,
-          child: _Stitch(
-            image: image,
-            knittingType: knittingType,
-            imageWidth: imageWidth,
-            imageHeight: imageHeight,
-            texture: texture,
-            selectedColor: selectedColor,
-            editModeType: editModeType,
-          ),
+        child: Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.all(knittingType.width),
+              width: knittingWidth,
+              height: knittingHeight,
+              child: _Stitch(
+                image: image,
+                knittingType: knittingType,
+                imageWidth: imageWidth,
+                imageHeight: imageHeight,
+                texture: texture,
+                selectedColor: selectedColor,
+                editModeType: editModeType,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(knittingType.width),
+              width: knittingWidth,
+              height: knittingHeight,
+              child: KnittingGridWithDividers(
+                totalRows: imageWidth,
+                totalColumns: imageHeight,
+                cellWidth: knittingType.width * knittingType.dxRatio,
+                cellHeight: knittingType.height * knittingType.dyRatio,
+                certainWidthGap: knittingType.certainHeightGap,
+                gapRatio: knittingType.gapRatio,
+              ),
+            ),
+          ],
         ),
       ),
     );
