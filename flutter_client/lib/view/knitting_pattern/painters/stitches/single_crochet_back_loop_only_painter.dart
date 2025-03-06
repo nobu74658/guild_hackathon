@@ -1,3 +1,4 @@
+// 必須！！
 part of '../stitch_painter.dart';
 
 class _SingleCrochetBackLoopOnlyPainter extends AbstractStitchPainter {
@@ -97,6 +98,7 @@ class _SingleCrochetBackLoopOnlyPainter extends AbstractStitchPainter {
         dx + width * 0.4 + dxGap,
         dy + height * 3 / 9,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     path
       // 10

@@ -7,8 +7,19 @@ import 'package:image/image.dart' as img;
 import 'package:knitting/app/manager/asset_image_manager.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
+import 'package:knitting/view/knitting_pattern/components/color_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
+
+enum BottomSheetType {
+  color,
+  knittingType,
+}
+
+enum EditModeType {
+  paint,
+  dropper,
+}
 
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
@@ -112,16 +123,17 @@ class _KnittingPatternScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    const activeColor = Colors.blue;
     final scaffoldKey = GlobalKey<ScaffoldState>();
     PersistentBottomSheetController? controller;
 
     final color = useValueNotifier(colorPalette.first);
-    final scale = useValueNotifier<double>(1.0);
     final selectedKnittingType = useValueNotifier(knittingType);
+    BottomSheetType? lastSelectedBottomSheet;
+    final editModeType = useValueNotifier(EditModeType.paint);
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: const [
@@ -131,146 +143,144 @@ class _KnittingPatternScreen extends HookWidget {
           ),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(scaffoldKey.currentContext ?? context)
-              .viewPadding
-              .bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          color: Colors.white,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (controller != null) {
-                        controller?.close();
-                        controller = null;
-                        return;
-                      }
-
-                      controller = scaffoldKey.currentState?.showBottomSheet(
-                        (context) => ColorPalette(
-                          onTap: (value) {
-                            color.value = value;
-                            Navigator.pop(context);
-                          },
-                          paletteColors: colorPalette,
-                          selectedColor: color.value,
-                        ),
-                        backgroundColor: Colors.white,
-                        enableDrag: true,
-                        showDragHandle: true,
-                      );
-                      controller?.closed.then((value) {
-                        controller = null;
-                      });
-                    },
-                    child: ValueListenableBuilder<Color>(
-                      valueListenable: color,
-                      builder: (context, value, child) {
-                        return Container(
-                          width: 25,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            color: value,
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (controller != null) {
-                        controller?.close();
-                        controller = null;
-                        return;
-                      }
-
-                      controller = scaffoldKey.currentState?.showBottomSheet(
-                        (context) => KnittingPatternSelector(
-                          selectedKnittingType: selectedKnittingType.value,
-                          onTap: (value) {
-                            selectedKnittingType.value = value;
-                            Navigator.pop(context);
-                          },
-                        ),
-                        backgroundColor: Colors.white,
-                        enableDrag: true,
-                        showDragHandle: true,
-                      );
-                      controller?.closed.then((value) {
-                        controller = null;
-                      });
-                    },
-                    icon: const Icon(Icons.brush_outlined),
-                  ),
-                ],
-              ),
-              ValueListenableBuilder<double>(
-                valueListenable: scale,
-                builder: (context, value, child) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 3,
-                        thumbColor: Colors.grey[400],
-                        activeTrackColor: Colors.grey[400],
-                      ),
-                      child: Slider(
-                        value: value,
-                        min: 1,
-                        max: 8,
-                        // スライドしてる位置の値が表示される、無いものを想定してたけどあっても便利かも？
-                        label: value.toStringAsFixed(1),
-                        onChanged: (newValue) {
-                          scale.value = newValue; // スライダーの値を更新
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
       body: LayoutBuilder(
-        builder: (context, constraints) => ValueListenableBuilder<double>(
-          valueListenable: scale,
-          builder: (context, scaleValue, child) {
-            return Transform.scale(
-              scale: scaleValue,
-              child: ValueListenableBuilder<Color>(
-                valueListenable: color,
-                builder: (context, colorValue, child) {
-                  return ValueListenableBuilder<KnittingType>(
-                    valueListenable: selectedKnittingType,
-                    builder: (context, knittingTypeValue, child) {
-                      return KnittingPatternViewer(
-                        image: image,
-                        texture: texture,
-                        knittingType: knittingTypeValue,
-                        maxHeight: constraints.maxHeight,
-                        selectedColor: colorValue,
-                      );
-                    },
-                  );
-                },
-              ),
+        builder: (context, constraints) => ValueListenableBuilder<KnittingType>(
+          valueListenable: selectedKnittingType,
+          builder: (context, knittingTypeValue, child) {
+            return KnittingPatternViewer(
+              image: image,
+              texture: texture,
+              knittingType: knittingTypeValue,
+              maxHeight: constraints.maxHeight,
+              selectedColor: color,
+              backgroundColor: backgroundColor,
+              editModeType: editModeType,
             );
           },
         ),
       ),
+      bottomNavigationBar: ColoredBox(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(scaffoldKey.currentContext ?? context)
+                .viewPadding
+                .bottom,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ColorSelector(
+                      colorPalette: colorPalette,
+                      color: color,
+                      onTap: () {
+                        final newController = _showBottomSheet(
+                          widget: ColorPalette(
+                            onTap: (value) {
+                              color.value = value;
+                              Navigator.pop(context);
+                              lastSelectedBottomSheet = null;
+                            },
+                            paletteColors: colorPalette,
+                            selectedColor: color.value,
+                          ),
+                          bottomSheetType: BottomSheetType.color,
+                          lastSelectedBottomSheet: lastSelectedBottomSheet,
+                          scaffoldKey: scaffoldKey,
+                          controller: controller,
+                        );
+                        controller = newController;
+                        lastSelectedBottomSheet = BottomSheetType.color;
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: editModeType,
+                      builder: (context, value, child) {
+                        return IconButton(
+                          onPressed: () {
+                            editModeType.value = EditModeType.dropper;
+                          },
+                          icon: Icon(
+                            Icons.colorize_outlined,
+                            color: value == EditModeType.dropper
+                                ? activeColor
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: editModeType,
+                      builder: (context, value, child) {
+                        return IconButton(
+                          onPressed: () {
+                            editModeType.value = EditModeType.paint;
+                          },
+                          icon: Icon(
+                            Icons.brush_outlined,
+                            color: value == EditModeType.paint
+                                ? activeColor
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        final newController = _showBottomSheet(
+                          widget: KnittingPatternSelector(
+                            onTap: (value) {
+                              selectedKnittingType.value = value;
+                              lastSelectedBottomSheet = null;
+                              Navigator.pop(context);
+                            },
+                            selectedKnittingType: selectedKnittingType.value,
+                          ),
+                          scaffoldKey: scaffoldKey,
+                          controller: controller,
+                          bottomSheetType: BottomSheetType.knittingType,
+                          lastSelectedBottomSheet: lastSelectedBottomSheet,
+                        );
+                        controller = newController;
+                        lastSelectedBottomSheet = BottomSheetType.knittingType;
+                      },
+                      icon: const Icon(Icons.change_circle_outlined),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+  }
+
+  PersistentBottomSheetController? _showBottomSheet({
+    required Widget widget,
+    required GlobalKey<ScaffoldState> scaffoldKey,
+    required PersistentBottomSheetController? controller,
+    required BottomSheetType bottomSheetType,
+    required BottomSheetType? lastSelectedBottomSheet,
+  }) {
+    if (controller != null && bottomSheetType == lastSelectedBottomSheet) {
+      controller.close();
+      controller = null;
+      return null;
+    }
+
+    controller = scaffoldKey.currentState?.showBottomSheet(
+      (context) => widget,
+      backgroundColor: Colors.white,
+      enableDrag: true,
+      showDragHandle: true,
+    );
+    return controller;
   }
 }

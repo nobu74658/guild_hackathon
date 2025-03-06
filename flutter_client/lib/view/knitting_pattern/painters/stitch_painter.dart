@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 
@@ -50,6 +51,10 @@ abstract class AbstractStitchPainter {
 
   double get width => data.knittingData.knittingType.width;
   double get height => data.knittingData.knittingType.height;
+  double get certainWidthGap =>
+      data.y.isEven ? data.knittingData.knittingType.certainWidthGap : 0;
+  double get certainHeightGap =>
+      data.y.isEven ? data.knittingData.knittingType.certainHeightGap : 0;
   double get dx => data.x * width;
   double get dy => data.y * height;
   double get dxGap =>
@@ -65,15 +70,7 @@ abstract class AbstractStitchPainter {
       pixel.g.toInt(),
       pixel.b.toInt(),
     );
-  // ..colorFilter = ColorFilter.mode(
-  //   Color.fromARGB(
-  //     pixel.a.toInt(),
-  //     pixel.r.toInt(),
-  //     pixel.g.toInt(),
-  //     pixel.b.toInt(),
-  //   ),
-  //   BlendMode.plus,
-  // );
+
   final path = Path();
 
   (Path, Paint) paint() {

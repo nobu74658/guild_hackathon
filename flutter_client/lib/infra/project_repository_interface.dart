@@ -6,5 +6,10 @@ abstract class ProjectRepositoryInterface {
 
   Future<Project> fetchProject(String projectId);
   Future<List<Project>> fetchAllProjects();
-  Future<img.Image> generateDottedImage(img.Image image, int width, int height, List<String> colors);
+  Future<img.Image> generateDottedImage(
+    img.Image image,
+    int width,
+    int height,
+    List<String> colors,
+  );
 }
