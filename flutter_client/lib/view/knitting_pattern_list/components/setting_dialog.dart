@@ -18,7 +18,7 @@ class SettingDialog extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final createType = useState(CreateType.note);
     final selectedImage = useState<Uint8List?>(null);
-    final selectedSize = useState(KnittingPatternSizeType.eight);
+    final selectedSize = useState(KnittingPatternSizeType.values.first);
     final selectedKnittingType = useState(KnittingType.singleCrochet);
     final selectedColorPalette = useState(ColorPaletteType.first);
 
@@ -61,6 +61,7 @@ class SettingDialog extends HookConsumerWidget {
             widget: SizedBox(
               height: 60,
               child: DropdownButton(
+                isExpanded: true,
                 value: selectedColorPalette.value,
                 items: ColorPaletteType.values
                     .map(
@@ -112,7 +113,7 @@ class SettingDialog extends HookConsumerWidget {
                     .map(
                       (sizeType) => DropdownMenuItem(
                         value: sizeType,
-                        child: Text(sizeType.label),
+                        child: Text('${sizeType.width} × ${sizeType.height}'),
                       ),
                     )
                     .toList(),
