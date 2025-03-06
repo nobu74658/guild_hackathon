@@ -65,15 +65,7 @@ abstract class AbstractStitchPainter {
       pixel.g.toInt(),
       pixel.b.toInt(),
     );
-  // ..colorFilter = ColorFilter.mode(
-  //   Color.fromARGB(
-  //     pixel.a.toInt(),
-  //     pixel.r.toInt(),
-  //     pixel.g.toInt(),
-  //     pixel.b.toInt(),
-  //   ),
-  //   BlendMode.plus,
-  // );
+
   final path = Path();
 
   (Path, Paint) paint() {

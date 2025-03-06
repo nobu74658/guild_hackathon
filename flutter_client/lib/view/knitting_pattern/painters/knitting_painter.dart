@@ -26,13 +26,6 @@ class KnittingPainter extends CustomPainter {
   final KnittingPainterData data;
 
   Paint get painter => Paint();
-  // ..shader = ImageShader(
-  //   data.texture,
-  //   TileMode.repeated,
-  //   TileMode.repeated,
-  //   Matrix4.identity().storage,
-  //   filterQuality: FilterQuality.low,
-  // );
 
   @override
   void paint(Canvas canvas, Size size) {
