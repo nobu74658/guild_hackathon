@@ -31,8 +31,11 @@ class KnittingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (int y = 0; y < data.image.height; y++) {
       for (int x = 0; x < data.image.width; x++) {
+        final isStartRight = y.isEven
+            ? data.knittingType.isEvenRowStartRight
+            : !data.knittingType.isEvenRowStartRight;
         final stitchPainterData = StitchPainterData(
-          x: x,
+          x: _xIndex(x, isStartRight),
           y: y,
           knittingData: data,
           painter: painter,
@@ -46,6 +49,10 @@ class KnittingPainter extends CustomPainter {
     }
   }
 
+  int _xIndex(int x, bool isStartRight) {
+    return isStartRight ? data.image.width - x - 1 : x;
+  }
+
   @override
   bool shouldRepaint(KnittingPainter oldDelegate) {
     return true;
@@ -53,7 +60,13 @@ class KnittingPainter extends CustomPainter {
 
   int? getTappedIndex(Offset position) {
     for (int i = 0; i < _pixelCount; i++) {
-      if (_pathList[i].contains(position)) {
+      final x = i % data.image.width;
+      final y = i ~/ data.image.width;
+      final isStartRight = y.isEven
+          ? data.knittingType.isEvenRowStartRight
+          : !data.knittingType.isEvenRowStartRight;
+      final xIndex = _xIndex(x, isStartRight);
+      if (_pathList[y * data.image.width + xIndex].contains(position)) {
         return i;
       }
     }
