@@ -11,7 +11,15 @@ import 'package:knitting/view/knitting_pattern/components/color_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_viewer.dart';
 
-enum BottomSheetType { color, knittingType }
+enum BottomSheetType {
+  color,
+  knittingType,
+}
+
+enum EditModeType {
+  paint,
+  dropper,
+}
 
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
@@ -115,12 +123,14 @@ class _KnittingPatternScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    const activeColor = Colors.blue;
     final scaffoldKey = GlobalKey<ScaffoldState>();
     PersistentBottomSheetController? controller;
 
     final color = useValueNotifier(colorPalette.first);
     final selectedKnittingType = useValueNotifier(knittingType);
     BottomSheetType? lastSelectedBottomSheet;
+    final editModeType = useValueNotifier(EditModeType.paint);
 
     return Scaffold(
       key: scaffoldKey,
@@ -174,6 +184,38 @@ class _KnittingPatternScreen extends HookWidget {
                         lastSelectedBottomSheet = BottomSheetType.color;
                       },
                     ),
+                    ValueListenableBuilder(
+                      valueListenable: editModeType,
+                      builder: (context, value, child) {
+                        return IconButton(
+                          onPressed: () {
+                            editModeType.value = EditModeType.dropper;
+                          },
+                          icon: Icon(
+                            Icons.colorize_outlined,
+                            color: value == EditModeType.dropper
+                                ? activeColor
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: editModeType,
+                      builder: (context, value, child) {
+                        return IconButton(
+                          onPressed: () {
+                            editModeType.value = EditModeType.paint;
+                          },
+                          icon: Icon(
+                            Icons.brush_outlined,
+                            color: value == EditModeType.paint
+                                ? activeColor
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
                     IconButton(
                       onPressed: () {
                         final newController = _showBottomSheet(
@@ -193,7 +235,7 @@ class _KnittingPatternScreen extends HookWidget {
                         controller = newController;
                         lastSelectedBottomSheet = BottomSheetType.knittingType;
                       },
-                      icon: const Icon(Icons.brush_outlined),
+                      icon: const Icon(Icons.change_circle_outlined),
                     ),
                   ],
                 ),
