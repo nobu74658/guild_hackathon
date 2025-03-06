@@ -1,9 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/model/types/knitting_type.dart';
+import 'package:knitting/view/knitting_pattern/components/grid_with_dividers.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 
@@ -31,6 +34,9 @@ class KnittingPatternViewer extends HookWidget {
   Widget build(BuildContext context) {
     final imageWidth = image.width;
     final imageHeight = image.height;
+
+    // Add state for grid customization
+    final showGrid = useState(true);
 
     final knittingWidth =
         knittingType.width * imageWidth * knittingType.dxRatio +
@@ -62,9 +68,29 @@ class KnittingPatternViewer extends HookWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: resetViewer,
-        child: const Icon(Icons.replay_outlined),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'toggleGridNumbers',
+            mini: true,
+            onPressed: () => showGrid.value = !showGrid.value,
+            child: const Icon(
+              Icons.format_list_numbered,
+              size: 20,
+            ),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            mini: true,
+            heroTag: 'resetView',
+            onPressed: resetViewer,
+            child: const Icon(
+              Icons.replay_outlined,
+              size: 20,
+            ),
+          ),
+        ],
       ),
       body: InteractiveViewer(
         boundaryMargin: const EdgeInsets.all(double.infinity),
@@ -72,21 +98,49 @@ class KnittingPatternViewer extends HookWidget {
         maxScale: 10,
         minScale: scale * 0.9,
         constrained: false,
-        child: Container(
-          margin: EdgeInsets.all(knittingType.width),
-          decoration: BoxDecoration(
-            border: Border.all(),
-          ),
-          width: knittingWidth, // TODO(nobu): 編み地の周囲に余白を追加
-          height: knittingHeight,
-          child: _Stitch(
-            image: image,
-            knittingType: knittingType,
-            imageWidth: imageWidth,
-            imageHeight: imageHeight,
-            texture: texture,
-            selectedColor: selectedColor,
-            editModeType: editModeType,
+        child: Padding(
+          padding: const EdgeInsets.all(
+            40,
+          ), // Increase padding on all sides for numbers
+          child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.all(knittingType.width),
+                width: knittingWidth,
+                height: knittingHeight,
+                child: _Stitch(
+                  image: image,
+                  knittingType: knittingType,
+                  imageWidth: imageWidth,
+                  imageHeight: imageHeight,
+                  texture: texture,
+                  selectedColor: selectedColor,
+                  editModeType: editModeType,
+                ),
+              ),
+              if (showGrid.value)
+                IgnorePointer(
+                  child: Container(
+                    margin: EdgeInsets.all(knittingType.width),
+                    width: knittingWidth,
+                    height: knittingHeight,
+                    child: KnittingGridWithDividers(
+                      totalRows: imageWidth,
+                      totalColumns: imageHeight,
+                      cellWidth: knittingType.width * knittingType.dxRatio,
+                      cellHeight: knittingType.height * knittingType.dyRatio,
+                      certainWidthGap: knittingType.certainHeightGap,
+                      gapRatio: knittingType.gapRatio,
+                      numberFontSize: 60.0, // Larger font size
+                      numberPadding: 100.0, // More padding
+                      regularNumberColor: Colors.black87,
+                      specialNumberColor: Colors.red.shade800,
+                      specialNumberFontSize: 60.0,
+                      numberBackgroundOpacity: 0,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
