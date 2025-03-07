@@ -9,29 +9,25 @@ class FakeProjectRepository extends ProjectRepositoryInterface {
   }
 
   @override
-  Future<Project> fetchProject(String projectId) async {
+  Future<Project> fetchProject(int projectId) async {
     return Future.value(
       Project(
-        projectId: '1',
+        projectId: 1,
         title: 'Project Title',
-        colors: [],
-        imageUrl: '',
+        imagePath: '',
       ),
     );
   }
 
   @override
-  Future<List<Project>> fetchAllProjects() async {
-    return Future.value(
-      [
-        Project(
-          projectId: '1',
-          title: 'Project Title',
-          colors: [],
-          imageUrl: '',
-        ),
-      ],
-    );
+  Stream<List<Project>> stream() async* {
+    yield [
+      Project(
+        projectId: 1,
+        title: 'Project Title',
+        imagePath: '',
+      ),
+    ];
   }
 
   @override
@@ -47,5 +43,20 @@ class FakeProjectRepository extends ProjectRepositoryInterface {
       height: height,
     );
     return Future.value(resizedImage);
+  }
+
+  @override
+  Future<void> saveProject(img.Image image) {
+    return Future.value();
+  }
+
+  @override
+  Future<void> updateProject(img.Image image, int projectId, String imageUrl) {
+    return Future.value();
+  }
+
+  @override
+  Future<void> deleteProject(int projectId) {
+    return Future.value();
   }
 }

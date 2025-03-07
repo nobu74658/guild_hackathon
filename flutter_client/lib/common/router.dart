@@ -30,11 +30,15 @@ class PaletteListRoute extends GoRouteData {
 
 class KnittingPatternRouteData {
   const KnittingPatternRouteData({
+    required this.projectId,
+    required this.imagePath,
     required this.image,
     required this.knittingType,
     required this.colorPalette,
   });
 
+  final int? projectId;
+  final String? imagePath;
   final img.Image image;
   final KnittingType knittingType;
   final List<Color> colorPalette;
@@ -51,6 +55,8 @@ class KnittingPatternRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ConnectedKnittingPatternScreen(
+      projectId: $extra.projectId,
+      imagePath: $extra.imagePath,
       image: $extra.image,
       knittingType: $extra.knittingType,
       backgroundColor: Colors.grey[300],
@@ -66,7 +72,8 @@ class DebugKnittingPatternRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return DebugKnittingPatternScreen(
-      // ここで変更できる
+      projectId: null,
+      imagePath: null,
       knittingType: KnittingType.singleCrochet,
       backgroundColor: Colors.grey[300],
       colorPalette: const [

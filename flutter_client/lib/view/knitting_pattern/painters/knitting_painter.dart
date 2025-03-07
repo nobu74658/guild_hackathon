@@ -43,6 +43,22 @@ class KnittingPainter extends CustomPainter {
             ? data.knittingType.evenStitch(stitchPainterData).paint()
             : data.knittingType.oddStitch(stitchPainterData).paint();
         canvas.drawPath(path, unitPainter);
+
+        // 編み目以外の部分にタップ判定を付与するためのPath
+        final width = data.knittingType.width;
+        final height = data.knittingType.height;
+        final dx = _xIndex(x, isStartRight) * width;
+        final dy = y * height;
+        final dxGap = data.knittingType.gapRatio *
+            data.knittingType.width *
+            data.knittingType.dxRatio *
+            (data.image.height - y - 1);
+        path.moveTo(dx + dxGap, dy);
+        path.lineTo(dx + width + dxGap, dy);
+        path.lineTo(dx + width + dxGap, dy + height);
+        path.lineTo(dx + dxGap, dy + height);
+        path.close();
+
         _pathList.add(path);
       }
     }
@@ -60,7 +76,7 @@ class KnittingPainter extends CustomPainter {
   (int, int)? getTappedIndex(Offset position) {
     for (int y = 0; y < data.image.height; y++) {
       for (int x = 0; x < data.image.width; x++) {
-        final isStartRight = y.isOdd
+        final isStartRight = y.isEven // TODO(nobu): image sizeとの関係を考慮
             ? data.knittingType.isEvenRowStartRight
             : data.knittingType.isOddRowStartRight;
         if (_pathList[y * data.image.width + x].contains(position)) {
