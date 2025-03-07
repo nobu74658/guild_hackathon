@@ -6,7 +6,7 @@ part of 'project_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectManagerHash() => r'761c2f676f1bb52e61636bc73e14d9708ad05c4c';
+String _$projectManagerHash() => r'c4a5b26c6446b292caf58b26404bb49b0b27fc36';
 
 /// See also [projectManager].
 @ProviderFor(projectManager)
@@ -21,8 +21,6 @@ final projectManagerProvider =
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 typedef ProjectManagerRef = AutoDisposeProviderRef<ProjectManagerInterface>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

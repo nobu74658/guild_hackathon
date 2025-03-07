@@ -8,6 +8,7 @@ part of 'router.dart';
 
 List<RouteBase> get $appRoutes => [
       $knittingPatternListRoute,
+      $paletteListRoute,
       $knittingPatternRoute,
       $debugKnittingPatternRoute,
     ];
@@ -23,6 +24,29 @@ extension $KnittingPatternListRouteExtension on KnittingPatternListRoute {
 
   String get location => GoRouteData.$location(
         '/',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $paletteListRoute => GoRouteData.$route(
+      path: '/palette',
+      factory: $PaletteListRouteExtension._fromState,
+    );
+
+extension $PaletteListRouteExtension on PaletteListRoute {
+  static PaletteListRoute _fromState(GoRouterState state) =>
+      const PaletteListRoute();
+
+  String get location => GoRouteData.$location(
+        '/palette',
       );
 
   void go(BuildContext context) => context.go(location);

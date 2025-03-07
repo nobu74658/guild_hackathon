@@ -6,6 +6,7 @@ import 'package:knitting/view/knitting_pattern/painters/knitting_painter.dart';
 
 part 'stitches/cross_stitch_painter.dart';
 part 'stitches/knit_painter.dart';
+part 'stitches/pixel_art_painter.dart';
 part 'stitches/single_crochet_back_loop_only_painter.dart';
 part 'stitches/single_crochet_back_loop_only_purl_painter.dart';
 part 'stitches/single_crochet_knit_painter.dart';
@@ -30,6 +31,8 @@ class StitchPainter {
       _CrossStitchPainter(data);
   static AbstractStitchPainter knit(StitchPainterData data) =>
       _KnitPainter(data);
+  static AbstractStitchPainter pixelArt(StitchPainterData data) =>
+      _PixelArtPainter(data);
   static AbstractStitchPainter singleCrochetKnit(StitchPainterData data) =>
       _SingleCrochetKnitPainter(data);
   static AbstractStitchPainter singleCrochetPurl(StitchPainterData data) =>

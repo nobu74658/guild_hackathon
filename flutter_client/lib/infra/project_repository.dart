@@ -27,10 +27,12 @@ class _ProjectRepository extends ProjectRepositoryInterface {
   final ClientChannel channel;
 
   @override
-  Future<Project> fetchProject(String projectId) async {
+  Future<Project> fetchProject(int projectId) async {
     final client = grpc_projects.ProjectServiceClient(channel);
     final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    final request = grpc_projects.GetProjectRequest(id: projectId);
+    final request = grpc_projects.GetProjectRequest(
+      id: projectId.toString(),
+    ); // TODO(backend): Convert to int
     final response = await client.getProject(
       request,
       options: CallOptions(
@@ -40,40 +42,39 @@ class _ProjectRepository extends ProjectRepositoryInterface {
       ),
     );
     return Project(
-      projectId: response.id,
+      projectId: 1, // TODO(backend): Convert to int
       title: response.title,
-      imageUrl: '',
-      colors: List.empty(),
+      imagePath: '',
     );
   }
 
   @override
-  Future<List<Project>> fetchAllProjects() async {
-    final client = grpc_projects.ProjectServiceClient(channel);
-    final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      throw Exception('User is not authenticated');
-    }
-    final request = grpc_projects.GetProjectsRequest(userId: currentUser.uid);
-    final response = await client.getProjects(
-      request,
-      options: CallOptions(
-        metadata: {
-          'Authorization': 'Bearer ${userIdToken ?? ''}',
-        },
-      ),
-    );
-    return response.projects
-        .map(
-          (project) => Project(
-            projectId: project.id,
-            title: project.title,
-            imageUrl: '',
-            colors: List.empty(),
-          ),
-        )
-        .toList();
+  Stream<List<Project>> stream() async* {
+    throw UnimplementedError();
+    // final client = grpc_projects.ProjectServiceClient(channel);
+    // final userIdToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    // final currentUser = FirebaseAuth.instance.currentUser;
+    // if (currentUser == null) {
+    //   throw Exception('User is not authenticated');
+    // }
+    // final request = grpc_projects.GetProjectsRequest(userId: currentUser.uid);
+    // final response = await client.getProjects(
+    //   request,
+    //   options: CallOptions(
+    //     metadata: {
+    //       'Authorization': 'Bearer ${userIdToken ?? ''}',
+    //     },
+    //   ),
+    // );
+    // return response.projects
+    //     .map(
+    //       (project) => Project(
+    //         projectId: 1, // TODO(backend): Convert to int
+    //         title: project.title,
+    //         imagePath: '',
+    //       ),
+    //     )
+    //     .toList();
   }
 
   @override
@@ -121,5 +122,20 @@ class _ProjectRepository extends ProjectRepositoryInterface {
     }
 
     return dottedImage;
+  }
+
+  @override
+  Future<void> saveProject(img.Image image) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateProject(img.Image image, int projectId, String imageUrl) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteProject(int projectId) {
+    throw UnimplementedError();
   }
 }

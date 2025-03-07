@@ -2,10 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/manager/asset_image_manager.dart';
+import 'package:knitting/app/manager/project_manager.dart';
 import 'package:knitting/model/types/knitting_type.dart';
+import 'package:knitting/view/components/show_dialog.dart';
 import 'package:knitting/view/knitting_pattern/components/color_palette.dart';
 import 'package:knitting/view/knitting_pattern/components/color_selector.dart';
 import 'package:knitting/view/knitting_pattern/components/knitting_pattern_selector.dart';
@@ -23,12 +25,16 @@ enum EditModeType {
 
 class DebugKnittingPatternScreen extends ConsumerWidget {
   const DebugKnittingPatternScreen({
+    required this.projectId,
+    required this.imagePath,
     required this.knittingType,
     required this.colorPalette,
     required this.backgroundColor,
     super.key,
   });
 
+  final int? projectId;
+  final String? imagePath;
   final KnittingType knittingType;
   final List<Color> colorPalette;
   final Color? backgroundColor;
@@ -46,6 +52,8 @@ class DebugKnittingPatternScreen extends ConsumerWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return _KnittingPatternScreen(
+            projectId: projectId,
+            imagePath: imagePath,
             image: snapshot.data![0] as img.Image,
             texture: snapshot.data![1] as ui.Image,
             knittingType: knittingType,
@@ -65,6 +73,8 @@ class DebugKnittingPatternScreen extends ConsumerWidget {
 
 class ConnectedKnittingPatternScreen extends ConsumerWidget {
   const ConnectedKnittingPatternScreen({
+    required this.projectId,
+    required this.imagePath,
     required this.image,
     required this.knittingType,
     required this.colorPalette,
@@ -74,6 +84,8 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
 
   static const path = '/edit';
 
+  final int? projectId;
+  final String? imagePath;
   final img.Image image;
   final KnittingType knittingType;
   final List<Color> colorPalette;
@@ -89,6 +101,8 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return _KnittingPatternScreen(
+            projectId: projectId,
+            imagePath: imagePath,
             image: image,
             texture: snapshot.data!,
             knittingType: knittingType,
@@ -106,8 +120,10 @@ class ConnectedKnittingPatternScreen extends ConsumerWidget {
   }
 }
 
-class _KnittingPatternScreen extends HookWidget {
+class _KnittingPatternScreen extends HookConsumerWidget {
   const _KnittingPatternScreen({
+    required this.projectId,
+    required this.imagePath,
     required this.image,
     required this.texture,
     required this.knittingType,
@@ -115,6 +131,8 @@ class _KnittingPatternScreen extends HookWidget {
     required this.backgroundColor,
   });
 
+  final int? projectId;
+  final String? imagePath;
   final img.Image image;
   final ui.Image texture;
   final KnittingType knittingType;
@@ -122,7 +140,8 @@ class _KnittingPatternScreen extends HookWidget {
   final Color? backgroundColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    img.Image newImage = image;
     const activeColor = Colors.blue;
     final scaffoldKey = GlobalKey<ScaffoldState>();
     PersistentBottomSheetController? controller;
@@ -136,10 +155,34 @@ class _KnittingPatternScreen extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Row(),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    SD.circular(context);
+                    if (projectId == null || imagePath == null) {
+                      await ref
+                          .read(projectManagerProvider)
+                          .saveProject(image: newImage);
+                    } else {
+                      await ref.read(projectManagerProvider).updateProject(
+                            projectId: projectId!,
+                            image: newImage,
+                            imageUrl: imagePath!,
+                          );
+                    }
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: const Icon(Icons.save_outlined),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -155,6 +198,9 @@ class _KnittingPatternScreen extends HookWidget {
               selectedColor: color,
               backgroundColor: backgroundColor,
               editModeType: editModeType,
+              onImageChanged: (img.Image value) {
+                newImage = value;
+              },
             );
           },
         ),
@@ -181,7 +227,7 @@ class _KnittingPatternScreen extends HookWidget {
                       color: color,
                       onTap: () {
                         final newController = _showBottomSheet(
-                          widget: ColorPalette(
+                          widget: ColorPaletteBottomSheet(
                             onTap: (value) {
                               color.value = value;
                               Navigator.pop(context);
