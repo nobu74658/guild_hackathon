@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image/image.dart' as img;
 import 'package:knitting/app/manager/project_manager.dart';
 import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
 import 'package:knitting/common/color.dart';
@@ -84,9 +85,25 @@ class KnittingPatternListScreen extends HookConsumerWidget {
                         if (context.mounted) {
                           SD.circular(context);
 
-                          final image = await ref
-                              .read(createNewPatternUseCaseProvider)
-                              .call(result.$1);
+                          img.Image image;
+
+                          try {
+                            image = await ref
+                                .read(createNewPatternUseCaseProvider)
+                                .call(result.$1);
+                          } catch (e) {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'エラーが発生しました\nネットワーク環境を確認して再度お試しください',
+                                  ),
+                                ),
+                              );
+                            }
+                            return;
+                          }
 
                           if (context.mounted) {
                             Navigator.pop(context);
