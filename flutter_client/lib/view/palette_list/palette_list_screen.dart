@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:knitting/common/color.dart';
 import 'package:knitting/model/types/color_palette_type.dart';
 import 'package:knitting/view/palette_list/components/palette_card.dart';
@@ -25,9 +26,6 @@ class PaletteListScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = useState(Colors.blue);
-    final paletteNameController = useTextEditingController();
-
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppBar(
@@ -46,15 +44,12 @@ class PaletteListScreen extends HookWidget {
         child: ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           itemCount: paletteList.length + 1,
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 16);
-          },
+          separatorBuilder: (context, index) => const Gap(16),
           itemBuilder: (context, index) {
             if (index == 0) {
-              return AddPaletteCard(context: context, color: color);
+              return const AddPaletteCard();
             }
             return PaletteCard(
-              context: context,
               palette: paletteList[index - 1],
             );
           },

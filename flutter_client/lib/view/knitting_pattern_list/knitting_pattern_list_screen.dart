@@ -33,10 +33,11 @@ class KnittingPatternListScreen extends HookConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                PaletteListRoute().push(context);
-              },
-              icon: const Icon(Icons.palette_outlined))
+            onPressed: () {
+              const PaletteListRoute().push(context);
+            },
+            icon: const Icon(Icons.palette_outlined),
+          ),
         ],
       ),
       body: FutureBuilder(

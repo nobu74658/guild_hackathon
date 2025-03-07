@@ -20,9 +20,8 @@ class _Card extends StatelessWidget {
 }
 
 class PaletteCard extends StatelessWidget {
-  const PaletteCard({super.key, required this.context, required this.palette});
+  const PaletteCard({super.key, required this.palette});
 
-  final BuildContext context;
   final ColorPaletteType palette;
 
   @override
@@ -115,10 +114,7 @@ class PaletteCard extends StatelessWidget {
 }
 
 class AddPaletteCard extends StatelessWidget {
-  const AddPaletteCard({super.key, required this.context, required this.color});
-
-  final BuildContext context;
-  final ValueNotifier<Color> color;
+  const AddPaletteCard({super.key});
 
   @override
   Widget build(BuildContext context) {
