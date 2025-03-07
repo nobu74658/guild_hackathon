@@ -19,13 +19,13 @@ class KnittingPatternListRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<PaletteListRoute>(path: PaletteListScreen.path)
+@TypedGoRoute<PaletteListRoute>(path: ConnectedPaletteListScreen.path)
 class PaletteListRoute extends GoRouteData {
   const PaletteListRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const PaletteListScreen();
+    return const ConnectedPaletteListScreen();
   }
 }
 

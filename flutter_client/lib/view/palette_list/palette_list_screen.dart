@@ -1,70 +1,64 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:knitting/common/color.dart';
+import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/view/palette_list/components/palette_card.dart';
 
-class PaletteListScreen extends HookWidget {
-  const PaletteListScreen({super.key});
+class ConnectedPaletteListScreen extends ConsumerWidget {
+  const ConnectedPaletteListScreen({super.key});
 
   static const path = '/palette';
 
   @override
-  Widget build(BuildContext context) {
-    final border = Border.all(
-      color: Colors.white70,
-      width: 2,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const PaletteListScreen(
+      paletteList: ColorPaletteType.values,
     );
+  }
+}
 
-    final color = useState(Colors.black);
+class PaletteListScreen extends HookWidget {
+  const PaletteListScreen({super.key, required this.paletteList});
+
+  final List<ColorPaletteType> paletteList;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = useState(Colors.blue);
+    final paletteNameController = useTextEditingController();
+
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppBar(
         backgroundColor: AppColor.background,
+        title: const Text(
+          'カラーパレット',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: border,
-              ),
-              child: IconButton(
-                color: Colors.grey,
-                iconSize: 100,
-                icon: const Icon(CupertinoIcons.add),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('色を選択'),
-                        content: SingleChildScrollView(
-                          child: ColorPicker(
-                            pickerColor: Colors.blue,
-                            onColorChanged: (Color color_) {
-                              color.value = color_;
-                              // print(color.value);
-                            },
-                          ),
-                        ),
-                        actions: [
-                          IconButton(
-                            onPressed: () {
-                              print(color.value);
-                            },
-                            icon: const Icon(CupertinoIcons.add),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          itemCount: paletteList.length + 1,
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 16);
+          },
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return AddPaletteCard(context: context, color: color);
+            }
+            return PaletteCard(
+              context: context,
+              palette: paletteList[index - 1],
             );
-          }
-          return null;
-        },
+          },
+        ),
       ),
     );
   }
