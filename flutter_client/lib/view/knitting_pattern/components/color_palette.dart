@@ -23,7 +23,7 @@ class ColorPaletteBottomSheet extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, // Adjust the number of columns as needed
+          crossAxisCount: 4,
         ),
         itemCount: paletteColors.length,
         itemBuilder: (context, index) {

@@ -22,7 +22,7 @@ class KnittingPatternSelector extends StatelessWidget {
           for (final knittingPattern in KnittingType.values)
             ListTile(
               title: Text(
-                knittingPattern.name,
+                knittingPattern.label,
                 style: TextStyle(
                   color: knittingPattern == selectedKnittingType
                       ? Colors.black
