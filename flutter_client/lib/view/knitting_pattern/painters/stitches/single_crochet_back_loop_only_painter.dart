@@ -124,6 +124,7 @@ class _SingleCrochetBackLoopOnlyPainter extends AbstractStitchPainter {
         dx + width * 0.75 + dxGap,
         dy + height * 2.5 / 9,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     return path;
   }
