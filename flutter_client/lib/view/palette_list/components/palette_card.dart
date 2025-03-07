@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/view/palette_list/components/select_color_dialog.dart';
 
 class _Card extends StatelessWidget {
   const _Card({required this.child});
@@ -29,7 +29,15 @@ class PaletteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return _Card(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => SelectColorDialog(
+              paletteName: palette.label,
+              colorPalette: palette.paletteColors,
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -46,9 +54,27 @@ class PaletteCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.more_vert),
+                    icon: const Icon(Icons.delete_outline),
                     onPressed: () {
-                      // Show palette options
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('削除しますか？'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('キャンセル'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // TODO(nobu): 削除機能
+                                Navigator.pop(context);
+                              },
+                              child: const Text('削除'),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -98,7 +124,13 @@ class AddPaletteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return _Card(
       child: InkWell(
-        onTap: () => showAddPaletteDialog(context, color),
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => const SelectColorDialog(
+            paletteName: '',
+            colorPalette: [],
+          ),
+        ),
         child: const Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
@@ -120,66 +152,6 @@ class AddPaletteCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void showAddPaletteDialog(BuildContext context, ValueNotifier<Color> color) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            '新しいパレットを作成',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const TextField(
-                  decoration: InputDecoration(
-                    labelText: 'パレット名',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ColorPicker(
-                  paletteType: PaletteType.hueWheel,
-                  pickerColor: color.value,
-                  onColorChanged: (newColor) {},
-                  enableAlpha: false,
-                  labelTypes: const [],
-                  displayThumbColor: true,
-                  pickerAreaHeightPercent: 0.8,
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('キャンセル'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: color.value,
-                foregroundColor: useWhiteForeground(color.value)
-                    ? Colors.white
-                    : Colors.black,
-              ),
-              onPressed: () {
-                print(color.value);
-                Navigator.of(context).pop();
-              },
-              child: const Text('追加'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
