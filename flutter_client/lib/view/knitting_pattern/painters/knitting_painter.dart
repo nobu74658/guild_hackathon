@@ -53,10 +53,23 @@ class KnittingPainter extends CustomPainter {
             data.knittingType.width *
             data.knittingType.dxRatio *
             (data.image.height - y - 1);
-        path.moveTo(dx + dxGap, dy);
-        path.lineTo(dx + width + dxGap, dy);
-        path.lineTo(dx + width + dxGap, dy + height);
-        path.lineTo(dx + dxGap, dy + height);
+        final certainWidthGap =
+            y.isEven ? data.knittingType.certainWidthGap : 0;
+        final certainHeightGap =
+            y.isEven ? data.knittingType.certainHeightGap : 0;
+        path.moveTo(dx + dxGap + certainWidthGap, dy + certainHeightGap);
+        path.lineTo(
+          dx + width + dxGap + certainWidthGap,
+          dy + certainHeightGap,
+        );
+        path.lineTo(
+          dx + width + dxGap + certainWidthGap,
+          dy + certainHeightGap + height,
+        );
+        path.lineTo(
+          dx + dxGap + certainWidthGap,
+          dy + certainHeightGap + height,
+        );
         path.close();
 
         _pathList.add(path);

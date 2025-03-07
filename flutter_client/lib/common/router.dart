@@ -74,7 +74,7 @@ class DebugKnittingPatternRoute extends GoRouteData {
     return DebugKnittingPatternScreen(
       projectId: null,
       imagePath: null,
-      knittingType: KnittingType.singleCrochetPurl,
+      knittingType: KnittingType.singleCrochet,
       backgroundColor: Colors.grey[300],
       colorPalette: const [
         Colors.red,

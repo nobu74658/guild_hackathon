@@ -16,7 +16,7 @@ class _SingleCrochetPurlPainter extends AbstractStitchPainter {
         0 + dx + dxGap + certainWidthGap,
         height * 0.35 + dy + certainHeightGap,
         width * 0.01 + dx + dxGap + certainWidthGap,
-        height * 0.3 + dy + certainHeightGap,
+        height * 0.2 + dy + certainHeightGap,
       )
       // 2
       ..quadraticBezierTo(
@@ -134,6 +134,7 @@ class _SingleCrochetPurlPainter extends AbstractStitchPainter {
         width * 0.55 + dx + dxGap + certainWidthGap,
         height * 0.25 + dy,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     return path;
   }

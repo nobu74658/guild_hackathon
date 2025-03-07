@@ -9,10 +9,9 @@ enum KnittingType {
     evenStitch: StitchPainter.singleCrochetPurl,
     label: '細編み（往復）',
     value: 'singleCrochet',
-    isEvenRowStartRight: false,
     certainWidthGap: 50,
     certainHeightGap: -15,
-    height: 80,
+    height: 85,
   ),
   singleCrochetFrontLoop._(
     oddStitch: StitchPainter.singleCrochetKnit,
@@ -28,20 +27,27 @@ enum KnittingType {
     evenStitch: StitchPainter.singleCrochetBackLoopOnly,
     label: 'すじ編み',
     value: 'singleCrochetBackLoopOnly',
-    height: 80,
+    height: 110,
   ),
   knit._(
     oddStitch: StitchPainter.knit,
     evenStitch: StitchPainter.knit,
-    value: 'knit',
     label: 'メリヤス編み',
+    value: 'knit',
+    height: 85,
   ),
-  // 不要なんだけど、見た目の確認のために表示
-  singleCrochetPurl._(
-    oddStitch: StitchPainter.singleCrochetPurl,
-    evenStitch: StitchPainter.singleCrochetPurl,
-    label: '細編み(裏あみ)',
-    value: 'singleCrochet',
+  // // Tは使ったことない、他の人の反応見ても需要は高くなさそう
+  // singleCrochetPurl._(
+  //   oddStitch: StitchPainter.singleCrochetPurl,
+  //   evenStitch: StitchPainter.singleCrochetPurl,
+  //   label: '細編み(裏あみ)',
+  //   value: 'singleCrochet',
+  // ),
+  pixelArt._(
+    oddStitch: StitchPainter.pixelArt,
+    evenStitch: StitchPainter.pixelArt,
+    label: 'ドット絵',
+    value: 'pixelArt',
   ),
   ;
 
