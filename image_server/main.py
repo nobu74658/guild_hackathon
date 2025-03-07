@@ -23,9 +23,14 @@ def read_root():
 @app.post("/api/convert")
 async def convert_image(
     image_file: UploadFile = File(...),
-    output_width: int = 100,
-    output_height: int = 100,
+    output_column: int = 100, # 列（横の編み地の数）
+    output_row: int = 100,    # 行（縦の編み地の数）
+    width_ratio: float = 1.0,
+    height_ratio: float = 1.0,
+    shear: float = 0.0,
     avalilable_colors_hex: List[str] = [],
+    # auto_contrast: bool = True,
+    # manual_color_mapping: dict = None,
     pallete_id: int = 1
 ):
     # if pallete_id == 1:
@@ -35,7 +40,8 @@ async def convert_image(
     # else:
     avalilable_colors_hex = [
         # '#ffeb3b', '#f44336', '#2196f3', '#9c27b0', '#9e9e9e', '#ffffff'
-        "#2d56e1", "#9ca7ae", "#000000", "#ffffff"
+        # "#2d56e1", "#9ca7ae", "#000000", "#ffffff"
+        "#ff7c78", "#ffa499", "000000", "#ffc0b3", "#ffffff" # 豚さんバージョン
     ]
     available_colors_rgb = [hex_to_rgb(color) for color in avalilable_colors_hex]
 
@@ -45,9 +51,16 @@ async def convert_image(
     image.show()
     convert_photo_to_pixel_art = ConvertPhotoToPixelArt(
         image=image,
-        output_width=output_width,
-        output_height=output_height,
+        input_width=image.width,
+        input_height=image.height,
+        output_column=output_column,
+        output_row=output_row,
+        width_ratio=width_ratio,
+        height_ratio=height_ratio,
+        shear=shear,
         available_colors=available_colors_rgb,
+        # auto_contrast=auto_contrast,
+        # manual_color_mapping=manual_color_mapping,
     )
     image = convert_photo_to_pixel_art.convert()
     image.show()
