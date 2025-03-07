@@ -20,32 +20,25 @@ class PaletteListScreen extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.background,
-        // title: const Text('パレット'), //仮のタイトル
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
-        //         KnittingPatternListRoute().push(context);
-        //       },
-        //       icon: const Icon(Icons.close))
-        // ],
       ),
-      body: ListView.builder(itemBuilder: (context, index) {
-        if (index == 0) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: border,
-            ),
-            child: IconButton(
-              color: Colors.grey,
-              iconSize: 100,
-              icon: const Icon(CupertinoIcons.add),
-              onPressed: () {
-                showDialog(
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: border,
+              ),
+              child: IconButton(
+                color: Colors.grey,
+                iconSize: 100,
+                icon: const Icon(CupertinoIcons.add),
+                onPressed: () {
+                  showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('色を選択'),
+                        title: const Text('色を選択'),
                         content: SingleChildScrollView(
                           child: ColorPicker(
                             pickerColor: Colors.blue,
@@ -61,15 +54,18 @@ class PaletteListScreen extends HookWidget {
                               print(color.value);
                             },
                             icon: const Icon(CupertinoIcons.add),
-                          )
+                          ),
                         ],
                       );
-                    });
-              },
-            ),
-          );
-        }
-      }),
+                    },
+                  );
+                },
+              ),
+            );
+          }
+          return null;
+        },
+      ),
     );
   }
 }
