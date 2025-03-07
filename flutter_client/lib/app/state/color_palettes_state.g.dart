@@ -1,25 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'project_repository.dart';
+part of 'color_palettes_state.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectRepositoryHash() => r'da7247df33e1e13c20ac9051b78a2cf59cd883c9';
+String _$colorPalettesStateHash() =>
+    r'e0e9b90a8ba5227d5bdc5a8686d5b4147547d432';
 
-/// See also [projectRepository].
-@ProviderFor(projectRepository)
-final projectRepositoryProvider = Provider<ProjectRepositoryInterface>.internal(
-  projectRepository,
-  name: r'projectRepositoryProvider',
+/// See also [ColorPalettesState].
+@ProviderFor(ColorPalettesState)
+final colorPalettesStateProvider = AutoDisposeNotifierProvider<
+    ColorPalettesState, List<ColorPalette>>.internal(
+  ColorPalettesState.new,
+  name: r'colorPalettesStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$projectRepositoryHash,
+      : _$colorPalettesStateHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ProjectRepositoryRef = ProviderRef<ProjectRepositoryInterface>;
+typedef _$ColorPalettesState = AutoDisposeNotifier<List<ColorPalette>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

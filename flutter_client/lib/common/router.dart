@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/model/types/color_palette_type.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern_list/knitting_pattern_list_screen.dart';
+import 'package:knitting/view/palette_list/palette_list_screen.dart';
 
 part 'router.g.dart';
 
@@ -15,6 +15,16 @@ class KnittingPatternListRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KnittingPatternListScreen();
+  }
+}
+
+@TypedGoRoute<PaletteListRoute>(path: ConnectedPaletteListScreen.path)
+class PaletteListRoute extends GoRouteData {
+  const PaletteListRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ConnectedPaletteListScreen();
   }
 }
 
@@ -56,9 +66,17 @@ class DebugKnittingPatternRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return DebugKnittingPatternScreen(
-      knittingType: KnittingType.singleCrochet,
+      // ここで変更できる
+      knittingType: KnittingType.singleCrochetPurl,
       backgroundColor: Colors.grey[300],
-      colorPalette: ColorPaletteType.first.paletteColors,
+      colorPalette: const [
+        Colors.red,
+        Colors.blue,
+        Colors.green,
+        Colors.yellow,
+        Colors.purple,
+        Colors.orange,
+      ],
     );
   }
 }
