@@ -76,7 +76,7 @@ class KnittingPainter extends CustomPainter {
   (int, int)? getTappedIndex(Offset position) {
     for (int y = 0; y < data.image.height; y++) {
       for (int x = 0; x < data.image.width; x++) {
-        final isStartRight = y.isOdd
+        final isStartRight = y.isEven // TODO(nobu): image sizeとの関係を考慮
             ? data.knittingType.isEvenRowStartRight
             : data.knittingType.isOddRowStartRight;
         if (_pathList[y * data.image.width + x].contains(position)) {
