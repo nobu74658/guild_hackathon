@@ -19,6 +19,7 @@ class KnittingPatternViewer extends HookWidget {
     required this.selectedColor,
     required this.editModeType,
     required this.backgroundColor,
+    required this.onImageChanged,
     super.key,
   });
 
@@ -29,13 +30,13 @@ class KnittingPatternViewer extends HookWidget {
   final Color? backgroundColor;
   final ValueNotifier<Color> selectedColor;
   final ValueNotifier<EditModeType> editModeType;
+  final void Function(img.Image) onImageChanged;
 
   @override
   Widget build(BuildContext context) {
     final imageWidth = image.width;
     final imageHeight = image.height;
 
-    // Add state for grid customization
     final showGrid = useState(true);
 
     final knittingWidth =
@@ -116,6 +117,7 @@ class KnittingPatternViewer extends HookWidget {
                   texture: texture,
                   selectedColor: selectedColor,
                   editModeType: editModeType,
+                  onImageChanged: onImageChanged,
                 ),
               ),
               if (showGrid.value)
@@ -157,6 +159,7 @@ class _Stitch extends HookWidget {
     required this.texture,
     required this.selectedColor,
     required this.editModeType,
+    required this.onImageChanged,
   });
 
   final img.Image image;
@@ -166,6 +169,7 @@ class _Stitch extends HookWidget {
   final ui.Image texture;
   final ValueNotifier<Color> selectedColor;
   final ValueNotifier<EditModeType> editModeType;
+  final void Function(img.Image) onImageChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +218,7 @@ class _Stitch extends HookWidget {
               );
               newImage.setPixel(point.$1, point.$2, color);
               imageState.value = newImage;
+              onImageChanged(newImage);
             }
             if (editModeType.value == EditModeType.dropper) {
               final color = imageState.value.getPixel(

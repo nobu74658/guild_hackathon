@@ -35,7 +35,7 @@ final getDirProvider = FutureProvider<Directory>.internal(
 );
 
 typedef GetDirRef = FutureProviderRef<Directory>;
-String _$getIsarHash() => r'9e4859ac4fc4a167e8ef4cee4671dc81c1d3b7db';
+String _$getIsarHash() => r'e7f573e90104fdda8abdfb48c21c2b571a2afc4c';
 
 /// See also [getIsar].
 @ProviderFor(getIsar)
