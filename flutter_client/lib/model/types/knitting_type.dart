@@ -30,11 +30,12 @@ enum KnittingType {
     height: 110,
   ),
   knit._(
-      oddStitch: StitchPainter.knit,
-      evenStitch: StitchPainter.knit,
-      label: 'メリヤス編み',
-      value: 'knit',
-      height: 85),
+    oddStitch: StitchPainter.knit,
+    evenStitch: StitchPainter.knit,
+    label: 'メリヤス編み',
+    value: 'knit',
+    height: 85,
+  ),
   // // Tは使ったことない、他の人の反応見ても需要は高くなさそう
   // singleCrochetPurl._(
   //   oddStitch: StitchPainter.singleCrochetPurl,

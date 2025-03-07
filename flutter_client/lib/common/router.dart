@@ -67,7 +67,7 @@ class DebugKnittingPatternRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) {
     return DebugKnittingPatternScreen(
       // ここで変更できる
-      knittingType: KnittingType.singleCrochetPurl,
+      knittingType: KnittingType.singleCrochet,
       backgroundColor: Colors.grey[300],
       colorPalette: const [
         Colors.red,
