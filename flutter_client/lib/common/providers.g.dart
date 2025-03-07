@@ -49,5 +49,21 @@ final getIsarProvider = FutureProvider<Isar>.internal(
 );
 
 typedef GetIsarRef = FutureProviderRef<Isar>;
+String _$getSharedPreferencesHash() =>
+    r'11223e285ef04ac5661ebf145d908e9e46dacd14';
+
+/// See also [getSharedPreferences].
+@ProviderFor(getSharedPreferences)
+final getSharedPreferencesProvider = FutureProvider<SharedPreferences>.internal(
+  getSharedPreferences,
+  name: r'getSharedPreferencesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getSharedPreferencesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetSharedPreferencesRef = FutureProviderRef<SharedPreferences>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

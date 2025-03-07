@@ -7,7 +7,7 @@ part of 'color_palette_repository.dart';
 // **************************************************************************
 
 String _$colorPaletteRepositoryHash() =>
-    r'3d48d57b119f53c2d5dafb2d4fbf28584ae5d447';
+    r'03eedd61e8128aefb3f7519bc04f4ca4aae03d3b';
 
 /// See also [colorPaletteRepository].
 @ProviderFor(colorPaletteRepository)

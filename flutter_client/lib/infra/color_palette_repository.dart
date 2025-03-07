@@ -5,17 +5,65 @@ import 'package:knitting/common/providers.dart';
 import 'package:knitting/infra/color_palette_interface.dart';
 import 'package:knitting/model/entities/color_palette.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'color_palette_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 ColorPaletteRepositoryInterface colorPaletteRepository(Ref ref) =>
-    _ColorPaletteRepository(ref.read(getIsarProvider.future));
+    _ColorPaletteRepository(
+      ref.read(getIsarProvider.future),
+      ref.read(getSharedPreferencesProvider.future),
+    );
 
 class _ColorPaletteRepository extends ColorPaletteRepositoryInterface {
-  _ColorPaletteRepository(this._isar);
+  _ColorPaletteRepository(this._isar, this._sharedPreferences) {
+    _sharedPreferences.then((value) {
+      final isFirstSetup = value.getBool('color_palette_setup') ?? true;
+      if (isFirstSetup) {
+        value.setBool('color_palette_setup', false);
+        add(
+          palette: [
+            Colors.white,
+            Colors.grey,
+            Colors.blueAccent,
+            Colors.black,
+            Colors.teal,
+            Colors.yellow,
+          ],
+          label: 'パレット1',
+          order: 1,
+        );
+        add(
+          palette: [
+            Colors.green,
+            Colors.orange,
+            Colors.pink,
+            Colors.brown,
+            Colors.black,
+            Colors.teal,
+          ],
+          label: 'パレット2',
+          order: 2,
+        );
+        add(
+          palette: [
+            Colors.yellow,
+            Colors.red,
+            Colors.blue,
+            Colors.purple,
+            Colors.grey,
+            Colors.white,
+          ],
+          label: 'パレット3',
+          order: 3,
+        );
+      }
+    });
+  }
 
   final Future<Isar> _isar;
+  final Future<SharedPreferences> _sharedPreferences;
 
   @override
   Stream<List<ColorPalette>> stream() async* {
@@ -41,7 +89,7 @@ class _ColorPaletteRepository extends ColorPaletteRepositoryInterface {
     final isar = await _isar;
     final theme = IsaColorPalette()
       ..label = label
-      ..order = 1
+      ..order = order
       ..paletteColors = palette.toIsar();
     await isar.writeTxn(() async {
       await isar.isaColorPalettes.put(theme);
