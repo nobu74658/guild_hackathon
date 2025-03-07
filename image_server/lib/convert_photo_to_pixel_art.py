@@ -14,8 +14,6 @@ class ConvertPhotoToPixelArt:
         width_ratio: float = 1.0,
         height_ratio: float = 1.0,
         shear: float = 0.0,
-        # output_width: int,
-        # output_height: int,
         available_colors: list = None,
         # auto_contrast: bool = True,
         # manual_color_mapping: dict = None,
@@ -28,8 +26,6 @@ class ConvertPhotoToPixelArt:
         self.width_ratio = width_ratio
         self.height_ratio = height_ratio
         self.shear = max(-1, min(1, shear))  # 制限 -1 ~ 1
-        # self.output_width = output_width
-        # self.output_height = output_height
         self.available_colors = available_colors or [
             (0, 0, 0),
             (255, 255, 255),
@@ -39,7 +35,7 @@ class ConvertPhotoToPixelArt:
     
 
     def apply_affine_transform(self, image):
-        """ widthRatio, heightRatio, shear を考慮し、アフィン変換を適用する """
+        """ widthRatio, heightRatio, shear を考慮し、アフィン変換を適用 """
         new_width = int(self.output_column * self.width_ratio)
         new_height = int(self.output_row * self.height_ratio)
         image = image.resize((new_width, new_height), resample=Image.NEAREST)
