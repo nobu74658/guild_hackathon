@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
 import 'package:knitting/app/use_case/pick_image_use_case.dart';
-import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/entities/color_palette.dart';
 import 'package:knitting/model/types/create_type.dart';
 import 'package:knitting/model/types/knitting_pattern_size.dart';
 import 'package:knitting/model/types/knitting_type.dart';
@@ -20,7 +20,12 @@ class SettingDialog extends HookConsumerWidget {
     final selectedImage = useState<Uint8List?>(null);
     final selectedSize = useState(KnittingPatternSizeType.eight);
     final selectedKnittingType = useState(KnittingType.singleCrochet);
-    final selectedColorPalette = useState(ColorPaletteType.first);
+    final selectedColorPalette = useState(ColorPalette.mock);
+    final colorPalettes = [
+      ColorPalette.mock,
+      ColorPalette.mock,
+      ColorPalette.mock,
+    ];
 
     return AlertDialog(
       title: const Text(
@@ -62,7 +67,7 @@ class SettingDialog extends HookConsumerWidget {
               height: 60,
               child: DropdownButton(
                 value: selectedColorPalette.value,
-                items: ColorPaletteType.values
+                items: colorPalettes
                     .map(
                       (colorPalette) => DropdownMenuItem(
                         value: colorPalette,

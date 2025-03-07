@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image/image.dart' as img;
-import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/entities/color_palette.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 import 'package:knitting/view/knitting_pattern/knitting_pattern_screen.dart';
 import 'package:knitting/view/knitting_pattern_list/knitting_pattern_list_screen.dart';
@@ -70,7 +70,7 @@ class DebugKnittingPatternRoute extends GoRouteData {
       // ここで変更できる
       knittingType: KnittingType.singleCrochetPurl,
       backgroundColor: Colors.grey[300],
-      colorPalette: ColorPaletteType.first.paletteColors,
+      colorPalette: ColorPalette.mock.paletteColors,
     );
   }
 }

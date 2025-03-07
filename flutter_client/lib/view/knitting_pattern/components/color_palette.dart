@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class ColorPalette extends StatelessWidget {
-  const ColorPalette({
+class ColorPaletteBottomSheet extends StatelessWidget {
+  const ColorPaletteBottomSheet({
     super.key,
     required this.onTap,
     required this.selectedColor,

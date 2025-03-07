@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:knitting/app/state/color_palettes_state.dart';
 import 'package:knitting/common/color.dart';
-import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/entities/color_palette.dart';
 import 'package:knitting/view/palette_list/components/palette_card.dart';
 
 class ConnectedPaletteListScreen extends ConsumerWidget {
@@ -13,8 +14,9 @@ class ConnectedPaletteListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const PaletteListScreen(
-      paletteList: ColorPaletteType.values,
+    final paletteList = ref.watch(colorPalettesStateProvider);
+    return PaletteListScreen(
+      paletteList: paletteList,
     );
   }
 }
@@ -22,7 +24,7 @@ class ConnectedPaletteListScreen extends ConsumerWidget {
 class PaletteListScreen extends HookWidget {
   const PaletteListScreen({super.key, required this.paletteList});
 
-  final List<ColorPaletteType> paletteList;
+  final List<ColorPalette> paletteList;
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:knitting/model/types/color_palette_type.dart';
+import 'package:knitting/model/entities/color_palette.dart';
 import 'package:knitting/view/palette_list/components/select_color_dialog.dart';
 
 class _Card extends StatelessWidget {
@@ -22,7 +22,7 @@ class _Card extends StatelessWidget {
 class PaletteCard extends StatelessWidget {
   const PaletteCard({super.key, required this.palette});
 
-  final ColorPaletteType palette;
+  final ColorPalette palette;
 
   @override
   Widget build(BuildContext context) {

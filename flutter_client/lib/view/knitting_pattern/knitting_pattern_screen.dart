@@ -181,7 +181,7 @@ class _KnittingPatternScreen extends HookWidget {
                       color: color,
                       onTap: () {
                         final newController = _showBottomSheet(
-                          widget: ColorPalette(
+                          widget: ColorPaletteBottomSheet(
                             onTap: (value) {
                               color.value = value;
                               Navigator.pop(context);
