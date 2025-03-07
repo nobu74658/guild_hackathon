@@ -74,15 +74,4 @@ enum KnittingType {
   final double dxRatio;
   final double dyRatio;
   final double gapRatio;
-
-  static KnittingType fromValue(String value) {
-    switch (value) {
-      case 'singleCrochet':
-        return KnittingType.singleCrochet;
-      case 'singleCrochetFrontLoop':
-        return KnittingType.singleCrochetFrontLoop;
-      default:
-        throw Exception('Unknown value: $value');
-    }
-  }
 }

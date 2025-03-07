@@ -42,7 +42,7 @@ class KnittingPatternRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) {
     return ConnectedKnittingPatternScreen(
       image: $extra.image,
-      knittingType: KnittingType.fromValue($extra.knittingType.value),
+      knittingType: $extra.knittingType,
       backgroundColor: Colors.grey[300],
       colorPalette: $extra.colorPalette,
     );
