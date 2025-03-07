@@ -113,9 +113,12 @@ class _ProjectRepository extends ProjectRepositoryInterface {
     // レスポンスを待機
     final response = await client.generateDottedImage(requestStream.stream);
 
+    print('response: $response');
+
     // 返却された画像データを Image オブジェクトに変換
     // バイトデータから PNG 画像としてデコードする
     final dottedImage = img.decodePng(Uint8List.fromList(response.image));
+    print('dottedImage: $dottedImage');
     if (dottedImage == null) {
       throw Exception('Failed to decode the received image');
     }
