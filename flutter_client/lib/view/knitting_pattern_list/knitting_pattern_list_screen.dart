@@ -74,7 +74,7 @@ class KnittingPatternListScreen extends HookConsumerWidget {
                         final result = await showDialog<
                             (CreateNewPatternUseCaseParam, KnittingType)>(
                           context: context,
-                          builder: (context) => const SettingDialog(),
+                          builder: (context) => const ConnectedSettingDialog(),
                         );
 
                         if (result == null) {

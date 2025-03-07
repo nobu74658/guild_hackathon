@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class ColorPaletteBottomSheet extends StatelessWidget {
   const ColorPaletteBottomSheet({
@@ -7,10 +6,7 @@ class ColorPaletteBottomSheet extends StatelessWidget {
     required this.onTap,
     required this.selectedColor,
     required this.paletteColors,
-  }) : assert(
-          paletteColors.length == 6,
-          'paletteColors must have exactly 6 colors.',
-        );
+  });
 
   final void Function(Color) onTap;
   final Color selectedColor;
@@ -21,37 +17,26 @@ class ColorPaletteBottomSheet extends StatelessWidget {
     const radius = 24.0;
 
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       width: double.infinity,
       color: Colors.white,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (final paletteColor in paletteColors.sublist(0, 3))
-                _PaletteCircle(
-                  radius: radius,
-                  onTap: () => onTap(paletteColor),
-                  color: paletteColor,
-                  selectedColor: selectedColor,
-                ),
-            ],
-          ),
-          const Gap(16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (final paletteColor in paletteColors.sublist(3, 6))
-                _PaletteCircle(
-                  radius: radius,
-                  onTap: () => onTap(paletteColor),
-                  color: paletteColor,
-                  selectedColor: selectedColor,
-                ),
-            ],
-          ),
-        ],
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4, // Adjust the number of columns as needed
+        ),
+        itemCount: paletteColors.length,
+        itemBuilder: (context, index) {
+          final paletteColor = paletteColors[index];
+          return Align(
+            child: _PaletteCircle(
+              radius: radius,
+              onTap: () => onTap(paletteColor),
+              color: paletteColor,
+              selectedColor: selectedColor,
+            ),
+          );
+        },
       ),
     );
   }

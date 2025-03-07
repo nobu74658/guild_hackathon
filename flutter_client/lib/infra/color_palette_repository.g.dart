@@ -7,7 +7,7 @@ part of 'color_palette_repository.dart';
 // **************************************************************************
 
 String _$colorPaletteRepositoryHash() =>
-    r'9c988e31db1e6b0fdd153099d030bd8c830b5df1';
+    r'3d48d57b119f53c2d5dafb2d4fbf28584ae5d447';
 
 /// See also [colorPaletteRepository].
 @ProviderFor(colorPaletteRepository)
@@ -22,9 +22,7 @@ final colorPaletteRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 typedef ColorPaletteRepositoryRef
     = ProviderRef<ColorPaletteRepositoryInterface>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

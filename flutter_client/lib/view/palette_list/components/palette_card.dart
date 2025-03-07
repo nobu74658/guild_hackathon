@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:knitting/app/manager/color_palette_manager.dart';
 import 'package:knitting/model/entities/color_palette.dart';
 import 'package:knitting/view/palette_list/components/select_color_dialog.dart';
 
@@ -19,21 +21,23 @@ class _Card extends StatelessWidget {
   }
 }
 
-class PaletteCard extends StatelessWidget {
+class PaletteCard extends ConsumerWidget {
   const PaletteCard({super.key, required this.palette});
 
   final ColorPalette palette;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return _Card(
       child: InkWell(
         onTap: () {
           showDialog(
             context: context,
             builder: (context) => SelectColorDialog(
+              id: palette.id,
               paletteName: palette.label,
               colorPalette: palette.paletteColors,
+              isEdit: true,
             ),
           );
         },
@@ -66,7 +70,9 @@ class PaletteCard extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // TODO(nobu): 削除機能
+                                ref
+                                    .read(colorPaletteManagerProvider)
+                                    .delete(palette.id);
                                 Navigator.pop(context);
                               },
                               child: const Text('削除'),
@@ -123,8 +129,10 @@ class AddPaletteCard extends StatelessWidget {
         onTap: () => showDialog(
           context: context,
           builder: (context) => const SelectColorDialog(
+            id: null,
             paletteName: '',
             colorPalette: [],
+            isEdit: false,
           ),
         ),
         child: const Padding(

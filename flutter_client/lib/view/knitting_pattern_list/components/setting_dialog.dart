@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
+import 'package:knitting/app/state/color_palettes_state.dart';
 import 'package:knitting/app/use_case/create_new_pattern_use_case.dart';
 import 'package:knitting/app/use_case/pick_image_use_case.dart';
 import 'package:knitting/model/entities/color_palette.dart';
@@ -11,21 +12,43 @@ import 'package:knitting/model/types/create_type.dart';
 import 'package:knitting/model/types/knitting_pattern_size.dart';
 import 'package:knitting/model/types/knitting_type.dart';
 
-class SettingDialog extends HookConsumerWidget {
-  const SettingDialog({super.key});
+class ConnectedSettingDialog extends ConsumerWidget {
+  const ConnectedSettingDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorPalettes = ref.watch(colorPalettesStateProvider);
+    if (colorPalettes.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            Gap(16),
+            Text(
+              'カラーパレットを探しています...',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
+    return SettingDialog(colorPalettes: colorPalettes);
+  }
+}
+
+class SettingDialog extends HookConsumerWidget {
+  const SettingDialog({super.key, required this.colorPalettes});
+
+  final List<ColorPalette> colorPalettes;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedColorPalette = useState(colorPalettes.firstOrNull);
     final createType = useState(CreateType.note);
     final selectedImage = useState<Uint8List?>(null);
     final selectedSize = useState(KnittingPatternSizeType.eight);
     final selectedKnittingType = useState(KnittingType.singleCrochet);
-    final selectedColorPalette = useState(ColorPalette.mock);
-    final colorPalettes = [
-      ColorPalette.mock,
-      ColorPalette.mock,
-      ColorPalette.mock,
-    ];
 
     return AlertDialog(
       title: const Text(
@@ -66,32 +89,41 @@ class SettingDialog extends HookConsumerWidget {
             widget: SizedBox(
               height: 60,
               child: DropdownButton(
+                isExpanded: true,
                 value: selectedColorPalette.value,
-                items: colorPalettes
-                    .map(
-                      (colorPalette) => DropdownMenuItem(
-                        value: colorPalette,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(colorPalette.label),
-                            Wrap(
-                              children: colorPalette.paletteColors
-                                  .map(
-                                    (color) => Container(
-                                      width: 20,
-                                      height: 20,
-                                      color: color,
-                                    ),
-                                  )
-                                  .toList(),
+                items: colorPalettes.map(
+                  (colorPalette) {
+                    List<Color> colors = colorPalette.paletteColors;
+                    if (colorPalette.paletteColors.length > 8) {
+                      colors = colorPalette.paletteColors.sublist(0, 8);
+                    }
+                    return DropdownMenuItem(
+                      value: colorPalette,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(colorPalette.label),
+                          Expanded(
+                            child: Wrap(
+                              children: [
+                                ...colors.map(
+                                  (color) => Container(
+                                    width: 20,
+                                    height: 20,
+                                    color: color,
+                                  ),
+                                ),
+                                if (colorPalette.paletteColors.length > 8)
+                                  const Text(' ...'),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    )
-                    .toList(),
+                    );
+                  },
+                ).toList(),
                 onChanged: (value) {
                   if (value != null) {
                     selectedColorPalette.value = value;
@@ -173,20 +205,25 @@ class SettingDialog extends HookConsumerWidget {
                 backgroundColor: Colors.indigo[400],
                 elevation: 0,
               ),
-              onPressed: () {
-                final image = selectedImage.value != null
-                    ? img.decodeImage(selectedImage.value!)
-                    : null;
+              onPressed: selectedColorPalette.value == null
+                  ? null
+                  : () {
+                      final image = selectedImage.value != null
+                          ? img.decodeImage(selectedImage.value!)
+                          : null;
 
-                final result = CreateNewPatternUseCaseParam(
-                  size: selectedSize.value,
-                  image: image,
-                  createType: createType.value,
-                  colorPalette: selectedColorPalette.value.paletteColors,
-                );
+                      final result = CreateNewPatternUseCaseParam(
+                        size: selectedSize.value,
+                        image: image,
+                        createType: createType.value,
+                        colorPalette: selectedColorPalette.value!.paletteColors,
+                      );
 
-                Navigator.pop(context, (result, selectedKnittingType.value));
-              },
+                      Navigator.pop(
+                        context,
+                        (result, selectedKnittingType.value),
+                      );
+                    },
               child: const Text(
                 '作成',
                 style: TextStyle(

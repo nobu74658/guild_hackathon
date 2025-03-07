@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:knitting/app/manager/color_palette_manager.dart';
 
 class SelectColorDialog extends HookConsumerWidget {
   const SelectColorDialog({
+    required this.id,
     required this.paletteName,
     required this.colorPalette,
+    required this.isEdit,
     super.key,
   });
 
+  final int? id;
   final String paletteName;
   final List<Color> colorPalette;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,10 +25,10 @@ class SelectColorDialog extends HookConsumerWidget {
     final paletteNameController = useTextEditingController(text: paletteName);
 
     return AlertDialog(
-      title: const Text(
-        'パレットを編集',
+      title: Text(
+        'パレットを${isEdit ? '編集' : '追加'}',
         textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -125,13 +130,44 @@ class SelectColorDialog extends HookConsumerWidget {
           child: const Text('キャンセル'),
         ),
         ElevatedButton(
-          onPressed: () {
-            // TODO(nobu): Save palette
-            Navigator.of(context).pop();
-          },
+          onPressed: _isValid(
+            colorPaletteState.value,
+            paletteNameController.text,
+          )
+              ? () {
+                  if (isEdit && id != null) {
+                    ref.read(colorPaletteManagerProvider).update(
+                          id: id!,
+                          palette: colorPaletteState.value,
+                          label: paletteNameController.text,
+                          order: 0,
+                        );
+                  } else {
+                    ref.read(colorPaletteManagerProvider).add(
+                          palette: colorPaletteState.value,
+                          label: paletteNameController.text,
+                          order: 0,
+                        );
+                  }
+                  Navigator.of(context).pop();
+                }
+              : null,
           child: const Text('保存'),
         ),
       ],
     );
+  }
+
+  bool _isValid(
+    List<Color> colorPalette,
+    String paletteName,
+  ) {
+    if (colorPalette.isEmpty) {
+      return false;
+    }
+    if (paletteName.isEmpty) {
+      return false;
+    }
+    return true;
   }
 }

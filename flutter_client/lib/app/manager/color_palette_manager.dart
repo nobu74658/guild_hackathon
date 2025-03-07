@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:knitting/infra/color_palette_interface.dart';
 import 'package:knitting/infra/color_palette_repository.dart';
@@ -8,6 +9,18 @@ part 'color_palette_manager.g.dart';
 
 abstract class ColorPaletteManagerInterface {
   Stream<List<ColorPalette>> stream();
+  void add({
+    required List<Color> palette,
+    required String label,
+    required int order,
+  });
+  void update({
+    required int id,
+    required List<Color> palette,
+    required String label,
+    required int order,
+  });
+  void delete(int id);
 }
 
 @riverpod
@@ -23,4 +36,35 @@ class _ColorPaletteManager extends ColorPaletteManagerInterface {
 
   @override
   Stream<List<ColorPalette>> stream() => repository.stream();
+
+  @override
+  void add({
+    required List<Color> palette,
+    required String label,
+    required int order,
+  }) {
+    repository.add(
+      palette: palette,
+      label: label,
+      order: order,
+    );
+  }
+
+  @override
+  void update({
+    required int id,
+    required List<Color> palette,
+    required String label,
+    required int order,
+  }) {
+    repository.update(
+      id: id,
+      palette: palette,
+      label: label,
+      order: order,
+    );
+  }
+
+  @override
+  void delete(int id) => repository.delete(id);
 }
