@@ -134,6 +134,7 @@ class _SingleCrochetPurlPainter extends AbstractStitchPainter {
         width * 0.55 + dx + dxGap + certainWidthGap,
         height * 0.25 + dy,
       );
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
 
     return path;
   }

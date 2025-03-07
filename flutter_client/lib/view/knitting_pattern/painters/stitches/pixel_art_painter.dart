@@ -15,6 +15,8 @@ class _PixelArtPainter extends AbstractStitchPainter {
       ..lineTo(dx + dxGap + width, dy + height)
       ..lineTo(dx + dxGap + width, dy);
 
+    path.addPath(path, Offset.zero); // 重なった部分が消えないようにするため
+
     return path;
   }
 }
